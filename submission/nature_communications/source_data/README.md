@@ -1,12 +1,10 @@
-# Source Data README
+# Source Data
 
-This directory contains source-data tables for the planned Nature Communications main figures.
+This folder contains the numerical source data for all graphs and charts in the main manuscript and Supplementary Fig. 1.
 
-- `Figure1_SourceData.csv`: conceptual schematic; no numerical source data required.
-- `Figure2_SourceData.csv`: cross-dataset random versus strict split summary from `table_two_channel_leakage_phase19.csv`.
-- `Figure3_SourceData.csv`: spatial-channel and patient-channel RLI matrix from corrected Phase 19 tables.
-- `Figure4_SourceData.csv`: spatial distance curves and GSE278936 non-zero-buffer pilot table.
-- `Figure5_SourceData.csv`: model-regime summaries, including corrected train-only GraphSAGE rows.
-- `Figure6_SourceData.csv`: generalization evidence hierarchy.
-
-No table contains restricted data, user-local paths, or hidden indices. Numerical values derive from frozen paper assets under `results/paper_assets/`.
+- `Figure1_SourceData.csv`: conceptual schematic manifest; Figure 1 contains no numerical graph values.
+- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, explicit ±1 s.d. units, and n for each error bar.
+- `Figure3_SourceData.csv`: spatial-channel and patient-associated RLI matrix values.
+- `Figure4_SourceData.csv`: mean Pearson values by spatial buffer with ±1 s.d. across frozen seeds.
+- `SupplementaryFigure1_SourceData.csv`: evaluation-regime-dependent model behavior values.
+- `SourceData_Index.csv`: per-figure file map.

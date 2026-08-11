@@ -1,7 +1,0 @@
-level,tier,supports,does_not_establish
-0,random spot interpolation,local interpolation,"spatial, section, patient, dataset or platform transfer"
-1,buffered spatial transfer,local neighborhood separation,patient transfer
-2,section-held-out transfer,section transfer,patient transfer unless patient identity is separated
-3,patient-held-out transfer,retention across patient-associated groups,dataset or platform transfer
-4,dataset-held-out transfer,dataset transportability stress test,cross-platform transfer
-5,cross-platform transfer,transportability across measurement platforms,universal generalization

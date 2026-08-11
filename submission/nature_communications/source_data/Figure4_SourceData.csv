@@ -1,13 +1,13 @@
-dataset,model,split,hop,mean_pearson,sd_seed
-DLPFC,spatial_knn,random,-0.4,0.2969292337082818,0.0057240967215972
-DLPFC,spatial_knn,matched_hop0,0.0,0.1774287003867675,0.0510410915872529
-DLPFC,spatial_knn,matched_hop2,2.0,0.1555979927936116,0.056642648239279
-DLPFC,spatial_knn,matched_hop5,5.0,0.0889604328350623,0.0553209224704305
-Visium breast,spatial_knn,random,-0.4,0.648544270388867,0.005600637716587
-Visium breast,spatial_knn,matched_hop0,0.0,0.2845848835744264,0.0148200363073434
-Visium breast,spatial_knn,matched_hop2,2.0,0.2292224964961432,0.0357595643730834
-Visium breast,spatial_knn,matched_hop5,5.0,0.1322212603385465,0.0827228012469974
-GSE278936 prostate,pca_ridge,random,-0.4,0.374473,0.001688626765766938
-GSE278936 prostate,pca_ridge,matched_hop0,0.0,0.374584,0.0003224148567369568
-GSE278936 prostate,pca_ridge,matched_hop2,2.0,0.294437,0.002171577329454478
-GSE278936 prostate,pca_ridge,matched_hop5,5.0,0.291516,0.010337506556123192
+dataset,model,split,hop,mean_pearson,sd,error_bar,n_seeds
+DLPFC,spatial_knn,random,-0.4,0.2969292337082818,0.0057240967215972,s.d. across 10 frozen seeds,10
+DLPFC,spatial_knn,matched_hop0,0.0,0.1774287003867675,0.0510410915872529,s.d. across 10 frozen seeds,10
+DLPFC,spatial_knn,matched_hop2,2.0,0.1555979927936116,0.056642648239279,s.d. across 10 frozen seeds,10
+DLPFC,spatial_knn,matched_hop5,5.0,0.0889604328350623,0.0553209224704305,s.d. across 10 frozen seeds,10
+Visium breast,spatial_knn,random,-0.4,0.648544270388867,0.005600637716587,s.d. across 10 frozen seeds,10
+Visium breast,spatial_knn,matched_hop0,0.0,0.2845848835744264,0.0148200363073434,s.d. across 10 frozen seeds,10
+Visium breast,spatial_knn,matched_hop2,2.0,0.2292224964961432,0.0357595643730834,s.d. across 10 frozen seeds,10
+Visium breast,spatial_knn,matched_hop5,5.0,0.1322212603385465,0.0827228012469974,s.d. across 10 frozen seeds,10
+GSE278936 prostate,pca_ridge,random,-0.4,0.374473,0.001688626765766938,s.d. across 5 frozen seeds,5
+GSE278936 prostate,pca_ridge,matched_hop0,0.0,0.374584,0.0003224148567369568,s.d. across 5 frozen seeds,5
+GSE278936 prostate,pca_ridge,matched_hop2,2.0,0.294437,0.002171577329454478,s.d. across 5 frozen seeds,5
+GSE278936 prostate,pca_ridge,matched_hop5,5.0,0.291516,0.010337506556123192,s.d. across 5 frozen seeds,5

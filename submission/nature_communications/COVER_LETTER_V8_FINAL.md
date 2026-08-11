@@ -4,11 +4,13 @@ We submit the manuscript entitled "Evaluation design reshapes apparent generaliz
 
 SpatialLeak addresses this problem by defining a leakage-resistant evaluation hierarchy for spatial omics prediction. Across public spatial transcriptomics datasets, the framework separates two sources of apparent generalization: local spatial-neighborhood dependence and patient-associated structure.
 
-The evidence comes from frozen analyses across public datasets. Dense Visium breast data showed strong spatial-neighborhood inflation, GraphSAGE evaluated with training-only preprocessing showed patient-associated losses in Andersson and Thrane, and GSE278936 prostate Visium showed that hop0 spatial partitioning was insufficient while non-zero buffers exposed a PCA+Ridge performance drop.
+The evidence comes from frozen analyses across public datasets. Dense Visium breast data showed strong spatial-neighborhood inflation, GraphSAGE showed patient-associated losses in Andersson and Thrane, and GSE278936 prostate Visium showed that hop0 spatial partitioning was insufficient while non-zero buffers exposed a PCA+Ridge performance drop.
 
 The resulting six-tier hierarchy provides practical guidance for matching split design to the level of generalization being claimed. We believe the manuscript will be relevant to researchers in spatial transcriptomics, computational biology, machine-learning evaluation and reproducible biomedical data science.
 
 All authors have approved this submission. The authors declare no competing interests.
+
+Code and source data are available at https://github.com/seefreewind/spatialleak (v1.0.0) and archived at https://doi.org/10.5281/zenodo.21881438.
 
 Sincerely,
 

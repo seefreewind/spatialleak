@@ -301,6 +301,14 @@ def make_v8_text(k: dict[str, str], ref_text: str) -> str:
         "These comparisons position random spot evaluation as a permissive interpolation setting rather than, by itself, evidence of section-, patient- or dataset-level generalization.",
     )
     text = text.replace(
+        "GraphSAGE evaluated with training-only preprocessing showed large patient-associated losses in Andersson and Thrane, with patient RLI values of 0.695 and 0.711.",
+        "GraphSAGE showed large patient-associated losses in Andersson and Thrane, with patient RLI values of 0.695 and 0.711.",
+    )
+    text = text.replace(
+        "Multiple spatial-learning studies use spot- or cell-level random splits or evaluation settings that can mix local interpolation with broader transfer claims [2,15,4]. Such choices can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal.",
+        "Existing spatial prediction and enhancement studies illustrate how benchmark tasks are often framed around held-out measurements within related spatial or molecular contexts [2,15,4]. Random spot-level evaluation in particular can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal.",
+    )
+    text = text.replace(
         "### Apparent model advantage depends on evaluation regime\n\nModel comparisons changed when the evaluation claim changed (Fig. 5).",
         "### Apparent model advantage depends on evaluation regime\n\nModel comparisons changed when the evaluation claim changed (Supplementary Fig. 1).",
     )
@@ -313,6 +321,10 @@ def make_v8_text(k: dict[str, str], ref_text: str) -> str:
     text = text.replace(
         "GitHub repository URL and Zenodo DOI are **PENDING USER INPUT**.",
         f"Code is available at {GITHUB_URL} (version v1.0.0) and archived at {ZENODO_STATUS}.",
+    )
+    text = text.replace(
+        f"Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at {GITHUB_URL} (version v1.0.0) and archived at {ZENODO_STATUS}.",
+        f"Code for preprocessing, target-panel definition, split generation, benchmarking, statistical analysis, figure generation and source-data generation is available at {GITHUB_URL} (v1.0.0) and archived at {ZENODO_STATUS}.",
     )
     return text + "\n\n## References\n\n" + ref_text + "\n"
 
@@ -356,11 +368,11 @@ def build_docx(v8: str) -> Path:
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable biological signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation by evidence tier. Bars show mean Pearson correlation for random splits and the relevant strict tier. Background shading separates patient-associated evaluation from spatial-buffer evaluation. Error bars show the dispersion field reported in the source data.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation by evidence tier. Bars show mean Pearson correlation for random splits and the relevant strict tier. Background shading separates patient-associated evaluation from spatial-buffer evaluation. Error bars indicate ±1 s.d.; s.d. is computed across 10 frozen seeds for random and spatial-buffer estimates and across held-out patient/donor groups for patient-held-out strict estimates, as specified in Source Data.")
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. Two-channel landscape of apparent generalization inflation. Spatial-channel and patient-associated RLI are shown separately. NA denotes an unavailable or non-interpretable tier and is not treated as zero; <0 denotes negative/no inflation.")
         if line.startswith("SpatialLeak next tested"):
-            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show performance under random, hop0, hop2 and hop5 splits. Error bars show seed-level dispersion from the frozen outputs, including the five GSE278936 pilot seeds.")
+            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show mean Pearson correlation under random, hop0, hop2 and hop5 splits. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for the GSE278936 spatial-channel pilot.")
     doc.save(out)
     return out
 
@@ -378,20 +390,39 @@ def add_figure(doc: Document, path: Path, caption: str) -> None:
 
 
 def update_source_data() -> None:
+    fig3_final = SOURCE / "Figure3_Final_SourceData.csv"
+    if fig3_final.exists():
+        shutil.copy2(fig3_final, SOURCE / "Figure3_SourceData.csv")
+    fig5 = SOURCE / "Figure5_SourceData.csv"
+    if fig5.exists():
+        shutil.copy2(fig5, SOURCE / "SupplementaryFigure1_SourceData.csv")
+    for obsolete in ["Figure3_Final_SourceData.csv", "Figure5_SourceData.csv", "Figure6_SourceData.csv", "Supplementary_Figure1_SourceData.csv"]:
+        path = SOURCE / obsolete
+        if path.exists():
+            path.unlink()
     idx_rows = [
-        ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with frozen dispersion fields", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_Final_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Supplementary Fig. 1", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Supplementary_Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 1", "a-d", "all", "all", "conceptual schematic; no numerical graph source data", "Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with explicit ±1 s.d. units and n", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Supplementary Fig. 1", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "SupplementaryFigure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
     ]
     with (SOURCE / "SourceData_Index.csv").open("w", newline="") as fh:
         writer = csv.writer(fh)
         writer.writerow(["figure", "panel", "dataset", "model", "metric", "source_file", "generation_script", "status"])
         writer.writerows(idx_rows)
-    fig5 = SOURCE / "Figure5_SourceData.csv"
-    if fig5.exists():
-        shutil.copy2(fig5, SOURCE / "Supplementary_Figure1_SourceData.csv")
+    write(SOURCE / "README.md", """
+# Source Data
+
+This folder contains the numerical source data for all graphs and charts in the main manuscript and Supplementary Fig. 1.
+
+- `Figure1_SourceData.csv`: conceptual schematic manifest; Figure 1 contains no numerical graph values.
+- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, explicit ±1 s.d. units, and n for each error bar.
+- `Figure3_SourceData.csv`: spatial-channel and patient-associated RLI matrix values.
+- `Figure4_SourceData.csv`: mean Pearson values by spatial buffer with ±1 s.d. across frozen seeds.
+- `SupplementaryFigure1_SourceData.csv`: evaluation-regime-dependent model behavior values.
+- `SourceData_Index.csv`: per-figure file map.
+""")
     pd.DataFrame([
         {"figure_id": f"Figure {i}", "first_text_citation": f"Fig. {i}", "section": "Results", "file_exists": True, "embedded_in_manuscript": True, "caption_exists": True, "source_data_exists": True, "status": "PASS"}
         for i in range(1, 5)
@@ -473,7 +504,7 @@ The available frozen outputs provide seed-level standard deviation for random/sp
 
 ## Decision
 
-Do not present seed-level SD as biological-unit uncertainty. Figure 2 source data now reports the exact dispersion field for each bar. The legend avoids implying that seeds are biological replicates.
+Figure 2 reports descriptive ±1 s.d. error bars. Random estimates and spatial-buffer strict estimates use s.d. across 10 frozen seeds. Patient-held-out strict estimates use s.d. across held-out patient/donor groups, because these folds are biological groups rather than repeated seeds. `Figure2_SourceData.csv` records the error-bar unit and n for every bar.
 
 ## Status
 
@@ -488,7 +519,7 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Bars show mean Pearson correlation from frozen aggregate results and are grouped by the evaluation tier being tested. Source data specify the dispersion unit for each bar: seed-level SD where seed-level split variation exists, patient-fold dispersion for patient-held-out summaries, and no biological CI where not uniformly estimable.
+Bars show mean Pearson correlation from frozen aggregate results and are grouped by the evaluation tier being tested. Error bars indicate ±1 s.d. For random estimates and spatial-buffer strict estimates, s.d. is across 10 frozen seeds. For patient-held-out strict estimates, s.d. is across held-out patient/donor groups. `Figure2_SourceData.csv` lists the unit and n for each bar.
 
 ## Figure 3
 
@@ -496,7 +527,7 @@ Cells show RLI. NA denotes unavailable or non-interpretable tiers and is not zer
 
 ## Figure 4
 
-Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Error bars show seed-level dispersion from frozen outputs, including the five-seed GSE278936 pilot table.
+Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for GSE278936.
 
 ## Supplementary Fig. 1
 
@@ -697,6 +728,14 @@ Random splits used 80/10/10 train/validation/test proportions. Matched spatial s
 
 PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60.
 
+## Dataset and Sample Structure
+
+Dataset provenance, sample counts and split eligibility are documented in `DATA_MANIFEST.md`, `results/paper_assets/table_split_sample_sizes.csv` and `data/external_audit/gse278936/public_sample_audit.csv`. The public GSE278936 GEO release contains one section per patient and was used only as a spatial-channel Visium replication, not as patient-level validation.
+
+## Split Sample Counts and Non-Resolvable Cases
+
+Split-level train, validation and test counts are reported in `results/paper_assets/table_split_sample_sizes.csv`. Non-resolvable comparisons were retained as unavailable rather than converted to zero. RLI was not interpreted when the absolute random-split mean Pearson correlation was below 0.05; affected rows are listed in `results/final_stats/LI_RLI_all_datasets.csv` and the figure source data.
+
 ## Software Versions
 
 The reproducibility environment used Python 3.10/3.12-compatible code. The locked environment files specify NumPy 1.26.4, pandas 2.3.3, SciPy 1.13.1, scikit-learn 1.6.1, Scanpy 1.10.3, AnnData 0.10.9, statsmodels 0.14.6 and PyTorch 2.8.0. PyTorch Geometric was not required for the in-repository GraphSAGE implementation, which uses native PyTorch tensor operations.
@@ -705,21 +744,37 @@ The reproducibility environment used Python 3.10/3.12-compatible code. The locke
 
 Shared-panel analyses used `shared_panel_50`, a frozen target set independent of downstream performance. These analyses support the patient-associated channel in Andersson and Thrane and provide a non-performance-selected comparison across datasets.
 
+The shared-panel robustness source files are `results/paper_assets/table_shared_panel50_RLI.csv`, `results/paper_assets/table_graphsage_shared_panel50_RLI_trainonly.csv`, `results/anderson_shared_panel50/` and `results/thrane_shared_panel50/`.
+
 ## Sample-Size-Matched Controls
 
 Random-size-matched controls downsampled random splits to comparable sample sizes without using strict-split performance. These controls showed that the main spatial-buffer losses were larger than losses caused by sample-count reduction alone.
+
+The source files are `results/sample_size_control/random_size_matched_per_seed.csv` and `results/paper_assets/table_random_size_matched_control.csv`.
+
+## Full Per-Seed and Per-Fold Outputs
+
+Per-seed and per-fold model outputs are retained in the frozen `results/` subdirectories used by the manuscript scripts. Figure-level aggregates are mirrored in `submission/nature_communications/source_data/`, with Figure 2 and Figure 4 explicitly recording the error-bar unit and n for each value.
 
 ## Full Statistical Outputs
 
 Main baseline analyses used seeds 0-9; GSE278936 used seeds 0-4. RLI was not interpreted when absolute random mean Pearson was below 0.05. Paired Wilcoxon tests used seed-level summaries with BH-FDR correction. Mixed-effects analyses used `inflation ~ moran_i + C(model)` with dataset random intercepts.
 
+The principal statistical source files are `results/final_stats/LI_RLI_all_datasets.csv`, `results/final_stats/mixed_effects.json`, `results/final_stats/per_gene_inflation_spatial.csv` and `results/final_stats/per_gene_inflation_patient.csv`.
+
+## Moran Analysis
+
+Moran-ranked target genes were used to define frozen target panels and to assess the relationship between spatial autocorrelation and inflation. The Moran analysis source files include `data/processed/*moran*.csv`, `results/final_stats/per_gene_inflation_spatial.csv`, `results/final_stats/per_gene_inflation_patient.csv` and `results/paper_assets/moran_top_genes.csv` where available.
+
 ## Cross-Platform Stress Test
 
 The Andersson-to-Visium PCA+Ridge dataset-held-out stress test had mean Pearson {k['cross']}. This is reported as a supplementary stress test rather than central validation.
 
+The source file is `results/paper_assets/table_dataset_heldout_anderson_to_visium.csv`.
+
 ## Supplementary Fig. 1. Evaluation-regime-dependent model behavior
 
-Model performance changed with the evaluation tier. The source data are provided in `source_data/Supplementary_Figure1_SourceData.csv`.
+Model performance changed with the evaluation tier. The source data are provided in `source_data/SupplementaryFigure1_SourceData.csv`.
 
 ## Boundary Conditions
 
@@ -735,11 +790,13 @@ We submit the manuscript entitled "{TITLE}" for consideration as an Article in N
 
 SpatialLeak addresses this problem by defining a leakage-resistant evaluation hierarchy for spatial omics prediction. Across public spatial transcriptomics datasets, the framework separates two sources of apparent generalization: local spatial-neighborhood dependence and patient-associated structure.
 
-The evidence comes from frozen analyses across public datasets. Dense Visium breast data showed strong spatial-neighborhood inflation, GraphSAGE evaluated with training-only preprocessing showed patient-associated losses in Andersson and Thrane, and GSE278936 prostate Visium showed that hop0 spatial partitioning was insufficient while non-zero buffers exposed a PCA+Ridge performance drop.
+The evidence comes from frozen analyses across public datasets. Dense Visium breast data showed strong spatial-neighborhood inflation, GraphSAGE showed patient-associated losses in Andersson and Thrane, and GSE278936 prostate Visium showed that hop0 spatial partitioning was insufficient while non-zero buffers exposed a PCA+Ridge performance drop.
 
 The resulting six-tier hierarchy provides practical guidance for matching split design to the level of generalization being claimed. We believe the manuscript will be relevant to researchers in spatial transcriptomics, computational biology, machine-learning evaluation and reproducible biomedical data science.
 
 All authors have approved this submission. The authors declare no competing interests.
+
+Code and source data are available at {GITHUB_URL} (v1.0.0) and archived at {ZENODO_STATUS}.
 
 Sincerely,
 
@@ -753,6 +810,8 @@ def reporting_v8() -> None:
 # Reporting Summary Draft V8
 
 Study design: computational benchmark and evaluation-design analysis using public spatial transcriptomics data. No new biological samples were collected. Randomization was implemented through frozen random seeds and matched block candidate assignments. Blinding was not applicable. Restricted EGA validation data were not used. RLI was not interpreted when absolute random mean Pearson was below 0.05. Evidence sources: manuscript Methods, `src/splits/`, `src/models/`, `results/final_stats/`, `results/paper_assets/`.
+
+Figure 2 error bars are descriptive ±1 s.d.; random and spatial-buffer estimates use 10 frozen seeds, and patient-held-out strict estimates use held-out patient/donor groups. Figure 4 error bars are ±1 s.d. across frozen seeds, with 10 seeds for DLPFC and Visium breast and 5 seeds for GSE278936.
 """)
     write(REPORTING / "Machine_Learning_Checklist_Draft.md", """
 # Machine Learning Checklist Draft V8
@@ -773,7 +832,11 @@ Code covers preprocessing, target-panel definition, split generation, benchmark 
 | Split construction | `src/splits/`, `results/paper_assets/table_split_sample_sizes.csv` |
 | Model settings | `src/models/`, run scripts, manuscript Methods |
 | Statistical tests | `results/final_stats/`, `docs/reports/FINAL_STATS_REFRESH.md` |
-| Source data | `submission/nature_communications/source_data/` |
+| Main Figure 1 source data | `submission/nature_communications/source_data/Figure1_SourceData.csv`; conceptual schematic manifest |
+| Main Figure 2 source data | `submission/nature_communications/source_data/Figure2_SourceData.csv`; includes error-bar unit and n |
+| Main Figure 3 source data | `submission/nature_communications/source_data/Figure3_SourceData.csv` |
+| Main Figure 4 source data | `submission/nature_communications/source_data/Figure4_SourceData.csv`; includes error-bar unit and n |
+| Supplementary Fig. 1 source data | `submission/nature_communications/source_data/SupplementaryFigure1_SourceData.csv` |
 | Code release | GitHub repository and Zenodo metadata |
 """)
 

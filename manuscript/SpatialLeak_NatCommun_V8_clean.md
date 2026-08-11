@@ -10,7 +10,7 @@ Correspondence: Da Lin, 212574@wzhealth.com; ORCID 0009-0009-4410-0218
 
 ## Abstract
 
-Spatial omics models are often evaluated using random spot-level splits, yet spatial neighborhoods, section context and patient-associated structure can make such performance difficult to interpret. We developed SpatialLeak, a leakage-resistant evaluation framework that compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes. In dense Visium breast data, Spatial kNN showed strong spatial-neighborhood inflation, with hop5 relative leakage inflation (RLI) of 0.796. GraphSAGE evaluated with training-only preprocessing showed large patient-associated losses in Andersson and Thrane, with patient RLI values of 0.695 and 0.711. In GSE278936 prostate Visium, PCA+Ridge was unchanged at hop0 but decreased under non-zero spatial buffers, reaching hop5 RLI 0.222. Random-size-matched controls indicated that reduced sample count alone did not explain the main spatial-buffer losses. SpatialLeak provides a hierarchy for matching benchmark design to the level of generalization being claimed.
+Spatial omics models are often evaluated using random spot-level splits, yet spatial neighborhoods, section context and patient-associated structure can make such performance difficult to interpret. We developed SpatialLeak, a leakage-resistant evaluation framework that compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes. In dense Visium breast data, Spatial kNN showed strong spatial-neighborhood inflation, with hop5 relative leakage inflation (RLI) of 0.796. GraphSAGE showed large patient-associated losses in Andersson and Thrane, with patient RLI values of 0.695 and 0.711. In GSE278936 prostate Visium, PCA+Ridge was unchanged at hop0 but decreased under non-zero spatial buffers, reaching hop5 RLI 0.222. Random-size-matched controls indicated that reduced sample count alone did not explain the main spatial-buffer losses. SpatialLeak provides a hierarchy for matching benchmark design to the level of generalization being claimed.
 
 ## Introduction
 
@@ -20,7 +20,7 @@ The evaluation problem is that spatial observations are not independent in the o
 
 Spatial dependence is not inherently invalid. Spatial autocorrelation is a defining property of many tissue measurements and has a formal statistical history [14]. A spatially aware model may use tissue architecture as a legitimate biological signal if that signal is retained under the separation required by the scientific claim. The central question is what claim the evaluation design can support: local interpolation, spatial transfer, section transfer, patient transfer, dataset transfer or cross-platform transfer.
 
-Current spatial omics benchmarks do not consistently separate these levels. Multiple spatial-learning studies use spot- or cell-level random splits or evaluation settings that can mix local interpolation with broader transfer claims [2,15,4]. Such choices can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal. This makes it difficult to interpret whether an apparent model advantage reflects a robust predictive principle or the evaluation tier used to measure it.
+Current spatial omics benchmarks do not consistently separate these levels. Existing spatial prediction and enhancement studies illustrate how benchmark tasks are often framed around held-out measurements within related spatial or molecular contexts [2,15,4]. Random spot-level evaluation in particular can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal. This makes it difficult to interpret whether an apparent model advantage reflects a robust predictive principle or the evaluation tier used to measure it.
 
 Here we introduce SpatialLeak, a multi-tier evaluation framework for spatial omics prediction. SpatialLeak compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes across public spatial transcriptomics datasets and diagnostic model classes. The framework shows that apparent generalization can arise through distinct spatial-neighborhood and patient-associated channels, and it organizes these findings into a generalization evidence hierarchy.
 
@@ -30,7 +30,7 @@ Here we introduce SpatialLeak, a multi-tier evaluation framework for spatial omi
 
 SpatialLeak first tested whether random spot-level performance was retained when the train-test boundary matched a stricter generalization claim (Fig. 1, Fig. 2). Across DLPFC, Andersson, Thrane and Visium breast, random splits produced higher apparent performance than the relevant stricter split for the main interpretable model-dataset combinations. These comparisons position random spot evaluation as a permissive interpolation setting rather than, by itself, evidence of section-, patient- or dataset-level generalization.
 
-The patient-channel datasets showed the clearest random-to-patient losses (Fig. 3). In Andersson, PCA+Ridge patient RLI was 0.662, and GraphSAGE evaluated with training-only preprocessing had patient RLI 0.695. In Thrane, PCA+Ridge patient RLI was 0.499, and GraphSAGE patient RLI was 0.711. These results show that a graph-based model did not remove the need for grouped evaluation.
+The patient-channel datasets showed the clearest random-to-patient losses (Fig. 3). In Andersson, PCA+Ridge patient RLI was 0.662, and GraphSAGE patient RLI was 0.695. In Thrane, PCA+Ridge patient RLI was 0.499, and GraphSAGE patient RLI was 0.711. These results show that a graph-based model did not remove the need for grouped evaluation.
 
 ### Non-zero spatial buffers reveal local neighborhood dependence
 
@@ -56,7 +56,7 @@ Model comparisons changed when the evaluation claim changed (Supplementary Fig. 
 
 These observations argue against using a single random-split leaderboard as evidence of model superiority. A method can be useful for local interpolation while being less informative for patient transfer, and a model that appears robust under a spatial split may still lose performance under patient-held-out evaluation.
 
-### SpatialLeak defines a hierarchy for spatial-omics generalization claims
+### SpatialLeak defines a hierarchy for spatial omics generalization claims
 
 SpatialLeak formalizes six evaluation tiers (Fig. 1). Level 0, random spot interpolation, supports local interpolation but does not establish spatial, section or patient transfer. Level 1, buffered spatial transfer, tests local neighborhood separation but does not establish patient transfer. Level 2, section-held-out transfer, tests transfer across sections but not necessarily across patients. Level 3, patient-held-out transfer, tests retention across patient-associated groups but does not establish dataset or platform transfer. Level 4, dataset-held-out transfer, tests broader dataset transportability. Level 5, cross-platform transfer, tests robustness when measurement platforms also change.
 
@@ -116,7 +116,7 @@ DLPFC, Andersson, Thrane, 10x Visium breast and GSE278936 public data were used 
 
 ## Code Availability
 
-Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at https://github.com/seefreewind/spatialleak (version v1.0.0) and archived at https://doi.org/10.5281/zenodo.21881438.
+Code for preprocessing, target-panel definition, split generation, benchmarking, statistical analysis, figure generation and source-data generation is available at https://github.com/seefreewind/spatialleak (v1.0.0) and archived at https://doi.org/10.5281/zenodo.21881438.
 
 ## Author Contributions
 

@@ -210,7 +210,7 @@ def manuscript_v7(k: dict[str, str], refs: dict[str, int]) -> str:
         f"Spatial omics models are often evaluated using random spot-level splits, yet spatial neighborhoods, section context and patient-associated structure can make such performance difficult to interpret. "
         f"We developed SpatialLeak, a leakage-resistant evaluation framework that compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes. "
         f"In dense Visium breast data, Spatial kNN showed strong spatial-neighborhood inflation, with hop5 relative leakage inflation (RLI) of {k['visium_knn']}. "
-        f"GraphSAGE evaluated with training-only preprocessing showed large patient-associated losses in Andersson and Thrane, with patient RLI values of {k['andersson_gs']} and {k['thrane_gs']}. "
+        f"GraphSAGE showed large patient-associated losses in Andersson and Thrane, with patient RLI values of {k['andersson_gs']} and {k['thrane_gs']}. "
         f"In GSE278936 prostate Visium, PCA+Ridge was unchanged at hop0 but decreased under non-zero spatial buffers, reaching hop5 RLI {k['gse_hop5']}. "
         "Random-size-matched controls indicated that reduced sample count alone did not explain the main spatial-buffer losses. "
         "SpatialLeak provides a hierarchy for matching benchmark design to the level of generalization being claimed."
@@ -222,7 +222,7 @@ The evaluation problem is that spatial observations are not independent in the o
 
 Spatial dependence is not inherently invalid. Spatial autocorrelation is a defining property of many tissue measurements and has a formal statistical history {c(['Moran1950Biometrika'])}. A spatially aware model may use tissue architecture as a legitimate biological signal if that signal is retained under the separation required by the scientific claim. The central question is what claim the evaluation design can support: local interpolation, spatial transfer, section transfer, patient transfer, dataset transfer or cross-platform transfer.
 
-Current spatial omics benchmarks do not consistently separate these levels. Multiple spatial-learning studies use spot- or cell-level random splits or evaluation settings that can mix local interpolation with broader transfer claims {c(['Abdelaal2020NAR','He2020NatBiomedEng','Chen2021Bioinformatics'])}. Such choices can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal. This makes it difficult to interpret whether an apparent model advantage reflects a robust predictive principle or the evaluation tier used to measure it.
+Current spatial omics benchmarks do not consistently separate these levels. Existing spatial prediction and enhancement studies illustrate how benchmark tasks are often framed around held-out measurements within related spatial or molecular contexts {c(['Abdelaal2020NAR','He2020NatBiomedEng','Chen2021Bioinformatics'])}. Random spot-level evaluation in particular can conflate local spatial-neighborhood dependence, patient-associated structure and transportable biological signal. This makes it difficult to interpret whether an apparent model advantage reflects a robust predictive principle or the evaluation tier used to measure it.
 
 Here we introduce SpatialLeak, a multi-tier evaluation framework for spatial omics prediction. SpatialLeak compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes across public spatial transcriptomics datasets and diagnostic model classes. The framework shows that apparent generalization can arise through distinct spatial-neighborhood and patient-associated channels, and it organizes these findings into a generalization evidence hierarchy.
 """.strip()
@@ -233,7 +233,7 @@ Here we introduce SpatialLeak, a multi-tier evaluation framework for spatial omi
 
 SpatialLeak first tested whether random spot-level performance was retained when the train-test boundary matched a stricter generalization claim (Fig. 1, Fig. 2). Across DLPFC, Andersson, Thrane and Visium breast, random splits produced higher apparent performance than the relevant stricter split for the main interpretable model-dataset combinations. This established random spot evaluation as a permissive interpolation setting rather than evidence, by itself, for section-, patient- or dataset-level generalization.
 
-The patient-channel datasets showed the clearest random-to-patient losses (Fig. 3). In Andersson, PCA+Ridge patient RLI was {k['anderson_pca']}, and GraphSAGE evaluated with training-only preprocessing had patient RLI {k['andersson_gs']}. In Thrane, PCA+Ridge patient RLI was {k['thrane_pca']}, and GraphSAGE patient RLI was {k['thrane_gs']}. These results show that a graph-based model did not remove the need for grouped evaluation.
+The patient-channel datasets showed the clearest random-to-patient losses (Fig. 3). In Andersson, PCA+Ridge patient RLI was {k['anderson_pca']}, and GraphSAGE patient RLI was {k['andersson_gs']}. In Thrane, PCA+Ridge patient RLI was {k['thrane_pca']}, and GraphSAGE patient RLI was {k['thrane_gs']}. These results show that a graph-based model did not remove the need for grouped evaluation.
 
 ### Non-zero spatial buffers reveal local neighborhood dependence
 
@@ -259,7 +259,7 @@ Model comparisons changed when the evaluation claim changed (Fig. 5). Spatial kN
 
 These observations argue against using a single random-split leaderboard as evidence of model superiority. A method can be useful for local interpolation while being less informative for patient transfer, and a model that appears robust under a spatial split may still lose performance under patient-held-out evaluation.
 
-### SpatialLeak defines a hierarchy for spatial-omics generalization claims
+### SpatialLeak defines a hierarchy for spatial omics generalization claims
 
 SpatialLeak formalizes six evaluation tiers (Fig. 1). Level 0, random spot interpolation, supports local interpolation but does not establish spatial, section or patient transfer. Level 1, buffered spatial transfer, tests local neighborhood separation but does not establish patient transfer. Level 2, section-held-out transfer, tests transfer across sections but not necessarily across patients. Level 3, patient-held-out transfer, tests retention across patient-associated groups but does not establish dataset or platform transfer. Level 4, dataset-held-out transfer, tests broader dataset transportability. Level 5, cross-platform transfer, tests robustness when measurement platforms also change.
 
@@ -450,15 +450,45 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         if strict_type == "patient":
             strict_parts = sdf[(sdf.dataset == dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"]
             strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
+            strict_n = int(len(strict_parts))
+            strict_error_bar = "s.d. across held-out patient/donor groups"
             strict_label = "patient-held-out"
         else:
             st = sdf[(sdf.dataset == dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)]
             strict_sd = 0.0 if st.empty or pd.isna(st.iloc[0].sd_seed) else float(st.iloc[0].sd_seed)
+            strict_n = 10
+            strict_error_bar = "s.d. across 10 frozen seeds"
             strict_label = str(lr.strict_split)
-        rows.append((tier, label, model, strict_label, lr.random, lr.strict, rnd_summary.sd_seed, strict_sd))
+        rows.append((
+            tier,
+            label,
+            model,
+            strict_label,
+            lr.random,
+            lr.strict,
+            rnd_summary.sd_seed,
+            strict_sd,
+            "s.d. across 10 frozen seeds",
+            strict_error_bar,
+            10,
+            strict_n,
+        ))
     pd.DataFrame(
         rows,
-        columns=["evaluation_tier", "dataset", "model", "strict_split", "random_mean_pearson", "strict_mean_pearson", "random_sd_seed", "strict_sd_seed"],
+        columns=[
+            "evaluation_tier",
+            "dataset",
+            "model",
+            "strict_split",
+            "random_mean_pearson",
+            "strict_mean_pearson",
+            "random_sd",
+            "strict_sd",
+            "random_error_bar",
+            "strict_error_bar",
+            "random_n",
+            "strict_n",
+        ],
     ).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
     x = np.arange(len(rows))
     width = 0.36
@@ -529,7 +559,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         es = [rnd.sd_seed] + [p[2] for p in pts]
         ax.errorbar(xs, ys, yerr=es, marker="o", lw=1.7, capsize=2, color=colors[label], label=f"{label} {model.replace('_', '+')}")
         for split_label, hop, mean, sd in zip(["random"] + [f"matched_hop{p[0]}" for p in pts], xs, ys, es):
-            fig4_rows.append({"dataset": label, "model": model, "split": split_label, "hop": hop, "mean_pearson": mean, "sd_seed": sd})
+            fig4_rows.append({"dataset": label, "model": model, "split": split_label, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 10 frozen seeds", "n_seeds": 10})
     gse = t["gse"][(t["gse"].model == "pca_ridge")]
     gse_seed = pd.read_csv("results/gse278936_prostate_spatial_pilot/spatial_pilot_aggregate.csv")
     gse_seed = gse_seed[gse_seed.model == "pca_ridge"]
@@ -543,7 +573,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         es.append(float(gse_sd.get(split, 0.0)))
     ax.errorbar(xs, ys, yerr=es, marker="o", lw=1.7, capsize=2, color=colors["GSE278936 prostate"], label="GSE278936 PCA+Ridge")
     for split_label, hop, mean, sd in zip(["random", "matched_hop0", "matched_hop2", "matched_hop5"], xs, ys, es):
-        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "hop": hop, "mean_pearson": mean, "sd_seed": sd})
+        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 5 frozen seeds", "n_seeds": 5})
     ax.set_xticks([-0.4, 0, 2, 5], ["Random", "hop0", "hop2", "hop5"])
     ax.set_ylabel("Mean Pearson correlation")
     ax.set_title("Non-zero spatial buffers reveal distance-dependent performance loss", loc="left", weight="bold")
@@ -591,9 +621,9 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
 def source_index() -> None:
     rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with seed SD", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 5", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Figure5_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
     ]
     with (SOURCE / "SourceData_Index.csv").open("w", newline="") as fh:
@@ -779,6 +809,9 @@ PASS.
     text = v7
     patterns = ["corrected", "rerun", "Phase", "audit", "smoke test", "current suite", "formal rerun", "pilot", "handoff", "Fig\\. 6|Figure 6", "0\\.692", "0\\.718"]
     stale = {pat: len(re.findall(pat, text, flags=re.I)) for pat in patterns}
+    fig6_count = stale["Fig\\. 6|Figure 6"]
+    old_gs_andersson_count = stale["0\\.692"]
+    old_gs_thrane_count = stale["0\\.718"]
     write(REPORTS / "NATCOMM_V7_LOW_LEVEL_ERROR_AUDIT.md", f"""
 # NATCOMM V7 Low-Level Error Audit
 
@@ -794,9 +827,9 @@ PASS.
 | current suite | {stale['current suite']} | PASS |
 | formal rerun | {stale['formal rerun']} | PASS |
 | pilot | {stale['pilot']} | PASS |
-| Figure 6 / Fig. 6 | {stale['Fig\\. 6|Figure 6']} | PASS |
-| old GraphSAGE value 0.692 | {stale['0\\.692']} | PASS |
-| old GraphSAGE value 0.718 | {stale['0\\.718']} | PASS |
+| Figure 6 / Fig. 6 | {fig6_count} | PASS |
+| old GraphSAGE value 0.692 | {old_gs_andersson_count} | PASS |
+| old GraphSAGE value 0.718 | {old_gs_thrane_count} | PASS |
 
 ## Terminology
 

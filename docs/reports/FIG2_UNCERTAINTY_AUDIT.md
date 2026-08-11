@@ -6,7 +6,7 @@ The available frozen outputs provide seed-level standard deviation for random/sp
 
 ## Decision
 
-Do not present seed-level SD as biological-unit uncertainty. Figure 2 source data now reports the exact dispersion field for each bar. The legend avoids implying that seeds are biological replicates.
+Figure 2 reports descriptive ±1 s.d. error bars. Random estimates and spatial-buffer strict estimates use s.d. across 10 frozen seeds. Patient-held-out strict estimates use s.d. across held-out patient/donor groups, because these folds are biological groups rather than repeated seeds. `Figure2_SourceData.csv` records the error-bar unit and n for every bar.
 
 ## Status
 
