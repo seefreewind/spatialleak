@@ -415,6 +415,148 @@ def save_pub(fig: plt.Figure, stem: str) -> None:
     fig.savefig(FIGS / f"{stem}.tiff", dpi=600, bbox_inches="tight")
 
 
+FIG1_COLORS = {
+    "train": "#4C78A8",
+    "test": "#E45756",
+    "spatial": "#59A14F",
+    "patient": "#B07AA1",
+    "signal": "#F2B447",
+    "neutral": "#5B6570",
+    "dark": "#243746",
+    "line": "#AAB4BE",
+    "tissue": "#EEF1F4",
+    "panel": "#FFFFFF",
+}
+
+
+def _panel_label(ax: plt.Axes, label: str, title: str) -> None:
+    ax.text(0.00, 1.02, label, transform=ax.transAxes, fontsize=9.5, fontweight="bold", ha="left", va="bottom")
+    ax.text(0.10, 1.02, title, transform=ax.transAxes, fontsize=7.7, fontweight="bold", ha="left", va="bottom", color=FIG1_COLORS["dark"])
+
+
+def _spot_grid() -> np.ndarray:
+    pts = []
+    for j, y in enumerate(np.linspace(0.24, 0.76, 6)):
+        xs = np.linspace(0.19, 0.81, 7) + (0.045 if j % 2 else 0.0)
+        for x in xs:
+            cx, cy = x - 0.50, y - 0.50
+            if (cx / 0.43) ** 2 + (cy / 0.33) ** 2 < 1:
+                pts.append((x, y))
+    return np.array(pts)
+
+
+def _draw_figure1_panel_a(ax: plt.Axes) -> None:
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    _panel_label(ax, "a", "Random spot split")
+
+    tissue = patches.Ellipse((0.50, 0.50), 0.82, 0.60, angle=-8, fc=FIG1_COLORS["tissue"], ec="#D6DCE2", lw=1.0)
+    ax.add_patch(tissue)
+    pts = _spot_grid()
+    test_idx = np.array([7, 11, 15, 20, 27])
+    is_test = np.zeros(len(pts), dtype=bool)
+    is_test[test_idx[test_idx < len(pts)]] = True
+    ax.scatter(pts[~is_test, 0], pts[~is_test, 1], s=22, c=FIG1_COLORS["train"], edgecolor="white", lw=0.35, zorder=3)
+    ax.scatter(pts[is_test, 0], pts[is_test, 1], s=25, c=FIG1_COLORS["test"], edgecolor="white", lw=0.35, zorder=4)
+
+    focus = pts[is_test][1]
+    ax.add_patch(patches.Circle(focus, 0.16, fc="none", ec=FIG1_COLORS["test"], lw=1.1, ls=(0, (3, 2)), zorder=5))
+    ax.text(0.50, 0.08, "Neighboring train and test spots\nshare local tissue context", ha="center", va="center", fontsize=6.9, color=FIG1_COLORS["dark"])
+    ax.scatter([0.22, 0.42], [0.90, 0.90], s=22, c=[FIG1_COLORS["train"], FIG1_COLORS["test"]], edgecolor="white", lw=0.35)
+    ax.text(0.25, 0.90, "train", fontsize=6.4, va="center", color=FIG1_COLORS["neutral"])
+    ax.text(0.45, 0.90, "test", fontsize=6.4, va="center", color=FIG1_COLORS["neutral"])
+
+
+def _draw_figure1_panel_b(ax: plt.Axes) -> None:
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    _panel_label(ax, "b", "Performance mixture")
+
+    ax.add_patch(patches.FancyBboxPatch((0.18, 0.78), 0.64, 0.10, boxstyle="round,pad=0.014,rounding_size=0.02", fc="#F7F9FB", ec=FIG1_COLORS["line"], lw=0.9))
+    ax.text(0.50, 0.83, "Observed test performance", ha="center", va="center", fontsize=6.7, fontweight="bold", color=FIG1_COLORS["dark"])
+    ax.plot([0.50, 0.50], [0.78, 0.69], color=FIG1_COLORS["line"], lw=0.9)
+    components = [
+        (0.61, "Local spatial", FIG1_COLORS["spatial"]),
+        (0.49, "Patient-\nassociated", FIG1_COLORS["patient"]),
+        (0.37, "Transportable\nsignal", FIG1_COLORS["signal"]),
+    ]
+    for y, label, color in components:
+        ax.add_patch(patches.FancyBboxPatch((0.18, y - 0.048), 0.64, 0.088, boxstyle="round,pad=0.010,rounding_size=0.020", fc=color, ec="white", lw=1.0, alpha=0.95))
+        ax.text(0.50, y - 0.004, label, ha="center", va="center", fontsize=6.0, color="white", fontweight="bold")
+    ax.annotate("", xy=(0.50, 0.65), xytext=(0.50, 0.69), arrowprops=dict(arrowstyle="->", lw=0.9, color=FIG1_COLORS["line"]))
+    ax.text(0.50, 0.18, "Spatial information is not inherently invalid;\nthe test is whether signal survives\nclaim-matched separation.", ha="center", va="center", fontsize=6.2, color=FIG1_COLORS["dark"], fontweight="bold")
+
+
+def _draw_figure1_panel_c(ax: plt.Axes) -> None:
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    _panel_label(ax, "c", "Increasing separation")
+
+    steps = [
+        ("Random", "#E5E8EC"),
+        ("Buffer", FIG1_COLORS["spatial"]),
+        ("Section", "#6EA6C9"),
+        ("Patient", FIG1_COLORS["patient"]),
+        ("Dataset", "#3D78A8"),
+        ("Platform", "#2F4858"),
+    ]
+    x0, y0 = 0.10, 0.80
+    for i, (label, color) in enumerate(steps):
+        x = x0 + i * 0.085
+        y = y0 - i * 0.102
+        w = 0.43
+        ax.add_patch(patches.FancyBboxPatch((x, y), w, 0.075, boxstyle="round,pad=0.012,rounding_size=0.014", fc=color, ec="white", lw=0.9))
+        txt_color = FIG1_COLORS["dark"] if i == 0 else "white"
+        ax.text(x + w / 2, y + 0.037, label, ha="center", va="center", fontsize=6.8, color=txt_color, fontweight="bold")
+        if i < len(steps) - 1:
+            ax.annotate("", xy=(x + 0.11, y - 0.030), xytext=(x + 0.06, y - 0.002), arrowprops=dict(arrowstyle="->", lw=0.8, color=FIG1_COLORS["line"]))
+    ax.annotate("", xy=(0.93, 0.28), xytext=(0.93, 0.73), arrowprops=dict(arrowstyle="->", lw=1.0, color=FIG1_COLORS["dark"]))
+    ax.text(0.83, 0.83, "Increasing\nindependence", ha="center", va="center", fontsize=5.8, color=FIG1_COLORS["dark"])
+
+
+def _draw_figure1_panel_d(ax: plt.Axes) -> None:
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    _panel_label(ax, "d", "Evidence hierarchy")
+
+    levels = [
+        ("L0", "Random"),
+        ("L1", "Buffer"),
+        ("L2", "Section"),
+        ("L3", "Patient"),
+        ("L4", "Dataset"),
+        ("L5", "Platform"),
+    ]
+    for i, (lvl, label) in enumerate(levels):
+        x = 0.10 + i * 0.075
+        y = 0.14 + i * 0.105
+        w = 0.43
+        color = mpl.colors.to_hex(plt.cm.Blues(0.28 + 0.10 * i))
+        ax.add_patch(patches.FancyBboxPatch((x, y), w, 0.072, boxstyle="round,pad=0.012,rounding_size=0.014", fc=color, ec="white", lw=0.9))
+        ax.text(x + 0.075, y + 0.036, lvl, ha="center", va="center", fontsize=6.1, color="white", fontweight="bold")
+        ax.text(x + 0.265, y + 0.036, label, ha="center", va="center", fontsize=6.1, color="white")
+    ax.annotate("", xy=(0.96, 0.76), xytext=(0.96, 0.29), arrowprops=dict(arrowstyle="->", lw=1.0, color=FIG1_COLORS["dark"]))
+    ax.text(0.91, 0.84, "Stronger\nevidence", ha="center", va="center", fontsize=5.9, color=FIG1_COLORS["dark"])
+    ax.annotate("Transportable\nsignal", xy=(0.66, 0.78), xytext=(0.45, 0.92), ha="center", va="center", fontsize=6.0, color="#8A5A00", arrowprops=dict(arrowstyle="->", lw=1.0, color=FIG1_COLORS["signal"]))
+    ax.text(0.50, 0.035, "Evaluation tier determines\nwhat can be claimed.", ha="center", va="center", fontsize=7.2, color=FIG1_COLORS["dark"], fontweight="bold")
+
+
+def make_figure1() -> None:
+    fig = plt.figure(figsize=(7.4, 4.8))
+    gs = fig.add_gridspec(1, 4, left=0.035, right=0.985, top=0.83, bottom=0.12, wspace=0.34)
+    fig.suptitle("Evaluation design determines the generalization claim", x=0.035, y=0.965, ha="left", fontsize=11, fontweight="bold")
+    _draw_figure1_panel_a(fig.add_subplot(gs[0, 0]))
+    _draw_figure1_panel_b(fig.add_subplot(gs[0, 1]))
+    _draw_figure1_panel_c(fig.add_subplot(gs[0, 2]))
+    _draw_figure1_panel_d(fig.add_subplot(gs[0, 3]))
+    save_pub(fig, "Figure1_final")
+    plt.close(fig)
+
+
 def make_figures(t: dict[str, pd.DataFrame]) -> None:
     mpl.rcParams.update({
         "font.family": "sans-serif",
@@ -425,13 +567,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         "axes.spines.right": False,
         "axes.spines.top": False,
     })
-    # Reuse locked Figure 1 if present; otherwise keep package coherent.
-    if not (FIGS / "Figure1_final.png").exists():
-        fig, ax = plt.subplots(figsize=(6, 4))
-        ax.axis("off")
-        ax.text(0, 1, "Evaluation hierarchy", fontsize=12, weight="bold", va="top")
-        save_pub(fig, "Figure1_final")
-        plt.close(fig)
+    make_figure1()
 
     # Figure 2: random versus strict grouped by evaluation tier.
     fig, ax = plt.subplots(figsize=(7.4, 4.8))
