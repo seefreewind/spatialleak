@@ -6,7 +6,7 @@ PASS.
 
 ## Checks
 
-- 29 bibliography entries are cited in sequential first-use order.
+- 30 bibliography entries are cited in sequential first-use order.
 - No orphan in-text citations were detected.
 - No bibliography entry outside the citation order was retained.
 - Duplicate DOI count: 0.

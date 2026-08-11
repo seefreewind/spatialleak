@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import bibtexparser
@@ -157,7 +158,7 @@ def journal_abbrev(journal: str) -> str:
 
 
 def ref_from_crossref(key: str, entry: dict, msg: dict | None) -> dict:
-    if key == "TenXBreastSection1":
+    if key in {"TenXBreastSection1", "TenXBreastSection2"}:
         return {
             "key": key,
             "authors": "10x Genomics",
@@ -281,7 +282,10 @@ def format_reference_list(records: list[dict]) -> str:
         pages = f" {str(r['pages']).replace('--', '-')}" if r["pages"] else ""
         if r["key"] == "TenXBreastSection1":
             note = f"; {r.get('note', '')}" if r.get("note") else ""
-            line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']} dataset, version 1.0.0, Block A Section 1{note}. {r['url']} ({r['year']})."
+            line = f"{r['citation_number']}. 10x Genomics. {r['title']}. 10x Genomics dataset, version 1.0.0, Block A Section 1{note}. {r['url']} ({r['year']})."
+        elif r["key"] == "TenXBreastSection2":
+            note = f"; {r.get('note', '')}" if r.get("note") else ""
+            line = f"{r['citation_number']}. 10x Genomics. {r['title']}. 10x Genomics dataset, version 1.1.0, Block A Section 2{note}. {r['url']} ({r['year']})."
         elif r["key"] == "Hamilton2017GraphSAGE":
             line = f"{r['citation_number']}. {r['authors']} {r['title']}. In Advances in Neural Information Processing Systems 30, 1024-1034 (2017)."
         else:
@@ -334,6 +338,16 @@ def make_v8_text(k: dict[str, str], ref_text: str) -> str:
 def build_docx(v8: str) -> Path:
     out = SUB / "SpatialLeak_NatCommun_V8.docx"
     doc = Document()
+    props = doc.core_properties
+    props.author = ""
+    props.last_modified_by = ""
+    props.title = TITLE
+    props.subject = "SpatialLeak Nature Communications manuscript"
+    props.keywords = "spatial omics; data leakage; evaluation design"
+    props.comments = ""
+    props.category = ""
+    props.created = datetime(2026, 8, 11, tzinfo=timezone.utc)
+    props.modified = datetime(2026, 8, 11, tzinfo=timezone.utc)
     sec = doc.sections[0]
     for margin in ["top_margin", "bottom_margin", "left_margin", "right_margin"]:
         setattr(sec, margin, Inches(1))
@@ -370,7 +384,7 @@ def build_docx(v8: str) -> Path:
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting can place neighboring training and test spots within the same local tissue context. (b) Observed test performance under permissive evaluation may combine local spatial dependence, patient-associated structure and transportable signal. (c) Increasing separation adds spatial buffers, section separation, patient or donor separation, dataset separation and platform separation. (d) The evidence hierarchy links each evaluation tier to the level of generalization it can support; signal retained under stricter tiers provides stronger evidence for transportable signal.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient/donor-associated evaluation compares random spot-level performance with patient- or donor-held-out performance in datasets supporting subject-level separation. (b) Spatial evaluation compares random performance with +5-hop buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient/donor-held-out estimates summarize held-out subject groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient/donor-associated evaluation compares random spot-level performance with patient- or donor-held-out performance in datasets supporting subject-level separation. (b) Spatial evaluation compares random performance with +5-hop buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient/donor-held-out estimates summarize held-out subject groups as detailed in Source Data. Because dispersion units differ between random seed summaries and subject-held-out group summaries, error-bar widths should not be interpreted as directly comparable measures of sampling uncertainty. Dataset-model combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
         if line.startswith("The patient/donor-associated datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and the prespecified hop-buffered spatial evaluation, prioritizing +5-hop where resolvable; exact strict splits are listed in Source Data. The patient/donor-associated channel reports RLI between random and patient- or donor-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
@@ -419,7 +433,7 @@ def update_source_data() -> None:
 This folder contains the numerical source data for all graphs and charts in the main manuscript and Supplementary Fig. 1.
 
 - `Figure1_SourceData.csv`: conceptual schematic manifest; Figure 1 contains no numerical graph values.
-- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, Δr, explicit ±1 s.d. units, and n for each error bar.
+- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, Δr, explicit ±1 s.d. units, and n for each error bar. Random and spatial-buffer dispersion summarize frozen seeds, whereas subject-held-out dispersion summarizes held-out subject groups; these error-bar widths should not be interpreted as directly comparable measures of sampling uncertainty.
 - `Figure3_SourceData.csv`: spatial-channel and patient/donor-associated RLI matrix values, exact strict split labels, descriptive pattern labels, and NA reasons.
 - `Figure4_SourceData.csv`: mean Pearson values by spatial buffer with ±1 s.d. across frozen seeds.
 - `SupplementaryFigure1_SourceData.csv`: evaluation-regime-dependent model behavior values.
@@ -724,13 +738,13 @@ def supplement_v3(k: dict[str, str]) -> None:
 
 ## Supplementary Methods
 
-SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, 10x Visium breast cancer and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. Up to 2000 highly variable predictor genes were selected once during dataset preprocessing after excluding target genes and then frozen before split-specific model fitting.
+SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, two public 10x Visium breast cancer sections and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. After target panels had been fixed, up to 2,000 highly variable predictor genes were selected once during dataset preprocessing after excluding target genes and then frozen before split-specific model fitting, with 2,000 predictors used whenever available. HVG selection was treated as a fixed, unsupervised dataset-level feature-definition step and did not use downstream model performance, labels or evaluation-tier outcomes.
 
 Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Block-only splits correspond to hop0; +2-hop and +5-hop buffers correspond to hop2 and hop5 exclusion on a within-slide spatial kNN graph with k = 15. Patient/donor-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training subjects. Section-held-out splits held out sections but were not treated as patient/donor-held-out unless subject identity was also separated.
 
-The Andersson-to-Visium dataset-held-out/cross-platform stress test trained PCA+Ridge on Andersson and evaluated on 10x Visium breast using 49 shared targets and 2000 common predictor features. PCA and Ridge parameters were fitted on the training dataset only and applied to the held-out Visium dataset without refitting; spatial kNN was excluded because spatial coordinates are not comparable across platforms.
+The Andersson-to-Visium dataset-held-out/cross-platform stress test trained PCA+Ridge on Andersson and evaluated on 10x Visium breast using 49 of the 50 shared-panel targets because SEPT4 was absent from the cross-dataset target-gene intersection, together with 2,000 common predictor features. PCA and Ridge parameters were fitted on the training dataset only and applied to the held-out Visium dataset without refitting; spatial kNN was excluded because spatial coordinates are not comparable across platforms.
 
-PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128 in all reported analyses, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60. The split-construction kNN graph (k = 15) was distinct from the GraphSAGE message-passing graph (k = 10).
+PCA+Ridge used up to 2,000 predictor genes, with 2,000 used whenever available, 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128 in all reported analyses, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60. The split-construction kNN graph (k = 15) was distinct from the GraphSAGE message-passing graph (k = 10).
 
 ## Dataset and Sample Structure
 
