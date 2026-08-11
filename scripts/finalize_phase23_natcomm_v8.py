@@ -139,6 +139,8 @@ def journal_abbrev(journal: str) -> str:
         "Nature Methods": "Nat. Methods",
         "Nature Neuroscience": "Nat. Neurosci.",
         "Nature Biomedical Engineering": "Nat. Biomed. Eng.",
+        "Nature Biotechnology": "Nat. Biotechnol.",
+        "Nature Computational Science": "Nat. Comput. Sci.",
         "Nucleic Acids Research": "Nucleic Acids Res.",
         "Bioinformatics": "Bioinformatics",
         "Genome Medicine": "Genome Med.",

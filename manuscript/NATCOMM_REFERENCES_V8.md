@@ -22,3 +22,9 @@
 20. 10x Genomics Human Breast Cancer (Block A Section 1): Spatial Gene Expression dataset. 10x Genomics dataset, version 1.0.0, Block A Section 1; Accessed 2026-08-10. https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-1-1-standard-1-0-0 (2020).
 21. Kiviaho, A. et al. Single cell and spatial transcriptomics highlight the interaction of club-like cells with immunosuppressive myeloid cells in prostate cancer. Nat. Commun. 15, 9949 (2024). https://doi.org/10.1038/s41467-024-54364-1
 22. Hamilton, W.L., Ying, R. & Leskovec, J. Inductive representation learning on large graphs. In Advances in Neural Information Processing Systems 30 (2017).
+23. Yuan, Z. et al. Benchmarking spatial clustering methods with spatially resolved transcriptomics data. Nat. Methods 21, 712-722 (2024). https://doi.org/10.1038/s41592-024-02215-8
+24. Wang, C. et al. Benchmarking the translational potential of spatial gene expression prediction from histology. Nat. Commun. 16, 1544 (2025). https://doi.org/10.1038/s41467-025-56618-y
+25. Sun, E.D., Ma, R., Navarro Negredo, P., Brunet, A. & Zou, J. TISSUE: uncertainty-calibrated prediction of single-cell spatial transcriptomics improves downstream analyses. Nat. Methods 21, 444-454 (2024). https://doi.org/10.1038/s41592-024-02184-y
+26. You, Y. et al. Systematic comparison of sequencing-based spatial transcriptomic methods. Nat. Methods 21, 1743-1754 (2024). https://doi.org/10.1038/s41592-024-02325-3
+27. Plummer, J.T. et al. Standardized metrics for assessment and reproducibility of imaging-based spatial transcriptomics datasets. Nat. Biotechnol. 44, 1213-1225 (2026). https://doi.org/10.1038/s41587-025-02811-9
+28. Yan, Y. et al. Benchmarking alignment methods for spatial transcriptomics data. Nat. Comput. Sci. 6, 524-541 (2026). https://doi.org/10.1038/s43588-026-00977-z

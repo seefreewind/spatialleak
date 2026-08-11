@@ -8,7 +8,7 @@ Sources: Nature Communications "How to submit" and "Article" instructions.
 
 ## Counts
 
-- Main-text word count including Methods and statements, excluding references: 2682
+- Main-text word count including Methods and statements, excluding references: 3362
 - Main figures: 4
 - Main tables: 0
 - Supplementary figures: 1
