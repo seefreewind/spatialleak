@@ -14,7 +14,7 @@ Yu Zhang; Ying Chen; Yue Liu; Da Lin
 
 ## Description
 
-SpatialLeak is a reproducible evaluation framework for testing how random, buffered spatial, section-held-out, patient-held-out and dataset-held-out splits change apparent generalization in spatial omics prediction.
+SpatialLeak is a reproducible evaluation framework for testing how random, buffered spatial, section-held-out, subject-held-out and dataset-held-out splits change apparent generalization in spatial omics prediction.
 
 ## License
 

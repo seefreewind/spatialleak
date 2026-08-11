@@ -6,7 +6,7 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Paired points show mean Pearson correlation from frozen aggregate results under random and strict evaluation tiers. Spatial-channel synthesis uses the prespecified +5-hop buffered tier where resolvable. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas patient/donor-held-out strict estimates summarize held-out subject groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
+Paired points show mean Pearson correlation from frozen aggregate results under random and strict evaluation tiers. Spatial-channel synthesis uses the prespecified +5-hop buffered tier where resolvable. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas subject-held-out strict estimates summarize held-out subject groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
 
 ## Figure 3
 

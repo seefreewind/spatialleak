@@ -1,10 +1,10 @@
 dataset,dataset_role,model,spatial_RLI,patient_RLI,spatial_strict_split,patient_strict_split,pattern,spatial_na_reason,patient_na_reason
 DLPFC,,PCA+Ridge,0.46301089818955055,0.2125949248616126,matched_hop5,patient/donor-held-out,Mixed,,
 DLPFC,,Spatial kNN,0.7003985369710632,0.1198326265838197,matched_hop5,patient/donor-held-out,Spatial,,
-Andersson,multi-patient,PCA+Ridge,0.3521384435162534,0.6623855729853078,matched_hop5,patient/donor-held-out,Patient-associated,,
-Andersson,multi-patient,GraphSAGE,0.074613080964976,0.6949524901120735,matched_hop5,patient/donor-held-out,Patient-associated,,
-Thrane,multi-patient,PCA+Ridge,-0.006868610742294506,0.499323532596777,matched_hop2,patient/donor-held-out,Patient-associated,,
-Thrane,multi-patient,GraphSAGE,,0.7114866615327763,,patient/donor-held-out,Patient-associated,Unavailable or non-interpretable,
+Andersson,multi-patient,PCA+Ridge,0.3521384435162534,0.6623855729853078,matched_hop5,patient/donor-held-out,Subject-associated,,
+Andersson,multi-patient,GraphSAGE,0.074613080964976,0.6949524901120735,matched_hop5,patient/donor-held-out,Subject-associated,,
+Thrane,multi-patient,PCA+Ridge,-0.006868610742294506,0.499323532596777,matched_hop2,patient/donor-held-out,Subject-associated,,
+Thrane,multi-patient,GraphSAGE,,0.7114866615327763,,patient/donor-held-out,Subject-associated,Unavailable or non-interpretable,
 Visium breast,single patient,PCA+Ridge,0.2592923132450507,,matched_hop5,,Spatial,,Unavailable from dataset structure
 Visium breast,single patient,Spatial kNN,0.7961260836376417,,matched_hop5,,Spatial,,Unavailable from dataset structure
 Visium breast,single patient,GraphSAGE,0.265139398831901,,matched_hop5,,Spatial,,Unavailable from dataset structure

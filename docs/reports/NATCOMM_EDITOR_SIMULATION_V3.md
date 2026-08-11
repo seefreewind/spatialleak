@@ -10,7 +10,7 @@ Yes. PCA+Ridge, Spatial kNN and GraphSAGE are diagnostic probes; the contributio
 
 ## Does the evidence support a field-level evaluation problem?
 
-Yes. The evidence spans multiple public spatial transcriptomics settings and separates spatial-neighborhood and patient-associated channels.
+Yes. The evidence spans multiple public spatial transcriptomics settings and separates spatial-neighborhood and subject-associated channels.
 
 ## Are claims appropriately bounded?
 
