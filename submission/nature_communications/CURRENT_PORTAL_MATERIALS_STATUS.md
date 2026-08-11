@@ -70,10 +70,17 @@ Both zip files passed archive-integrity checks.
 Current Supplementary Information file:
 
 ```text
-submission/nature_communications/portal_materials_final/Supplementary_Information_V3.md
+submission/nature_communications/portal_materials_final/Supplementary_Information_V3.docx
 ```
 
-This file is intended to hold methods-level defence and supplementary results rather than expanding the main text. It covers:
+The editable source and visual QA copy are also retained:
+
+```text
+submission/nature_communications/portal_materials_final/Supplementary_Information_V3.md
+submission/nature_communications/portal_materials_final/Supplementary_Information_V3.pdf
+```
+
+The Supplementary Information is intended to hold methods-level defence and supplementary results rather than expanding the main text. It covers:
 
 - evaluation-regime-dependent model behaviour
 - random-size-matched control
@@ -142,6 +149,8 @@ Figure status:
 - Figure 3: two-channel RLI matrix locked.
 - Figure 4: spatial-buffer trajectory locked; GSE278936 includes seed-level error bars.
 
+For portal upload, use the PDF vector figure files first where accepted. TIFF files are retained as fallback raster versions.
+
 ## Reporting and checklist materials
 
 Current reporting folder:
@@ -161,11 +170,29 @@ REPORTING_FORM_EVIDENCE_MAP.md
 
 These are draft portal-support documents. They should be used to complete the Nature Communications reporting summary and any machine-learning/code/software checklist fields in the online system.
 
+Official Nature form PDFs have also been downloaded into:
+
+```text
+submission/nature_communications/portal_materials_final/official_forms/
+```
+
+Included official forms:
+
+```text
+nr-reporting-summary.pdf
+machine-learning-checklist.pdf
+nr-software-policy.pdf
+```
+
+The Markdown files in `reporting/` are answer/evidence drafts. The official PDFs are the files to complete where the Nature portal requires formal reporting forms. Nature indicates that smart PDF forms should be opened in Adobe Reader or similar software rather than edited in a browser.
+
 ## Cover letter and availability statements
 
 Included in the final portal folder:
 
 ```text
+COVER_LETTER_V8_FINAL.docx
+COVER_LETTER_V8_FINAL.pdf
 COVER_LETTER_V8_FINAL.md
 DATA_AVAILABILITY.md
 CODE_AVAILABILITY.md
@@ -190,8 +217,10 @@ SpatialLeak_NatCommun_V8.docx
 2. Supplementary Information
 
 ```text
-Supplementary_Information_V3.md
+Supplementary_Information_V3.docx
 ```
+
+Use `Supplementary_Information_V3.pdf` only as a visual QA/reference copy or if the portal refuses Word upload.
 
 3. Source Data
 
@@ -202,26 +231,34 @@ SpatialLeak_NatCommun_SourceData_final.zip
 4. Figures
 
 ```text
-Figure1_final.tiff
-Figure2_final.tiff
-Figure3_final_matrix.tiff
-Figure4_final.tiff
+Figure1_final.pdf
+Figure2_final.pdf
+Figure3_final_matrix.pdf
+Figure4_final.pdf
 ```
 
-Keep the PDF versions available as editable/vector backups if requested.
+Keep the TIFF versions available as fallback raster files if the portal requests them.
 
 5. Cover letter
 
 ```text
-COVER_LETTER_V8_FINAL.md
+COVER_LETTER_V8_FINAL.docx
 ```
+
+Use `COVER_LETTER_V8_FINAL.pdf` only as a visual QA/reference copy or if the portal requests PDF.
 
 6. Reporting/checklist material
 
-Use the files in:
+Use the draft answer files in:
 
 ```text
 reporting/
+```
+
+Then complete the official forms in:
+
+```text
+official_forms/
 ```
 
 7. Availability statements
@@ -274,4 +311,3 @@ Before pressing submit, manually verify the following in the online portal:
 Do not add new datasets, new SOTA models, new patient-held-out analyses for GSE278936, restricted EGA downloads, or new scientific claims at this stage.
 
 The remaining work is administrative submission assembly, portal-field completion, and final human confirmation of uploaded files.
-
