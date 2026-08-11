@@ -57,31 +57,44 @@ Full portal upload archive:
 submission/nature_communications/SpatialLeak_NatCommun_portal_materials_final.zip
 ```
 
+Recommended slim portal assembly archive:
+
+```text
+submission/nature_communications/SpatialLeak_NatCommun_portal_materials_upload_slim.zip
+```
+
 Source Data-only archive:
 
 ```text
 submission/nature_communications/SpatialLeak_NatCommun_SourceData_final.zip
 ```
 
-Both zip files passed archive-integrity checks.
+The slim portal archive and Source Data archive passed archive-integrity checks. The older full portal archive contains large TIFF backups and should not be uploaded unless raster figures are explicitly required.
 
 ## Supplementary Information
 
 Current Supplementary Information file:
 
 ```text
-submission/nature_communications/portal_materials_final/Supplementary_Information_V3.docx
+submission/nature_communications/portal_materials_final/Supplementary_Information_V4.docx
 ```
 
 The editable source and visual QA copy are also retained:
 
 ```text
-submission/nature_communications/portal_materials_final/Supplementary_Information_V3.md
-submission/nature_communications/portal_materials_final/Supplementary_Information_V3.pdf
+submission/nature_communications/portal_materials_final/Supplementary_Information_V4.pdf
 ```
 
 The Supplementary Information is intended to hold methods-level defence and supplementary results rather than expanding the main text. It covers:
 
+- embedded Supplementary Fig. 1: evaluation-regime-dependent model behaviour
+- embedded Supplementary Fig. 2: random-size-matched controls
+- embedded Supplementary Fig. 3: shared_panel_50 robustness
+- embedded Supplementary Table 1: dataset and sample structure
+- embedded Supplementary Table 2: split sample counts
+- embedded Supplementary Table 3: Visium breast section-held-out results
+- embedded Supplementary Table 4: mixed-effects/statistical summary
+- embedded Supplementary Table 5: boundary and non-interpretable cases
 - evaluation-regime-dependent model behaviour
 - random-size-matched control
 - shared-panel robustness
@@ -110,6 +123,13 @@ Figure2_SourceData.csv
 Figure3_SourceData.csv
 Figure4_SourceData.csv
 SupplementaryFigure1_SourceData.csv
+SupplementaryFigure2_SourceData.csv
+SupplementaryFigure3_SourceData.csv
+SupplementaryTable1_DatasetSampleStructure.csv
+SupplementaryTable2_SplitSampleCounts.csv
+SupplementaryTable3_VisiumBreastSectionHeldOutSummary.csv
+SupplementaryTable4_MixedEffectsSummary.csv
+SupplementaryTable5_BoundaryCases.csv
 SupplementaryTable_VisiumBreastSectionHeldOut.csv
 SourceData_Index.csv
 README.md
@@ -149,7 +169,7 @@ Figure status:
 - Figure 3: two-channel RLI matrix locked.
 - Figure 4: spatial-buffer trajectory locked; GSE278936 includes seed-level error bars.
 
-For portal upload, use the PDF vector figure files first where accepted. TIFF files are retained as fallback raster versions.
+For portal upload, use the PDF vector figure files first where accepted. TIFF files are retained as local fallback raster versions and are excluded from the slim upload archive.
 
 ## Reporting and checklist materials
 
@@ -181,10 +201,12 @@ Included official forms:
 ```text
 nr-reporting-summary.pdf
 machine-learning-checklist.pdf
+machine-learning-checklist_filled.pdf
 nr-software-policy.pdf
+OFFICIAL_FORM_COMPLETION_GUIDE.md
 ```
 
-The Markdown files in `reporting/` are answer/evidence drafts. The official PDFs are the files to complete where the Nature portal requires formal reporting forms. Nature indicates that smart PDF forms should be opened in Adobe Reader or similar software rather than edited in a browser.
+The Markdown files in `reporting/` are answer/evidence drafts. The Machine Learning Checklist has a locally filled PDF draft that must be verified in Adobe Reader before upload. The Bio/Life Sciences Reporting Summary and Code/Software checklist expose no standard AcroForm fields to local tooling and should be completed manually in Adobe Reader or equivalent software using `OFFICIAL_FORM_COMPLETION_GUIDE.md`.
 
 ## Cover letter and availability statements
 
@@ -217,10 +239,10 @@ SpatialLeak_NatCommun_V8.docx
 2. Supplementary Information
 
 ```text
-Supplementary_Information_V3.docx
+Supplementary_Information_V4.docx
 ```
 
-Use `Supplementary_Information_V3.pdf` only as a visual QA/reference copy or if the portal refuses Word upload.
+Use `Supplementary_Information_V4.pdf` only as a visual QA/reference copy or if the portal refuses Word upload.
 
 3. Source Data
 
@@ -272,21 +294,7 @@ CODE_AVAILABILITY.md
 
 ## Residual checks already passed
 
-The final portal bundle was scanned for major residual placeholders and stale wording. No hits remained for:
-
-```text
-PENDING
-prepared for deposition
-will include
-10x Visium breast cancer dataset
-patient transfer
-e107-e107
-1e-3
-1e-4
-Perf_
-inflation ~
-Acknowledgements
-```
+The final slim portal bundle was scanned for major residual placeholders, stale wording, old reference-format errors and code-like formula fragments. No actionable hits remained.
 
 The archive files also passed zip integrity tests.
 
