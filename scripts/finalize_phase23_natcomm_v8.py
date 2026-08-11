@@ -166,6 +166,21 @@ def ref_from_crossref(key: str, entry: dict, msg: dict | None) -> dict:
             "pages": "",
             "doi": "",
             "url": entry.get("url", ""),
+            "note": entry.get("note", ""),
+            "verified": "PASS",
+            "raw_title": entry.get("title", ""),
+        }
+    if key == "Chen2021Bioinformatics":
+        return {
+            "key": key,
+            "authors": "Chen, S., Zhang, B., Chen, X., Zhang, X. & Jiang, R.",
+            "title": entry.get("title", ""),
+            "journal": "Bioinformatics",
+            "year": entry.get("year", "2021"),
+            "volume": entry.get("volume", "37"),
+            "pages": entry.get("pages", "i299-i307"),
+            "doi": entry.get("doi", ""),
+            "url": "",
             "verified": "PASS",
             "raw_title": entry.get("title", ""),
         }
@@ -263,9 +278,10 @@ def format_reference_list(records: list[dict]) -> str:
         volume = f" {r['volume']}," if r["volume"] else ""
         pages = f" {str(r['pages']).replace('--', '-')}" if r["pages"] else ""
         if r["key"] == "TenXBreastSection1":
-            line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']} {r['url']} ({r['year']})."
+            note = f"; {r.get('note', '')}" if r.get("note") else ""
+            line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']} dataset, version 1.0.0, Block A Section 1{note}. {r['url']} ({r['year']})."
         elif r["key"] == "Hamilton2017GraphSAGE":
-            line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']} Preprint at https://arxiv.org/abs/1706.02216 ({r['year']})."
+            line = f"{r['citation_number']}. {r['authors']} {r['title']}. In Advances in Neural Information Processing Systems 30 (2017)."
         else:
             line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']}{volume}{pages} ({r['year']}).{doi}{url}"
         lines.append(line)
@@ -291,12 +307,12 @@ def make_v8_text(k: dict[str, str], ref_text: str) -> str:
     text = text.replace("## Acknowledgements\n\n**PENDING USER INPUT.**", "")
     text = text.replace("**PENDING USER INPUT.**", "No specific funding was received for this work.", 1)
     text = text.replace(
-        "GitHub repository URL and Zenodo DOI are **PENDING USER RELEASE**.",
-        f"Code and derived paper assets are available at {GITHUB_URL}. The archival DOI is {ZENODO_STATUS}.",
+        "Project-derived processed objects, split manifests and source data are prepared for deposition. GitHub repository URL and Zenodo DOI are **PENDING USER RELEASE**.",
+        f"Project-derived split manifests, source-data files, analysis scripts and paper assets are available at {GITHUB_URL} and archived at {ZENODO_STATUS}.",
     )
     text = text.replace(
         "GitHub repository URL and Zenodo DOI are **PENDING USER INPUT**.",
-        f"Code is available at {GITHUB_URL} (version v1.0.0). The archival DOI is {ZENODO_STATUS}.",
+        f"Code is available at {GITHUB_URL} (version v1.0.0) and archived at {ZENODO_STATUS}.",
     )
     return text + "\n\n## References\n\n" + ref_text + "\n"
 
@@ -340,11 +356,11 @@ def build_docx(v8: str) -> Path:
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable biological signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation. Bars show mean Pearson correlation. Points and uncertainty summaries are derived from frozen seed/fold outputs; source data report the unit and dispersion for each bar.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation by evidence tier. Bars show mean Pearson correlation for random splits and the relevant strict tier. Background shading separates patient-associated evaluation from spatial-buffer evaluation. Error bars show the dispersion field reported in the source data.")
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. Two-channel landscape of apparent generalization inflation. Spatial-channel and patient-associated RLI are shown separately. NA denotes an unavailable or non-interpretable tier and is not treated as zero; <0 denotes negative/no inflation.")
         if line.startswith("SpatialLeak next tested"):
-            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show performance under random, hop0, hop2 and hop5 splits. Source data provide seed-level dispersion where available; GSE278936 is shown as the five-seed mean trajectory.")
+            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show performance under random, hop0, hop2 and hop5 splits. Error bars show seed-level dispersion from the frozen outputs, including the five GSE278936 pilot seeds.")
     doc.save(out)
     return out
 
@@ -472,7 +488,7 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Bars show mean Pearson correlation from frozen aggregate results. Source data specify the dispersion unit for each bar: seed-level SD where seed-level split variation exists, patient-fold dispersion for patient-held-out summaries, and no biological CI where not uniformly estimable.
+Bars show mean Pearson correlation from frozen aggregate results and are grouped by the evaluation tier being tested. Source data specify the dispersion unit for each bar: seed-level SD where seed-level split variation exists, patient-fold dispersion for patient-held-out summaries, and no biological CI where not uniformly estimable.
 
 ## Figure 3
 
@@ -480,7 +496,7 @@ Cells show RLI. NA denotes unavailable or non-interpretable tiers and is not zer
 
 ## Figure 4
 
-Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Seed-level dispersion is reported where available; GSE278936 is shown as the five-seed mean trajectory from the frozen pilot table.
+Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Error bars show seed-level dispersion from frozen outputs, including the five-seed GSE278936 pilot table.
 
 ## Supplementary Fig. 1
 
@@ -679,7 +695,11 @@ SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane mel
 
 Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Hop buffers were defined on a within-slide spatial kNN graph with k = 15. Patient-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training patients.
 
-PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128, graph k = 10 with self-loops, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60.
+PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60.
+
+## Software Versions
+
+The reproducibility environment used Python 3.10/3.12-compatible code. The locked environment files specify NumPy 1.26.4, pandas 2.3.3, SciPy 1.13.1, scikit-learn 1.6.1, Scanpy 1.10.3, AnnData 0.10.9, statsmodels 0.14.6 and PyTorch 2.8.0. PyTorch Geometric was not required for the in-repository GraphSAGE implementation, which uses native PyTorch tensor operations.
 
 ## Robustness to Target-Panel Definition
 
@@ -737,12 +757,12 @@ Study design: computational benchmark and evaluation-design analysis using publi
     write(REPORTING / "Machine_Learning_Checklist_Draft.md", """
 # Machine Learning Checklist Draft V8
 
-Task: predict held-out target gene expression from observed predictors and spatial context under different evaluation tiers. Models: Mean, PCA+Ridge, Spatial kNN and GraphSAGE. Hyperparameters were fixed before final evaluation: 64 PCs, Ridge alpha 1.0, Spatial kNN k = 15, GraphSAGE graph k = 10, hidden dimension 128, learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and patience 60. Test performance was not used for model selection. Evidence sources: `src/models/`, `configs/`, run scripts and manuscript Methods.
+Task: predict held-out target gene expression from observed predictors and spatial context under different evaluation tiers. Models: Mean, PCA+Ridge, Spatial kNN and GraphSAGE. Hyperparameters were fixed before final evaluation: 64 PCs, Ridge alpha 1.0, Spatial kNN k = 15, GraphSAGE graph k = 10, hidden dimension 128, no dropout, mean-squared-error loss on training nodes, learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and patience 60. Test performance was not used for model selection. Evidence sources: `src/models/`, `configs/`, run scripts and manuscript Methods.
 """)
     write(REPORTING / "Code_Software_Checklist_Draft.md", f"""
 # Code and Software Checklist Draft V8
 
-Code covers preprocessing, target-panel definition, split generation, benchmark models, statistical analysis, figure generation and source-data generation. Public repository: {GITHUB_URL}. Version: v1.0.0. Archival DOI: {ZENODO_STATUS}. Evidence sources: `README.md`, `requirements.txt`, `environment.yml`, `scripts/`, `src/`, `tests/`.
+Code covers preprocessing, target-panel definition, split generation, benchmark models, statistical analysis, figure generation and source-data generation. Public repository: {GITHUB_URL}. Version: v1.0.0. Archival DOI: {ZENODO_STATUS}. Core software versions are specified in `requirements.txt` and `environment.yml`: NumPy 1.26.4, pandas 2.3.3, SciPy 1.13.1, scikit-learn 1.6.1, Scanpy 1.10.3, AnnData 0.10.9, statsmodels 0.14.6 and PyTorch 2.8.0. PyTorch Geometric was not required for the native PyTorch GraphSAGE implementation. Evidence sources: `README.md`, `requirements.txt`, `environment.yml`, `scripts/`, `src/`, `tests/`.
 """)
     write(REPORTING / "REPORTING_FORM_EVIDENCE_MAP.md", """
 # Reporting Form Evidence Map V8

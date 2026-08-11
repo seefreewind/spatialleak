@@ -100,7 +100,7 @@ Spatial graphs were built within slides only. kNN edges were calculated from spa
 
 ### Models
 
-PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers, hidden dimension 128 for formal external runs, within-slide graph k = 10 with self-loops, ReLU activation, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. Test performance was not used for checkpoint selection.
+PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers, hidden dimension 128 for formal external runs, within-slide graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. Test performance was not used for checkpoint selection.
 
 ### Metrics and inference
 
@@ -112,11 +112,11 @@ Seeds were frozen before final analyses. Test performance was not used for hyper
 
 ## Data Availability
 
-DLPFC, Andersson, Thrane, 10x Visium breast and GSE278936 public data were used from the public resources cited above. Restricted EGA validation data from the prostate study were not used. Project-derived processed objects, split manifests and source data are prepared for deposition. Code and derived paper assets are available at https://github.com/seefreewind/spatialleak. The archival DOI is https://doi.org/10.5281/zenodo.21881438.
+DLPFC, Andersson, Thrane, 10x Visium breast and GSE278936 public data were used from the public resources cited above. Restricted EGA validation data from the prostate study were not used. Project-derived split manifests, source-data files, analysis scripts and paper assets are available at https://github.com/seefreewind/spatialleak and archived at https://doi.org/10.5281/zenodo.21881438.
 
 ## Code Availability
 
-Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at https://github.com/seefreewind/spatialleak (version v1.0.0). The archival DOI is https://doi.org/10.5281/zenodo.21881438.
+Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at https://github.com/seefreewind/spatialleak (version v1.0.0) and archived at https://doi.org/10.5281/zenodo.21881438.
 
 ## Author Contributions
 
@@ -137,7 +137,7 @@ The authors declare no competing interests.
 1. Ståhl, P.L. et al. Visualization and analysis of gene expression in tissue sections by spatial transcriptomics. Science 353, 78-82 (2016). https://doi.org/10.1126/science.aaf2403
 2. Abdelaal, T., Mourragui, S., Mahfouz, A. & Reinders, M.J.T. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Res. 48, e107-e107 (2020). https://doi.org/10.1093/nar/gkaa740
 3. Biancalani, T. et al. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. Nat. Methods 18, 1352-1362 (2021). https://doi.org/10.1038/s41592-021-01264-7
-4. Shengquan, C., Boheng, Z., Xiaoyang, C., Xuegong, Z. & Rui, J. stPlus: a reference-based method for the accurate enhancement of spatial transcriptomics. Bioinformatics 37, i299-i307 (2021). https://doi.org/10.1093/bioinformatics/btab298
+4. Chen, S., Zhang, B., Chen, X., Zhang, X. & Jiang, R. stPlus: a reference-based method for the accurate enhancement of spatial transcriptomics. Bioinformatics 37, i299–i307 (2021). https://doi.org/10.1093/bioinformatics/btab298
 5. Long, Y. et al. Spatially informed clustering, integration, and deconvolution of spatial transcriptomics with GraphST. Nat. Commun. 14, 1155 (2023). https://doi.org/10.1038/s41467-023-36796-3
 6. Dong, K. & Zhang, S. Deciphering spatial domains from spatially resolved transcriptomics with an adaptive graph attention auto-encoder. Nat. Commun. 13, 1739 (2022). https://doi.org/10.1038/s41467-022-29439-6
 7. Hu, J. et al. SpaGCN: Integrating gene expression, spatial location and histology to identify spatial domains and spatially variable genes by graph convolutional network. Nat. Methods 18, 1342-1351 (2021). https://doi.org/10.1038/s41592-021-01255-8
@@ -153,6 +153,6 @@ The authors declare no competing interests.
 17. Andersson, A. et al. Spatial deconvolution of HER2-positive breast cancer delineates tumor-associated cell type interactions. Nat. Commun. 12, 6012 (2021). https://doi.org/10.1038/s41467-021-26271-2
 18. Andersson, A. et al. Spatial deconvolution of HER2-positive breast cancer delineates tumor-associated cell type interactions. Zenodo (2021). https://doi.org/10.5281/zenodo.4751624
 19. Thrane, K., Eriksson, H., Maaskola, J., Hansson, J. & Lundeberg, J. Spatially Resolved Transcriptomics Enables Dissection of Genetic Heterogeneity in Stage III Cutaneous Malignant Melanoma. Cancer Res. 78, 5970-5979 (2018). https://doi.org/10.1158/0008-5472.CAN-18-0747
-20. 10x Genomics Human Breast Cancer (Block A Section 1): Spatial Gene Expression dataset. 10x Genomics https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-1-1-standard-1-0-0 (2020).
+20. 10x Genomics Human Breast Cancer (Block A Section 1): Spatial Gene Expression dataset. 10x Genomics dataset, version 1.0.0, Block A Section 1; Accessed 2026-08-10. https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-1-1-standard-1-0-0 (2020).
 21. Kiviaho, A. et al. Single cell and spatial transcriptomics highlight the interaction of club-like cells with immunosuppressive myeloid cells in prostate cancer. Nat. Commun. 15, 9949 (2024). https://doi.org/10.1038/s41467-024-54364-1
-22. Hamilton, W.L., Ying, R. & Leskovec, J. Inductive representation learning on large graphs. Advances in Neural Information Processing Systems Preprint at https://arxiv.org/abs/1706.02216 (2017).
+22. Hamilton, W.L., Ying, R. & Leskovec, J. Inductive representation learning on large graphs. In Advances in Neural Information Processing Systems 30 (2017).

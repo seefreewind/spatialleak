@@ -305,7 +305,7 @@ Spatial graphs were built within slides only. kNN edges were calculated from spa
 
 ### Models
 
-PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers, hidden dimension 128 for formal external runs, within-slide graph k = 10 with self-loops, ReLU activation, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. Test performance was not used for checkpoint selection.
+PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers, hidden dimension 128 for formal external runs, within-slide graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. Test performance was not used for checkpoint selection.
 
 ### Metrics and inference
 
@@ -427,37 +427,54 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         save_pub(fig, "Figure1_final")
         plt.close(fig)
 
-    # Figure 2: random versus strict with seed SD.
-    fig, ax = plt.subplots(figsize=(7.2, 4.4))
+    # Figure 2: random versus strict grouped by evaluation tier.
+    fig, ax = plt.subplots(figsize=(7.4, 4.8))
     rows = []
-    for dataset, strict_type, label in [
-        ("dlpfc", "spatial", "DLPFC"),
-        ("anderson", "patient", "Andersson"),
-        ("thrane", "patient", "Thrane"),
-        ("visium_breast", "spatial", "Visium breast"),
-    ]:
-        for model in ["pca_ridge", "spatial_knn"]:
-            lr = t["lirli"][(t["lirli"].dataset == dataset) & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
-            if lr.empty:
-                continue
-            lr = lr.iloc[0]
-            sdf = t["summary"]
-            rnd_summary = sdf[(sdf.dataset == dataset) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
-            if strict_type == "patient":
-                strict_parts = sdf[(sdf.dataset == dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"]
-                strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
-            else:
-                st = sdf[(sdf.dataset == dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)]
-                strict_sd = 0.0 if st.empty or pd.isna(st.iloc[0].sd_seed) else float(st.iloc[0].sd_seed)
-            rows.append((label, model, lr.random, lr.strict, rnd_summary.sd_seed, strict_sd))
-    pd.DataFrame(rows, columns=["dataset", "model", "random_mean_pearson", "strict_mean_pearson", "random_sd_seed", "strict_sd_seed"]).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
+    fig2_specs = [
+        ("Patient-associated evaluation", "dlpfc", "patient", "DLPFC", "pca_ridge"),
+        ("Patient-associated evaluation", "anderson", "patient", "Andersson", "pca_ridge"),
+        ("Patient-associated evaluation", "thrane", "patient", "Thrane", "pca_ridge"),
+        ("Spatial-buffer evaluation", "dlpfc", "spatial", "DLPFC", "spatial_knn"),
+        ("Spatial-buffer evaluation", "anderson", "spatial", "Andersson", "spatial_knn"),
+        ("Spatial-buffer evaluation", "thrane", "spatial", "Thrane", "spatial_knn"),
+        ("Spatial-buffer evaluation", "visium_breast", "spatial", "Visium breast", "pca_ridge"),
+        ("Spatial-buffer evaluation", "visium_breast", "spatial", "Visium breast", "spatial_knn"),
+    ]
+    for tier, dataset, strict_type, label, model in fig2_specs:
+        lr = t["lirli"][(t["lirli"].dataset == dataset) & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+        if lr.empty:
+            continue
+        lr = lr.iloc[0]
+        sdf = t["summary"]
+        rnd_summary = sdf[(sdf.dataset == dataset) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
+        if strict_type == "patient":
+            strict_parts = sdf[(sdf.dataset == dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"]
+            strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
+            strict_label = "patient-held-out"
+        else:
+            st = sdf[(sdf.dataset == dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)]
+            strict_sd = 0.0 if st.empty or pd.isna(st.iloc[0].sd_seed) else float(st.iloc[0].sd_seed)
+            strict_label = str(lr.strict_split)
+        rows.append((tier, label, model, strict_label, lr.random, lr.strict, rnd_summary.sd_seed, strict_sd))
+    pd.DataFrame(
+        rows,
+        columns=["evaluation_tier", "dataset", "model", "strict_split", "random_mean_pearson", "strict_mean_pearson", "random_sd_seed", "strict_sd_seed"],
+    ).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
     x = np.arange(len(rows))
     width = 0.36
-    ax.bar(x - width / 2, [r[2] for r in rows], width, yerr=[r[4] for r in rows], label="Random", color="#4C78A8", capsize=2)
-    ax.bar(x + width / 2, [r[3] for r in rows], width, yerr=[r[5] for r in rows], label="Strict", color="#F58518", capsize=2)
-    ax.set_xticks(x, [f"{r[0]}\n{r[1].replace('_', '+')}" for r in rows], rotation=0)
+    patient_n = sum(r[0] == "Patient-associated evaluation" for r in rows)
+    ax.axvspan(-0.55, patient_n - 0.45, color="#F5EEF6", zorder=0)
+    ax.axvspan(patient_n - 0.45, len(rows) - 0.45, color="#EEF6F0", zorder=0)
+    ax.bar(x - width / 2, [r[4] for r in rows], width, yerr=[r[6] for r in rows], label="Random", color="#4C78A8", capsize=2, zorder=3)
+    ax.bar(x + width / 2, [r[5] for r in rows], width, yerr=[r[7] for r in rows], label="Strict tier", color="#F58518", capsize=2, zorder=3)
+    ax.axvline(patient_n - 0.5, color="#A9B2BC", lw=0.8, ls="--", zorder=2)
+    ax.text((patient_n - 1) / 2, 0.715, "Patient-associated evaluation", ha="center", va="top", fontsize=7.2, weight="bold", color="#7A4E78")
+    ax.text(patient_n + (len(rows) - patient_n - 1) / 2, 0.715, "Spatial-buffer evaluation", ha="center", va="top", fontsize=7.2, weight="bold", color="#3D6D43")
+    ax.set_xticks(x, [f"{r[1]}\n{r[2].replace('pca_ridge', 'PCA+Ridge').replace('spatial_knn', 'Spatial kNN')}" for r in rows], rotation=0)
     ax.set_ylabel("Mean Pearson correlation")
-    ax.set_title("Random and strict evaluation diverge across datasets", loc="left", weight="bold")
+    ax.set_ylim(-0.055, 0.74)
+    ax.set_title("Random and strict evaluation diverge by evidence tier", loc="left", weight="bold")
+    ax.grid(axis="y", color="#E5E7EB", lw=0.6, zorder=1)
     ax.legend()
     fig.tight_layout()
     save_pub(fig, "Figure2_final")
@@ -486,8 +503,9 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
                 ax.add_patch(patches.Rectangle((j - 0.5, i - 0.5), 1, 1, fc="#F1F1F1", ec="white", hatch="///"))
                 ax.text(j, i, "NA", ha="center", va="center", fontsize=7, color="#666666")
     ax.set_title("Two-channel landscape of apparent generalization inflation", loc="left", weight="bold")
+    ax.axhline(len(df3) - 1.5, color="#8A97A5", lw=0.9)
     cbar = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.03)
-    cbar.set_label("RLI, positive values")
+    cbar.set_label("Relative leakage inflation (RLI)")
     ax.text(0.5, len(df3) + 0.25, "NA is unavailable or not interpretable; <0 marks negative/no inflation and is not encoded as positive signal.", ha="center", va="top", fontsize=6.5)
     fig.tight_layout()
     save_pub(fig, "Figure3_final_matrix")
@@ -513,14 +531,19 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         for split_label, hop, mean, sd in zip(["random"] + [f"matched_hop{p[0]}" for p in pts], xs, ys, es):
             fig4_rows.append({"dataset": label, "model": model, "split": split_label, "hop": hop, "mean_pearson": mean, "sd_seed": sd})
     gse = t["gse"][(t["gse"].model == "pca_ridge")]
-    xs, ys = [-0.4], [float(gse.iloc[0].random_mean_pearson)]
+    gse_seed = pd.read_csv("results/gse278936_prostate_spatial_pilot/spatial_pilot_aggregate.csv")
+    gse_seed = gse_seed[gse_seed.model == "pca_ridge"]
+    gse_sd = gse_seed.groupby("split")["mean_pearson"].std(ddof=1).to_dict()
+    xs, ys, es = [-0.4], [float(gse.iloc[0].random_mean_pearson)], [float(gse_sd.get("random", 0.0))]
     for comp in ["random_vs_matched_hop0", "random_vs_matched_hop2", "random_vs_matched_hop5"]:
         r = gse[gse.comparison == comp].iloc[0]
+        split = comp.replace("random_vs_", "")
         xs.append(int(comp[-1]))
         ys.append(float(r.strict_mean_pearson))
-    ax.plot(xs, ys, marker="o", lw=1.7, color=colors["GSE278936 prostate"], label="GSE278936 PCA+Ridge")
-    for split_label, hop, mean in zip(["random", "matched_hop0", "matched_hop2", "matched_hop5"], xs, ys):
-        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "hop": hop, "mean_pearson": mean, "sd_seed": np.nan})
+        es.append(float(gse_sd.get(split, 0.0)))
+    ax.errorbar(xs, ys, yerr=es, marker="o", lw=1.7, capsize=2, color=colors["GSE278936 prostate"], label="GSE278936 PCA+Ridge")
+    for split_label, hop, mean, sd in zip(["random", "matched_hop0", "matched_hop2", "matched_hop5"], xs, ys, es):
+        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "hop": hop, "mean_pearson": mean, "sd_seed": sd})
     ax.set_xticks([-0.4, 0, 2, 5], ["Random", "hop0", "hop2", "hop5"])
     ax.set_ylabel("Mean Pearson correlation")
     ax.set_title("Non-zero spatial buffers reveal distance-dependent performance loss", loc="left", weight="bold")
