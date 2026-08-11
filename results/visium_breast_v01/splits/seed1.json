@@ -1,0 +1,124 @@
+{
+  "random": {
+    "n_train": 6228,
+    "n_val": 778,
+    "n_test": 779,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 1686,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_hop1": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 1686,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 1,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_hop2": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 1414,
+    "n_dropped": 272,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 2,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_hop5": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 597,
+    "n_dropped": 1089,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 5,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_coord0.25": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 1088,
+    "n_dropped": 598,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.25,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_coord0.5": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 534,
+    "n_dropped": 1152,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.5,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  },
+  "matched_coord1.0": {
+    "n_train": 5211,
+    "n_val": 888,
+    "n_test": 60,
+    "n_dropped": 1626,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 1.0,
+      "knn_k": 15,
+      "match_score": 0.3252
+    }
+  }
+}

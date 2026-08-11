@@ -1,0 +1,2 @@
+split,model,seed,mean_pearson,median_pearson,sd_pearson,mean_spearman,median_spearman,mean_rmse,n_genes
+random,graphsage,0,0.1493122517975044,0.12245727641904089,0.16044924217359047,0.1364493671865871,0.12811883803854157,0.4090969054400921,50

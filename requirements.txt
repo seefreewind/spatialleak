@@ -1,0 +1,21 @@
+# Core scientific stack (verified present in system Python 3.9.6 on 2026-08-07)
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.13.1
+scikit-learn==1.6.1
+scanpy==1.10.3
+anndata==0.10.9
+statsmodels==0.14.6
+torch==2.8.0
+
+# Needed for spatial analysis / neighborhood graphs (NOT yet installed - verify)
+squidpy>=1.6.0
+
+# I/O and reproducibility
+h5py
+pyyaml
+requests
+python-dateutil
+
+# Testing
+pytest>=8.0

@@ -1,0 +1,28 @@
+{
+  "random": {
+    "n_train": 38145,
+    "n_val": 4768,
+    "n_test": 4768,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 31471,
+    "n_val": 5408,
+    "n_test": 10802,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 1.0796
+    }
+  }
+}

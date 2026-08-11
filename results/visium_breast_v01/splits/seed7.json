@@ -1,0 +1,124 @@
+{
+  "random": {
+    "n_train": 6228,
+    "n_val": 778,
+    "n_test": 779,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 1783,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_hop1": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 1783,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 1,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_hop2": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 1662,
+    "n_dropped": 121,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 2,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_hop5": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 1240,
+    "n_dropped": 543,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 5,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_coord0.25": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 1386,
+    "n_dropped": 397,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.25,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_coord0.5": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 982,
+    "n_dropped": 801,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.5,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  },
+  "matched_coord1.0": {
+    "n_train": 5172,
+    "n_val": 830,
+    "n_test": 169,
+    "n_dropped": 1614,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 1.0,
+      "knn_k": 15,
+      "match_score": 0.301
+    }
+  }
+}

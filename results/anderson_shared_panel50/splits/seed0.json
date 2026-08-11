@@ -1,0 +1,168 @@
+{
+  "random": {
+    "n_train": 10896,
+    "n_val": 1362,
+    "n_test": 1362,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 8892,
+    "n_val": 1320,
+    "n_test": 3408,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 0.2287
+    }
+  },
+  "patient_A": {
+    "n_train": 11260,
+    "n_val": 295,
+    "n_test": 2065,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6"
+      ],
+      "val_groups": [
+        "B1"
+      ]
+    }
+  },
+  "patient_B": {
+    "n_train": 11562,
+    "n_val": 346,
+    "n_test": 1712,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_C": {
+    "n_train": 12188,
+    "n_val": 346,
+    "n_test": 1086,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_D": {
+    "n_train": 11441,
+    "n_val": 346,
+    "n_test": 1833,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_E": {
+    "n_train": 11545,
+    "n_val": 346,
+    "n_test": 1729,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_F": {
+    "n_train": 11176,
+    "n_val": 346,
+    "n_test": 2098,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_G": {
+    "n_train": 11903,
+    "n_val": 346,
+    "n_test": 1371,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "G1",
+        "G2",
+        "G3"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  },
+  "patient_H": {
+    "n_train": 11548,
+    "n_val": 346,
+    "n_test": 1726,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "H1",
+        "H2",
+        "H3"
+      ],
+      "val_groups": [
+        "A1"
+      ]
+    }
+  }
+}

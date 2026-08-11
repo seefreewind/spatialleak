@@ -1,0 +1,60 @@
+{
+  "random": {
+    "n_train": 107607,
+    "n_val": 13451,
+    "n_test": 13451,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 87387,
+    "n_val": 15495,
+    "n_test": 31627,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 0.1746
+    }
+  },
+  "matched_hop2": {
+    "n_train": 87387,
+    "n_val": 15495,
+    "n_test": 2203,
+    "n_dropped": 29424,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 2,
+      "knn_k": 15,
+      "match_score": 0.1746
+    }
+  },
+  "matched_hop5": {
+    "n_train": 87387,
+    "n_val": 15495,
+    "n_test": 1203,
+    "n_dropped": 30424,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 5,
+      "knn_k": 15,
+      "match_score": 0.1746
+    }
+  }
+}

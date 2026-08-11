@@ -1,0 +1,3 @@
+# Machine Learning Checklist Draft V8
+
+Task: predict held-out target gene expression from observed predictors and spatial context under different evaluation tiers. Models: Mean, PCA+Ridge, Spatial kNN and GraphSAGE. Hyperparameters were fixed before final evaluation: 64 PCs, Ridge alpha 1.0, Spatial kNN k = 15, GraphSAGE graph k = 10, hidden dimension 128, learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and patience 60. Test performance was not used for model selection. Evidence sources: `src/models/`, `configs/`, run scripts and manuscript Methods.

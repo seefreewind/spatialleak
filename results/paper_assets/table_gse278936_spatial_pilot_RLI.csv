@@ -1,0 +1,7 @@
+dataset,role,panel,seeds,model,comparison,random_mean_pearson,strict_mean_pearson,li,rli,retention,decision_note
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",pca_ridge,random_vs_matched_hop0,0.374473,0.374584,-0.000111,-0.000296,1.000296,"No measurable loss at hop0"
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",pca_ridge,random_vs_matched_hop2,0.374473,0.294437,0.080036,0.213731,0.786269,"Stable loss after hop2 spatial isolation"
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",pca_ridge,random_vs_matched_hop5,0.374473,0.291516,0.082958,0.221532,0.778468,"Stable loss after hop5 spatial isolation"
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",spatial_knn,random_vs_matched_hop0,-0.007289,-0.007824,NA,NA,NA,"RLI not interpretable because random performance is below zero"
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",spatial_knn,random_vs_matched_hop2,-0.007289,-0.001770,NA,NA,NA,"RLI not interpretable because random performance is below zero"
+GSE278936 prostate,spatial-channel external replication,shared_panel_50,"0,1,2,3,4",spatial_knn,random_vs_matched_hop5,-0.007289,-0.004150,NA,NA,NA,"RLI not interpretable because random performance is below zero"

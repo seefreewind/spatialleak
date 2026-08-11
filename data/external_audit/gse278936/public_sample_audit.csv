@@ -1,0 +1,53 @@
+source,patient_id,section_id,geo_sample_label,gsm,spots_under_tissue,treatment_group,slide_serial
+Supplementary Dataset 1 Discovery,BPH 1,V12U07-009_A1,BPH_1,GSM8557976,4199,None/NA,V12U07-009
+Supplementary Dataset 1 Discovery,BPH 2,V10F03-112_C1,BPH_2,GSM8557977,1317,None/NA,V10F03-112
+Supplementary Dataset 1 Discovery,BPH 3,V10F03-112_D1,BPH_3,GSM8557978,2030,None/NA,V10F03-112
+Supplementary Dataset 1 Discovery,BPH 4,V12N14-332_C1,BPH_4,GSM8557979,3841,None/NA,V12N14-332
+Supplementary Dataset 1 Discovery,TRNA 1,V12M21-393_A1,TRNA_1,GSM8557980,3937,None/NA,V12M21-393
+Supplementary Dataset 1 Discovery,TRNA 2,V12M21-393_C1,TRNA_2,GSM8557981,2148,None/NA,V12M21-393
+Supplementary Dataset 1 Discovery,TRNA 3,V12U07-009_C1,TRNA_3,GSM8557982,3391,None/NA,V12U07-009
+Supplementary Dataset 1 Discovery,TRNA 4,V12U07-009_B1,TRNA_4,GSM8557983,2047,None/NA,V12U07-009
+Supplementary Dataset 1 Discovery,TRNA 5,V12N14-332_A1,TRNA_5,GSM8557984,991,None/NA,V12N14-332
+Supplementary Dataset 1 Discovery,TRNA 6,V12N14-331_B1,TRNA_6,GSM8557985,4899,None/NA,V12N14-331
+Supplementary Dataset 1 Discovery,TRNA 7,V10F03-112_A1,TRNA_7,GSM8557986,2099,None/NA,V10F03-112
+Supplementary Dataset 1 Discovery,TRNA 8,V12M21-393_D1,TRNA_8,GSM8557987,740,None/NA,V12M21-393
+Supplementary Dataset 1 Discovery,TRNA 9,V10F03-107_A1,TRNA_9,GSM8557988,1617,None/NA,V10F03-107
+Supplementary Dataset 1 Discovery,TRNA 10,V10F03-112_B1,TRNA_10,GSM8557989,1190,None/NA,V10F03-112
+Supplementary Dataset 1 Discovery,TRNA 11,V12N14-330_C1,TRNA_11,GSM8557990,4517,None/NA,V12N14-330
+Supplementary Dataset 1 Discovery,TRNA 12,V12N09-306_A1,TRNA_12,GSM8557991,1096,None/NA,V12N09-306
+Supplementary Dataset 1 Discovery,TRNA 13,V12M21-393_B1,TRNA_13,GSM8557992,1839,None/NA,V12M21-393
+Supplementary Dataset 1 Discovery,TRNA 14,V12N14-332_B1,TRNA_14,GSM8557993,2254,None/NA,V12N14-332
+Supplementary Dataset 1 Discovery,TRNA 15,V10F03-109_A1,TRNA_15,GSM8557994,1778,None/NA,V10F03-109
+Supplementary Dataset 1 Discovery,TRNA 16,V12N09-306_B1,TRNA_16,GSM8557995,2738,None/NA,V12N09-306
+Supplementary Dataset 1 Discovery,TRNA 17,V12N14-329_D1,TRNA_17,GSM8557996,4704,None/NA,V12N14-329
+Supplementary Dataset 1 Discovery,NEADT 1,V12N09-306_D1,NEADT_1,GSM8557997,3082,goserelin,V12N09-306
+Supplementary Dataset 1 Discovery,NEADT 2,V12N09-306_C1,NEADT_2,GSM8557998,3143,bicalutamide,V12N09-306
+Supplementary Dataset 1 Discovery,NEADT 3,V12N14-331_A1,NEADT_3,GSM8557999,4572,goserelin,V12N14-331
+Supplementary Dataset 1 Discovery,NEADT 4,V12N14-331_D1,NEADT_4,GSM8558000,4419,goserelin,V12N14-331
+Supplementary Dataset 1 Discovery,NEADT 5,V12N14-329_A1,NEADT_5,GSM8558001,2845,bicalutamide,V12N14-329
+Supplementary Dataset 1 Discovery,NEADT 6,V12N14-329_C1,NEADT_6,GSM8558002,3906,goserelin,V12N14-329
+Supplementary Dataset 1 Discovery,NEADT 7,V12N14-329_B1,NEADT_7,GSM8558003,4828,bicalutamide,V12N14-329
+Supplementary Dataset 1 Discovery,NEADT 8,V12N14-330_B1,NEADT_8,GSM8558004,3621,goserelin,V12N14-330
+Supplementary Dataset 1 Discovery,NEADT 9,V12N14-330_A1,NEADT_9,GSM8558005,4470,bicalutamide,V12N14-330
+Supplementary Dataset 1 Discovery,NEADT 10,V12N14-331_C1,NEADT_10,GSM8558006,3602,bicalutamide,V12N14-331
+Supplementary Dataset 1 Discovery,NEADT 11,V12N14-330_D1,NEADT_11,GSM8558007,4401,bicalutamide,V12N14-330
+Supplementary Dataset 1 Discovery,NEADT 12,NEADT_12,NEADT_12,GSM8558008,2296,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,NEADT 13,NEADT_13,NEADT_13,GSM8558009,1802,degarelix,
+Supplementary Dataset 1 Discovery,NEADT 14,NEADT_14,NEADT_14,GSM8558010,2216,degarelix,
+Supplementary Dataset 1 Discovery,NEADT 15,NEADT_15,NEADT_15,GSM8558011,2860,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,NEADT 16,NEADT_16,NEADT_16,GSM8558012,2071,degarelix,
+Supplementary Dataset 1 Discovery,NEADT 17,NEADT_17,NEADT_17,GSM8558013,1525,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,NEADT 18,NEADT_18,NEADT_18,GSM8558014,1465,degarelix,
+Supplementary Dataset 1 Discovery,NEADT 19,NEADT_19,NEADT_19,GSM8558015,1650,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,NEADT 20,NEADT_20,NEADT_20,GSM8558016,2093,degarelix,
+Supplementary Dataset 1 Discovery,NEADT 21,NEADT_21,NEADT_21,GSM8558017,1748,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,NEADT 22,NEADT_22,NEADT_22,GSM8558018,2247,degarelix + apalutamide,
+Supplementary Dataset 1 Discovery,CRPC 1,V10F03-109_D1,CRPC_1,GSM8558019,578,orchiectomy,V10F03-109
+Supplementary Dataset 1 Discovery,CRPC 2,V10F03-109_B1,CRPC_2,GSM8558020,1395,orchiectomy,V10F03-109
+Supplementary Dataset 1 Discovery,CRPC 3,V12N14-332_D1,CRPC_3,GSM8558021,1818,LHRH + bicalutamide,V12N14-332
+Supplementary Dataset 1 Discovery,CRPC 4,V12U07-009_D1,CRPC_4,GSM8558022,1586,orchiectomy,V12U07-009
+Supplementary Dataset 1 Discovery,CRPC 5,V10F03-109_C1,CRPC_5,GSM8558023,945,LHRH,V10F03-109
+Supplementary Dataset 10 Metastatic,A14,V13Y08-090_C1,Met_A,GSM8558024,2190,metastatic,V13Y08-090
+Supplementary Dataset 10 Metastatic,GP12,V13Y08-090_B1,Met_B,GSM8558025,2346,metastatic,V13Y08-090
+Supplementary Dataset 10 Metastatic,A3,V13Y08-092_A1,Met_C,GSM8558026,2255,metastatic,V13Y08-092
+Supplementary Dataset 10 Metastatic,A16,V13Y08-093_D1,Met_D,GSM8558027,3162,metastatic,V13Y08-093

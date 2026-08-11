@@ -1,0 +1,7 @@
+# Dataset config: SpatialLIBD DLPFC (Maynard et al. 2021)
+raw_dir: data/raw/dlpfc
+processed_dir: data/processed
+h5ad: data/processed/dlpfc_hvg2000.h5ad
+n_hvg: 2000
+n_target_genes: 50        # top-Moran's-I genes (selected from full-data property)
+normalization: normalize_total(1e4)+log1p

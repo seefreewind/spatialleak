@@ -1,0 +1,4 @@
+model,matched_coord0.25,matched_coord0.5,matched_coord1.0,matched_hop0,matched_hop1,matched_hop2,matched_hop5,patient,random,region_hop10,region_hop5
+mean,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0
+pca_ridge,1.0,1.0,1.0,1.0,1.0,1.0,1.0,2.0,2.0,1.0,1.0
+spatial_knn,2.0,2.0,2.0,2.0,2.0,2.0,2.0,1.0,1.0,2.0,2.0

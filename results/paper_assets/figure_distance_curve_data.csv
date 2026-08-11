@@ -1,0 +1,61 @@
+dataset,buffer_family,hop,split,model,mean_pearson
+Andersson,matched,0.0,matched_hop0,mean,0.0
+Andersson,matched,0.0,matched_hop0,pca_ridge,0.5824121629957377
+Andersson,matched,0.0,matched_hop0,spatial_knn,0.01641376651925039
+Andersson,matched,1.0,matched_hop1,mean,0.0
+Andersson,matched,1.0,matched_hop1,pca_ridge,0.5824121629957377
+Andersson,matched,1.0,matched_hop1,spatial_knn,0.01641376651925039
+Andersson,matched,2.0,matched_hop2,mean,0.0
+Andersson,matched,2.0,matched_hop2,pca_ridge,0.5661454252103566
+Andersson,matched,2.0,matched_hop2,spatial_knn,0.009776199855033097
+Andersson,matched,5.0,matched_hop5,mean,0.0
+Andersson,matched,5.0,matched_hop5,pca_ridge,0.3913154642468525
+Andersson,matched,5.0,matched_hop5,spatial_knn,0.06137609911982197
+Andersson,region,5.0,region_hop5,mean,0.0
+Andersson,region,5.0,region_hop5,pca_ridge,0.2598459267702207
+Andersson,region,5.0,region_hop5,spatial_knn,0.0298619359493605
+DLPFC,matched,0.0,matched_hop0,mean,0.0
+DLPFC,matched,0.0,matched_hop0,pca_ridge,0.1959264348358189
+DLPFC,matched,0.0,matched_hop0,spatial_knn,0.17742870038676747
+DLPFC,matched,1.0,matched_hop1,mean,0.0
+DLPFC,matched,1.0,matched_hop1,pca_ridge,0.1959264348358189
+DLPFC,matched,1.0,matched_hop1,spatial_knn,0.17742870038676747
+DLPFC,matched,2.0,matched_hop2,mean,0.0
+DLPFC,matched,2.0,matched_hop2,pca_ridge,0.18441224226056413
+DLPFC,matched,2.0,matched_hop2,spatial_knn,0.15559799279361167
+DLPFC,matched,5.0,matched_hop5,mean,0.0
+DLPFC,matched,5.0,matched_hop5,pca_ridge,0.15657360020499272
+DLPFC,matched,5.0,matched_hop5,spatial_knn,0.08896043283506236
+DLPFC,region,5.0,region_hop5,mean,0.0
+DLPFC,region,5.0,region_hop5,pca_ridge,0.1892601285181091
+DLPFC,region,5.0,region_hop5,spatial_knn,0.153063793911766
+DLPFC,region,10.0,region_hop10,mean,0.0
+DLPFC,region,10.0,region_hop10,pca_ridge,0.1558878613549738
+DLPFC,region,10.0,region_hop10,spatial_knn,0.1267664179596448
+Thrane,matched,0.0,matched_hop0,mean,0.0
+Thrane,matched,0.0,matched_hop0,pca_ridge,0.6373321389486024
+Thrane,matched,0.0,matched_hop0,spatial_knn,0.06304430090756677
+Thrane,matched,1.0,matched_hop1,mean,0.0
+Thrane,matched,1.0,matched_hop1,pca_ridge,0.6373321389486024
+Thrane,matched,1.0,matched_hop1,spatial_knn,0.06304430090756677
+Thrane,matched,2.0,matched_hop2,mean,0.0
+Thrane,matched,2.0,matched_hop2,pca_ridge,0.6577082182985159
+Thrane,matched,2.0,matched_hop2,spatial_knn,0.010365092082121129
+Visium breast,matched,0.0,matched_hop0,mean,0.0
+Visium breast,matched,0.0,matched_hop0,pca_ridge,0.4681831048073934
+Visium breast,matched,0.0,matched_hop0,spatial_knn,0.28458488357442646
+Visium breast,matched,1.0,matched_hop1,mean,0.0
+Visium breast,matched,1.0,matched_hop1,pca_ridge,0.4681831048073934
+Visium breast,matched,1.0,matched_hop1,spatial_knn,0.28458488357442646
+Visium breast,matched,2.0,matched_hop2,mean,0.0
+Visium breast,matched,2.0,matched_hop2,pca_ridge,0.46009768663192574
+Visium breast,matched,2.0,matched_hop2,spatial_knn,0.2292224964961432
+Visium breast,matched,5.0,matched_hop5,mean,0.0
+Visium breast,matched,5.0,matched_hop5,pca_ridge,0.4424223982699787
+Visium breast,matched,5.0,matched_hop5,spatial_knn,0.13222126033854656
+Visium breast,region,5.0,region_hop5,mean,0.0
+Visium breast,region,5.0,region_hop5,pca_ridge,0.4856042654709253
+Visium breast,region,5.0,region_hop5,spatial_knn,0.1827742660730898
+Visium breast,region,10.0,region_hop10,mean,0.0
+Visium breast,region,10.0,region_hop10,pca_ridge,0.4302446363046452
+Visium breast,region,10.0,region_hop10,spatial_knn,0.1197000221222285

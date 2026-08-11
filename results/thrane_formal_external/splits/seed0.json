@@ -1,0 +1,208 @@
+{
+  "random": {
+    "n_train": 1876,
+    "n_val": 234,
+    "n_test": 235,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 587,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_hop1": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 587,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 1,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_hop2": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 185,
+    "n_dropped": 402,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 2,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_hop5": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 0,
+    "n_dropped": 587,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 5,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_coord0.25": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 398,
+    "n_dropped": 189,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.25,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_coord0.5": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 183,
+    "n_dropped": 404,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 0.5,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "matched_coord1.0": {
+    "n_train": 1497,
+    "n_val": 261,
+    "n_test": 19,
+    "n_dropped": 568,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "coord",
+      "buffer_value": 1.0,
+      "knn_k": 15,
+      "match_score": 0.2588
+    }
+  },
+  "patient_mel1_": {
+    "n_train": 1390,
+    "n_val": 383,
+    "n_test": 572,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "mel1_rep1",
+        "mel1_rep2"
+      ],
+      "val_groups": [
+        "mel2_rep1"
+      ]
+    }
+  },
+  "patient_mel2_": {
+    "n_train": 1303,
+    "n_val": 279,
+    "n_test": 763,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "mel2_rep1",
+        "mel2_rep2"
+      ],
+      "val_groups": [
+        "mel1_rep1"
+      ]
+    }
+  },
+  "patient_mel3_": {
+    "n_train": 1516,
+    "n_val": 279,
+    "n_test": 550,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "mel3_rep1",
+        "mel3_rep2"
+      ],
+      "val_groups": [
+        "mel1_rep1"
+      ]
+    }
+  },
+  "patient_mel4_": {
+    "n_train": 1606,
+    "n_val": 279,
+    "n_test": 460,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "mel4_rep1",
+        "mel4_rep2"
+      ],
+      "val_groups": [
+        "mel1_rep1"
+      ]
+    }
+  },
+  "region_hop5": {
+    "n_train": 943,
+    "n_val": 933,
+    "n_test": 0,
+    "n_dropped": 469,
+    "params": {
+      "n_bands": 5,
+      "buffer_kind": "hop",
+      "buffer_value": 5,
+      "knn_k": 15
+    }
+  },
+  "region_hop10": {
+    "n_train": 943,
+    "n_val": 933,
+    "n_test": 0,
+    "n_dropped": 469,
+    "params": {
+      "n_bands": 5,
+      "buffer_kind": "hop",
+      "buffer_value": 10,
+      "knn_k": 15
+    }
+  }
+}

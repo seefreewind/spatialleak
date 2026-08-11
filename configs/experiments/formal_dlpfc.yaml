@@ -1,0 +1,18 @@
+# Formal DLPFC experiment (Phase 7A) - locked in ANALYSIS_LOCK.md
+out_dir: results/formal_dlpfc
+h5ad: data/processed/dlpfc_hvg2000.h5ad
+moran_csv: data/processed/moran_top_genes.csv
+n_target_genes: 50
+n_features: 2000
+seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+train_frac: 0.8
+val_frac: 0.1
+hop_buffers: [0, 1, 2, 5]
+coord_buffers: [0.25, 0.5, 1.0]
+n_candidates: 300
+knn_k: 15
+models: [mean, pca_ridge, spatial_knn]
+model_params:
+  pca_components: 64
+  ridge_alpha: 1.0
+  knn_k: 15

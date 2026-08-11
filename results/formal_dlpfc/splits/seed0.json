@@ -1,0 +1,79 @@
+{
+  "random": {
+    "n_train": 38145,
+    "n_val": 4768,
+    "n_test": 4768,
+    "n_dropped": 0,
+    "params": {
+      "train_frac": 0.8,
+      "val_frac": 0.1
+    }
+  },
+  "matched_hop0": {
+    "n_train": 31921,
+    "n_val": 5334,
+    "n_test": 10426,
+    "n_dropped": 0,
+    "params": {
+      "n_blocks_per_slide": 9,
+      "test_block_frac": 0.2,
+      "val_block_frac": 0.1,
+      "n_candidates": 300,
+      "buffer_kind": "hop",
+      "buffer_value": 0,
+      "knn_k": 15,
+      "match_score": 1.0755
+    }
+  },
+  "patient_Br5292": {
+    "n_train": 25987,
+    "n_val": 3661,
+    "n_test": 18033,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "151507",
+        "151508",
+        "151509",
+        "151510"
+      ],
+      "val_groups": [
+        "151669"
+      ]
+    }
+  },
+  "patient_Br5595": {
+    "n_train": 28171,
+    "n_val": 4226,
+    "n_test": 15284,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "151669",
+        "151670",
+        "151671",
+        "151672"
+      ],
+      "val_groups": [
+        "151507"
+      ]
+    }
+  },
+  "patient_Br8100": {
+    "n_train": 29091,
+    "n_val": 4226,
+    "n_test": 14364,
+    "n_dropped": 0,
+    "params": {
+      "test_groups": [
+        "151673",
+        "151674",
+        "151675",
+        "151676"
+      ],
+      "val_groups": [
+        "151507"
+      ]
+    }
+  }
+}

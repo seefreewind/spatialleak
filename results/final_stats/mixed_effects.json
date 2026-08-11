@@ -1,0 +1,50 @@
+{
+  "patient": {
+    "formula": "inflation ~ moran_i + C(model)",
+    "n_obs": 300,
+    "n_datasets": 3,
+    "coef_moran_i": 0.007316912259862083,
+    "p_moran_i": 0.9323026723446565,
+    "coefs": {
+      "Intercept": 0.2625273372180671,
+      "C(model)[T.spatial_knn]": -0.24115467739732882,
+      "moran_i": 0.007316912259862083,
+      "Group Var": 0.460630497960953
+    },
+    "pvalues": {
+      "Intercept": 1.7572491135037155e-06,
+      "C(model)[T.spatial_knn]": 3.5549407107422944e-58,
+      "moran_i": 0.9323026723446565,
+      "Group Var": 0.331923091797817
+    }
+  },
+  "spatial": {
+    "formula": "inflation ~ moran_i + C(model)",
+    "n_obs": 400,
+    "n_datasets": 4,
+    "coef_moran_i": 0.16688136133224515,
+    "p_moran_i": 0.07899199873339188,
+    "coefs": {
+      "Intercept": 0.0642873858041281,
+      "C(model)[T.spatial_knn]": 0.04606059906694169,
+      "moran_i": 0.16688136133224515,
+      "Group Var": 0.4972107400211207
+    },
+    "pvalues": {
+      "Intercept": 0.33103449761491643,
+      "C(model)[T.spatial_knn]": 0.005776261560076015,
+      "moran_i": 0.07899199873339188,
+      "Group Var": 0.25050498436668056
+    }
+  },
+  "meta": {
+    "date": "2026-08-09 20:23",
+    "datasets": [
+      "dlpfc",
+      "anderson",
+      "thrane",
+      "visium_breast"
+    ],
+    "note": "patient model excludes Visium breast; spatial model uses each dataset's configured spatial split."
+  }
+}

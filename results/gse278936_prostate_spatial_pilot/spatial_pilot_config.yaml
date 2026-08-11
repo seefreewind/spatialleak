@@ -1,0 +1,39 @@
+coord_buffers: []
+dataset: gse278936_prostate
+gene_csv: data/processed/gene_panels/shared_panel_50_gse278936_prostate_targets.csv
+h5ad: data/processed/gse278936_prostate_hvg2000.h5ad
+hop_buffers:
+- 0
+- 2
+- 5
+knn_k: 15
+model_params:
+  knn_k: 15
+  pca_components: 64
+  ridge_alpha: 1.0
+models:
+- mean
+- pca_ridge
+- spatial_knn
+moran_csv: data/processed/gse278936_prostate_moran.csv
+n_candidates: 300
+n_features: 2000
+n_target_genes: 50
+out_dir: results/gse278936_prostate_spatial_pilot
+out_prefix: spatial_pilot
+patient_each_seed: false
+region_hops: []
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+slide_holdout: false
+splits_filter:
+- matched_hop0
+- matched_hop2
+- matched_hop5
+- random
+train_frac: 0.8
+val_frac: 0.1

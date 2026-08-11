@@ -1,0 +1,22 @@
+{
+  "datasets": [
+    "dlpfc",
+    "visium_breast",
+    "gse278936_prostate"
+  ],
+  "models": [
+    "pca_ridge",
+    "spatial_knn"
+  ],
+  "hops": [
+    2,
+    5
+  ],
+  "outputs": [
+    "results/paper_assets/table_split_sample_sizes.csv",
+    "results/paper_assets/table_random_size_matched_control.csv",
+    "results/sample_size_control/random_size_matched_per_seed.csv",
+    "results/sample_size_control/random_size_matched_split_meta.csv",
+    "docs/reports/SAMPLE_SIZE_MATCHING_AUDIT.md"
+  ]
+}

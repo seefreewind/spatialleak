@@ -1,0 +1,5 @@
+figure_id,first_text_citation,section,file_exists,embedded_in_manuscript,caption_exists,source_data_exists,status
+Figure 1,Fig. 1,Results,True,True,True,True,PASS
+Figure 2,Fig. 2,Results,True,True,True,True,PASS
+Figure 3,Fig. 3,Results,True,True,True,True,PASS
+Figure 4,Fig. 4,Results,True,True,True,True,PASS

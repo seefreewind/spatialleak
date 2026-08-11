@@ -1,0 +1,4 @@
+model,n_pairs,median_diff,statistic,p,p_bh,sig_bh_0.05
+mean,10,0.0,0.0,1.0,1.0,False
+pca_ridge,10,0.11652472245303391,0.0,0.001953125,0.0029296875,True
+spatial_knn,10,0.15430867778203458,0.0,0.001953125,0.0029296875,True

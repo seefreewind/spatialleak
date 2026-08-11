@@ -1,0 +1,42 @@
+# Data
+data/raw/*
+data/processed/*
+data/metadata/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/metadata/.gitkeep
+
+# Results (reproducible artifacts)
+results/pilot/*
+results/benchmark/*
+results/sensitivity/*
+results/figures/*
+!results/*/.gitkeep
+
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+
+# Submission QA/intermediate renders
+submission/nature_communications/rendered*/
+submission/nature_communications/FIGURES/*.tiff
+submission/nature_communications/FIGURES/*prototype*
+submission/nature_communications/SPATIALLEAK_NATCOMM_WORD_DRAFT.docx
+
+# Large local data archives and downloaded data
+*.h5ad
+*.h5
+*.mtx.gz
+*.tar.gz
+*.zip

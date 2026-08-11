@@ -1,0 +1,14 @@
+{
+  "train_dataset": "anderson",
+  "test_dataset": "visium_breast",
+  "n_targets": 49,
+  "missing_targets": [
+    "SEPT4"
+  ],
+  "n_common_features": 2000,
+  "models": [
+    "mean",
+    "pca_ridge"
+  ],
+  "note": "Cross-platform prototype; spatial coordinates are not comparable and spatial kNN is excluded."
+}

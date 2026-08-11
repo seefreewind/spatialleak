@@ -1,0 +1,17 @@
+# Pilot experiment config (locked in ANALYSIS_LOCK.md §1)
+out_dir: results/pilot
+h5ad: data/processed/dlpfc_hvg2000.h5ad
+moran_csv: data/processed/moran_top_genes.csv
+n_target_genes: 50
+n_features: 2000
+seeds: [0, 1, 2, 3, 4]
+train_frac: 0.8
+val_frac: 0.1
+block_method: grid
+n_blocks_per_slide: 4
+block_buffers: [0, 2]
+models: [mean, pca_ridge, spatial_knn]
+model_params:
+  pca_components: 64
+  ridge_alpha: 1.0
+  knn_k: 15

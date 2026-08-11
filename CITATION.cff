@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "SpatialLeak: leakage-resistant evaluation for spatial omics prediction"
+message: "If you use SpatialLeak, please cite this software release and the accompanying manuscript."
+type: software
+authors:
+  - family-names: Zhang
+    given-names: Yu
+  - family-names: Chen
+    given-names: Ying
+  - family-names: Liu
+    given-names: Yue
+  - family-names: Lin
+    given-names: Da
+version: 1.0.0
+date-released: 2026-08-11
+url: "https://github.com/seefreewind/spatialleak"
+license: MIT
+keywords:
+  - spatial transcriptomics
+  - spatial omics
+  - data leakage
+  - machine learning evaluation
+  - reproducibility
