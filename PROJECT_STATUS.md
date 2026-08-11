@@ -1,3 +1,3 @@
 # Project Status
 
-SpatialLeak is scientifically ready for Nature Communications submission. The only remaining technical release item is Zenodo DOI generation after GitHub release binding.
+SpatialLeak is scientifically and technically ready for Nature Communications submission. GitHub release `v1.0.0` has a Zenodo archival DOI.

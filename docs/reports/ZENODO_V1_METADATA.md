@@ -38,4 +38,6 @@ Raw public datasets, large processed `.h5ad` objects, local caches, logs, render
 
 ## Status
 
-READY FOR USER RELEASE through GitHub-Zenodo binding. DOI not yet available in local metadata.
+COMPLETE. GitHub release `v1.0.0` has been archived through Zenodo.
+
+DOI: https://doi.org/10.5281/zenodo.21881438

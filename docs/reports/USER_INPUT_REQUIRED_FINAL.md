@@ -8,6 +8,6 @@ User confirmed: no funding. V8 uses: "No specific funding was received for this 
 
 User confirmed: no Acknowledgements. V8 removes the Acknowledgements section.
 
-## Release Metadata Still Needed
+## Release Metadata
 
-Zenodo DOI after GitHub-Zenodo release binding.
+Zenodo DOI: {ZENODO_URL}

@@ -9,7 +9,7 @@
 | Exclusion criteria | PASS | Empty or non-resolvable splits and near-zero RLI denominators are documented. |
 | Statistics | PASS | LI, RLI, retention, bootstrap, Wilcoxon and mixed-effects analyses are documented. |
 | Sample-size effects | PASS | Random-size-matched controls are included. |
-| Software/code | PENDING USER INPUT | Repository URL and Zenodo DOI must be inserted after release. |
-| Data accessions | PARTIAL | Public sources are named; final accession formatting and processed-data DOI remain pending. |
+| Software/code | PASS | Repository URL and Zenodo DOI are inserted. |
+| Data accessions | PASS | Public sources, GitHub repository and Zenodo archival DOI are named. |
 | Machine-learning reporting | PASS | Train-only preprocessing, validation-only early stopping and test exclusion are described. |
 | Source data | PASS | Source-data tables are prepared for Figures 1-6. |

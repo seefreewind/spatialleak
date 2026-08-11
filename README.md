@@ -39,7 +39,7 @@ The manuscript uses public DLPFC, Andersson HER2-positive breast cancer, Thrane 
 
 ## Citation
 
-Zenodo DOI and formal citation will be added after public release.
+Software archive DOI: https://doi.org/10.5281/zenodo.21881438.
 
 
 ## Repository layout
@@ -59,4 +59,4 @@ Raw and processed spatial transcriptomics data are not committed to GitHub. Down
 
 Public repository: https://github.com/seefreewind/spatialleak
 Version: v1.0.0
-Zenodo DOI: PENDING ZENODO DOI
+Zenodo DOI: https://doi.org/10.5281/zenodo.21881438

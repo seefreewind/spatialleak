@@ -6,19 +6,16 @@ NONE.
 
 ## Manuscript Blockers
 
-NONE after V7 hardening. Figure 6 has been removed, internal project language has been removed, and the main text uses the five-figure structure.
+NONE after V8 hardening. Figure 5 has been moved to Supplementary Fig. 1, internal project language has been removed, and the main text uses four display figures.
 
 ## Open-Science Blockers
 
-- Public GitHub repository URL is pending.
-- Zenodo DOI or equivalent archive DOI is pending.
+NONE. Public GitHub repository and Zenodo DOI are available.
 
 ## User-Input Blockers
 
-- Funding statement.
-- Acknowledgements statement or confirmation to remove the section.
-- Final confirmation of corresponding author details.
+NONE. Funding, Acknowledgements, competing interests, authorship, affiliations and correspondence metadata have been supplied by the user.
 
 ## Overall Status
 
-READY PENDING USER METADATA.
+READY FOR SUBMISSION.

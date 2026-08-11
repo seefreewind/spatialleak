@@ -16,13 +16,12 @@ The public repository contains the submission-ready source code, scripts, config
 
 ## Zenodo
 
-Status: blocked by user authentication.
+Status: complete.
 
-The Zenodo GitHub integration page redirects to:
+- DOI: https://doi.org/10.5281/zenodo.21881438
+- Archived release: `v1.0.0`
 
-`https://zenodo.org/login/?next=%2Faccount%2Fsettings%2Fgithub%2F`
-
-Zenodo requires the account holder to log in and authorize/connect GitHub before `seefreewind/spatialleak` can be enabled for automatic release archiving. After the repository is enabled in Zenodo, the existing GitHub release `v1.0.0` should be selected or reprocessed to mint the Zenodo DOI.
+Zenodo DOI has been inserted into the manuscript Data Availability / Code Availability text, README, CITATION.cff and current release metadata.
 
 Official workflow checked:
 
@@ -36,11 +35,9 @@ Official workflow checked:
 - Competing interests: no competing interests declared.
 - Correspondence: Da Lin, 212574@wzhealth.com; ORCID 0009-0009-4410-0218.
 
-## User Action Required
+## Remaining Action
 
-1. Log in to Zenodo.
-2. Open the Zenodo GitHub integration/settings page.
-3. Click `Sync now` if `seefreewind/spatialleak` is not listed.
-4. Toggle `seefreewind/spatialleak` to enabled.
-5. Select or reprocess GitHub release `v1.0.0`.
-6. Copy the issued Zenodo DOI back into the manuscript Data Availability / Code Availability text.
+Submit the V8 package to Nature Communications using:
+
+- GitHub repository: https://github.com/seefreewind/spatialleak
+- Zenodo DOI: https://doi.org/10.5281/zenodo.21881438

@@ -1,7 +1,4 @@
 # Next Actions
 
-1. Push public GitHub repository.
-2. Create GitHub release `v1.0.0`.
-3. Enable/import the GitHub release in Zenodo.
-4. Insert Zenodo DOI into V8 Data and Code Availability.
-5. Submit V8 package to Nature Communications.
+1. Submit V8 package to Nature Communications.
+2. Use GitHub repository `https://github.com/seefreewind/spatialleak` and Zenodo DOI `https://doi.org/10.5281/zenodo.21881438` in submission metadata.

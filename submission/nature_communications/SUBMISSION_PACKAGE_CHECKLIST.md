@@ -18,34 +18,35 @@
 | Figure 1 final rendered assets | PASS |
 | Figure 3 final rendered assets | PASS |
 | Source Data | PASS |
-| Figure 2/4/5/6 final render polish | PENDING USER INPUT |
+| Figure 2/4 final render polish | PASS |
+| Supplementary Fig. 1 source-data placement | PASS |
 
 ## Manuscript Package
 
 | Item | Status |
 |---|---|
-| V6 manuscript | PASS |
+| V8 manuscript | PASS |
 | Supplementary Information | PASS |
-| References | PENDING USER INPUT |
-| Data Availability | PENDING USER INPUT |
-| Code Availability | PENDING USER INPUT |
+| References | PASS |
+| Data Availability | PASS |
+| Code Availability | PASS |
 | Cover Letter Final | PASS |
-| Reporting forms | PENDING USER INPUT |
+| Reporting forms | PREPARED |
 
 ## Open Science
 
 | Item | Status |
 |---|---|
 | Repository audit | PASS |
-| GitHub public repository | PENDING USER INPUT |
-| Zenodo DOI | PENDING USER INPUT |
+| GitHub public repository | PASS |
+| Zenodo DOI | PASS |
 
 ## Metadata
 
 | Item | Status |
 |---|---|
-| Authors | PENDING USER INPUT |
-| Affiliations | PENDING USER INPUT |
-| Funding | PENDING USER INPUT |
-| Competing interests | PENDING USER INPUT |
-| Author contributions | PENDING USER INPUT |
+| Authors | PASS |
+| Affiliations | PASS |
+| Funding | PASS |
+| Competing interests | PASS |
+| Author contributions | PASS |

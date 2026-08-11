@@ -25,7 +25,7 @@ NONE.
 
 ## Technical Blockers
 
-Zenodo DOI pending until GitHub-Zenodo binding release is completed.
+NONE. Zenodo DOI issued: {ZENODO_URL}
 
 ## User-Input Blockers
 
@@ -33,4 +33,4 @@ NONE for funding or acknowledgements; both were confirmed by the user.
 
 ## Status
 
-SCIENTIFICALLY READY FOR SUBMISSION. PENDING ZENODO DOI ONLY.
+SCIENTIFICALLY AND TECHNICALLY READY FOR SUBMISSION.

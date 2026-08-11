@@ -112,11 +112,11 @@ Seeds were frozen before final analyses. Test performance was not used for hyper
 
 ## Data Availability
 
-DLPFC, Andersson, Thrane, 10x Visium breast and GSE278936 public data were used from the public resources cited above. Restricted EGA validation data from the prostate study were not used. Project-derived processed objects, split manifests and source data are prepared for deposition. Code and derived paper assets are available at https://github.com/seefreewind/spatialleak. The archival DOI is PENDING ZENODO DOI.
+DLPFC, Andersson, Thrane, 10x Visium breast and GSE278936 public data were used from the public resources cited above. Restricted EGA validation data from the prostate study were not used. Project-derived processed objects, split manifests and source data are prepared for deposition. Code and derived paper assets are available at https://github.com/seefreewind/spatialleak. The archival DOI is https://doi.org/10.5281/zenodo.21881438.
 
 ## Code Availability
 
-Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at https://github.com/seefreewind/spatialleak (version v1.0.0). The archival DOI is PENDING ZENODO DOI.
+Code used for preprocessing, target-panel definition, split generation, benchmark models, statistical analyses, figure generation and source-data generation is prepared for public release. Code is available at https://github.com/seefreewind/spatialleak (version v1.0.0). The archival DOI is https://doi.org/10.5281/zenodo.21881438.
 
 ## Author Contributions
 

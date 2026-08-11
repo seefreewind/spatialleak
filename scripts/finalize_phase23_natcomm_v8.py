@@ -43,7 +43,9 @@ AFFILIATIONS = p22.AFFILIATIONS
 CORRESPONDENCE = p22.CORRESPONDENCE
 GITHUB_REPO = "seefreewind/spatialleak"
 GITHUB_URL = "https://github.com/seefreewind/spatialleak"
-ZENODO_STATUS = "PENDING ZENODO DOI"
+ZENODO_DOI = "10.5281/zenodo.21881438"
+ZENODO_URL = f"https://doi.org/{ZENODO_DOI}"
+ZENODO_STATUS = ZENODO_URL
 
 
 def write(path: Path, text: str) -> None:
@@ -564,7 +566,9 @@ Raw public datasets, large processed `.h5ad` objects, local caches, logs, render
 
 ## Status
 
-READY FOR USER RELEASE through GitHub-Zenodo binding. DOI not yet available in local metadata.
+COMPLETE. GitHub release `v1.0.0` has been archived through Zenodo.
+
+DOI: {ZENODO_URL}
 """)
     write(REPORTS / "USER_INPUT_REQUIRED_FINAL.md", """
 # User Input Required Final
@@ -577,9 +581,9 @@ User confirmed: no funding. V8 uses: "No specific funding was received for this 
 
 User confirmed: no Acknowledgements. V8 removes the Acknowledgements section.
 
-## Release Metadata Still Needed
+## Release Metadata
 
-Zenodo DOI after GitHub-Zenodo release binding.
+Zenodo DOI: {ZENODO_URL}
 """)
     write(REPORTS / "NATCOMM_V8_LOW_LEVEL_ERROR_FINAL.md", """
 # NATCOMM V8 Low-Level Error Final
@@ -651,7 +655,7 @@ NONE.
 
 ## Technical Blockers
 
-Zenodo DOI pending until GitHub-Zenodo binding release is completed.
+NONE. Zenodo DOI issued: {ZENODO_URL}
 
 ## User-Input Blockers
 
@@ -659,7 +663,7 @@ NONE for funding or acknowledgements; both were confirmed by the user.
 
 ## Status
 
-SCIENTIFICALLY READY FOR SUBMISSION. PENDING ZENODO DOI ONLY.
+SCIENTIFICALLY AND TECHNICALLY READY FOR SUBMISSION.
 """)
 
 
@@ -795,6 +799,7 @@ authors:
     given-names: Da
 version: 1.0.0
 date-released: 2026-08-11
+doi: "{ZENODO_DOI}"
 url: "{GITHUB_URL}"
 license: MIT
 keywords:
@@ -805,6 +810,11 @@ keywords:
   - reproducibility
 """)
     readme = Path("README.md").read_text()
+    readme = readme.replace(
+        "Zenodo DOI and formal citation will be added after public release.",
+        f"Software archive DOI: {ZENODO_URL}.",
+    )
+    readme = readme.replace("Zenodo DOI: PENDING ZENODO DOI", f"Zenodo DOI: {ZENODO_URL}")
     if "## Repository layout" not in readme:
         readme += f"""
 
@@ -827,7 +837,7 @@ Public repository: {GITHUB_URL}
 Version: v1.0.0
 Zenodo DOI: {ZENODO_STATUS}
 """
-        write(Path("README.md"), readme)
+    write(Path("README.md"), readme)
     gi = Path(".gitignore").read_text()
     extra = """
 
@@ -864,26 +874,23 @@ Nature Communications V8 final submission lock is complete. Scientific explorati
 - Acknowledgements section removed per user confirmation.
 - Source Data index rebuilt for Figures 1-4 plus Supplementary Fig. 1.
 - V8 Word manuscript generated and ready for render QA.
-- GitHub v1.0.0 release materials prepared.
+- GitHub repository and release `v1.0.0` completed.
+- Zenodo DOI inserted: https://doi.org/10.5281/zenodo.21881438.
 
 ## Remaining
 
-- Push public GitHub repository.
-- Complete GitHub-Zenodo binding and insert Zenodo DOI.
+- Submit V8 package to Nature Communications.
 """)
     write(Path("PROJECT_STATUS.md"), """
 # Project Status
 
-SpatialLeak is scientifically ready for Nature Communications submission. The only remaining technical release item is Zenodo DOI generation after GitHub release binding.
+SpatialLeak is scientifically and technically ready for Nature Communications submission. GitHub release `v1.0.0` has a Zenodo archival DOI.
 """)
     write(Path("NEXT_ACTIONS.md"), """
 # Next Actions
 
-1. Push public GitHub repository.
-2. Create GitHub release `v1.0.0`.
-3. Enable/import the GitHub release in Zenodo.
-4. Insert Zenodo DOI into V8 Data and Code Availability.
-5. Submit V8 package to Nature Communications.
+1. Submit V8 package to Nature Communications.
+2. Use GitHub repository `https://github.com/seefreewind/spatialleak` and Zenodo DOI `https://doi.org/10.5281/zenodo.21881438` in submission metadata.
 """)
 
 
