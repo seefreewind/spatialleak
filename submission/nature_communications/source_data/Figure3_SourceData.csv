@@ -1,11 +1,12 @@
-dataset,model,spatial_RLI,patient_RLI
-DLPFC,PCA+Ridge,0.3280453401744346,0.2125949248616126
-DLPFC,Spatial kNN,0.4024545910454799,0.1198326265838197
-Andersson,PCA+Ridge,0.3521384435162534,0.6623855729853078
-Andersson,GraphSAGE,,0.6949524901120735
-Thrane,PCA+Ridge,-0.0068686107422945,0.499323532596777
-Thrane,GraphSAGE,,0.7114866615327763
-Visium breast,PCA+Ridge,0.2592923132450507,
-Visium breast,Spatial kNN,0.7961260836376417,
-Visium breast,GraphSAGE,0.265139398831901,
-GSE278936,PCA+Ridge,0.221532,
+dataset,dataset_role,model,spatial_RLI,patient_RLI,pattern,spatial_na_reason,patient_na_reason
+DLPFC,,PCA+Ridge,0.3280453401744346,0.2125949248616126,Mixed,,
+DLPFC,,Spatial kNN,0.4024545910454799,0.1198326265838197,Spatial,,
+Andersson,multi-patient,PCA+Ridge,0.3521384435162534,0.6623855729853078,Patient-associated,,
+Andersson,multi-patient,GraphSAGE,0.074613080964976,0.6949524901120735,Patient-associated,,
+Thrane,multi-patient,PCA+Ridge,-0.0068686107422945,0.499323532596777,Patient-associated,,
+Thrane,multi-patient,GraphSAGE,,0.7114866615327763,Patient-associated,Unavailable or non-interpretable,
+Visium breast,single patient,PCA+Ridge,0.2592923132450507,,Spatial,,Unavailable from dataset structure
+Visium breast,single patient,Spatial kNN,0.7961260836376417,,Spatial,,Unavailable from dataset structure
+Visium breast,single patient,GraphSAGE,0.265139398831901,,Spatial,,Unavailable from dataset structure
+GSE278936,spatial replication,PCA+Ridge,0.221532,,Spatial replication,,Not used as clean patient-level validation
+GSE278936,spatial replication,Spatial kNN,,,Boundary,RLI denominator below prespecified threshold,Not used as clean patient-level validation

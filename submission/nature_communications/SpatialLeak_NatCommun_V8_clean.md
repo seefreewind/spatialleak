@@ -44,7 +44,7 @@ The patient-associated channel should not be interpreted as a causal batch-effec
 
 ### Dominant generalization-inflation channels vary across datasets and model classes
 
-Figure 3 summarizes the central heterogeneity result. DLPFC showed both spatial and donor-associated effects. Andersson and Thrane were patient-channel dominant. Visium breast was spatial-channel dominant but single-patient. GSE278936 replicated the spatial-channel PCA+Ridge buffer response and provided a kNN boundary condition because random kNN performance was below zero.
+The two-channel phenotype map shows that evaluation sensitivity was structured rather than uniform (Fig. 3). DLPFC exhibited mixed spatial and donor-associated attenuation, Andersson and Thrane were patient-associated dominant, dense Visium breast exposed a strong local spatial channel in a single-patient setting, and GSE278936 provided an external spatial-channel replication plus a kNN boundary condition because random kNN performance was below zero.
 
 This two-channel landscape explains why one split or one model cannot diagnose all settings. Spatial kNN is useful as a local-neighborhood probe when it has signal. PCA+Ridge provides a strong non-graph baseline. GraphSAGE tests whether graph learning follows the same split-dependent behavior as simpler baselines.
 

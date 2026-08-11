@@ -253,7 +253,7 @@ The patient-associated channel should not be interpreted as a causal batch-effec
 
 ### Dominant generalization-inflation channels vary across datasets and model classes
 
-Figure 3 summarizes the central heterogeneity result. DLPFC showed both spatial and donor-associated effects. Andersson and Thrane were patient-channel dominant. Visium breast was spatial-channel dominant but single-patient. GSE278936 replicated the spatial-channel PCA+Ridge buffer response and provided a kNN boundary condition because random kNN performance was below zero.
+The two-channel phenotype map shows that evaluation sensitivity was structured rather than uniform (Fig. 3). DLPFC exhibited mixed spatial and donor-associated attenuation, Andersson and Thrane were patient-associated dominant, dense Visium breast exposed a strong local spatial channel in a single-patient setting, and GSE278936 provided an external spatial-channel replication plus a kNN boundary condition because random kNN performance was below zero.
 
 This two-channel landscape explains why one split or one model cannot diagnose all settings. Spatial kNN is useful as a local-neighborhood probe when it has signal. PCA+Ridge provides a strong non-graph baseline. GraphSAGE tests whether graph learning follows the same split-dependent behavior as simpler baselines.
 
@@ -380,30 +380,68 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
     two, gs, gse = t["two"], t["gs"], t["gse"]
     rows = []
     base = [
-        ("DLPFC", "PCA+Ridge", "pca_ridge"),
-        ("DLPFC", "Spatial kNN", "spatial_knn"),
-        ("Andersson", "PCA+Ridge", "pca_ridge"),
-        ("Andersson", "GraphSAGE", "graphsage"),
-        ("Thrane", "PCA+Ridge", "pca_ridge"),
-        ("Thrane", "GraphSAGE", "graphsage"),
-        ("Visium breast", "PCA+Ridge", "pca_ridge"),
-        ("Visium breast", "Spatial kNN", "spatial_knn"),
-        ("Visium breast", "GraphSAGE", "graphsage"),
+        ("DLPFC", "", "PCA+Ridge", "pca_ridge", "Mixed"),
+        ("DLPFC", "", "Spatial kNN", "spatial_knn", "Spatial"),
+        ("Andersson", "multi-patient", "PCA+Ridge", "pca_ridge", "Patient-associated"),
+        ("Andersson", "multi-patient", "GraphSAGE", "graphsage", "Patient-associated"),
+        ("Thrane", "multi-patient", "PCA+Ridge", "pca_ridge", "Patient-associated"),
+        ("Thrane", "multi-patient", "GraphSAGE", "graphsage", "Patient-associated"),
+        ("Visium breast", "single patient", "PCA+Ridge", "pca_ridge", "Spatial"),
+        ("Visium breast", "single patient", "Spatial kNN", "spatial_knn", "Spatial"),
+        ("Visium breast", "single patient", "GraphSAGE", "graphsage", "Spatial"),
     ]
-    for dataset, label, model in base:
+    for dataset, role_tag, label, model, pattern in base:
         if model == "graphsage":
-            strict = "patient" if dataset in {"Andersson", "Thrane"} else "matched_hop5"
-            r = gs[(gs.dataset == dataset) & (gs.strict_label == strict)]
-            if r.empty:
-                continue
-            spatial = r.iloc[0].RLI if strict != "patient" else np.nan
-            patient = r.iloc[0].RLI if strict == "patient" else np.nan
+            r2 = two[(two.dataset == dataset) & (two.model == "graphsage_trainonly")]
+            if not r2.empty:
+                spatial, patient = r2.iloc[0].RLI_spatial, r2.iloc[0].RLI_patient
+            else:
+                strict = "patient" if dataset in {"Andersson", "Thrane"} else "matched_hop5"
+                r = gs[(gs.dataset == dataset) & (gs.strict_label == strict)]
+                if r.empty:
+                    continue
+                spatial = r.iloc[0].RLI if strict != "patient" else np.nan
+                patient = r.iloc[0].RLI if strict == "patient" else np.nan
         else:
             r = two[(two.dataset == dataset) & (two.model == model)].iloc[0]
             spatial, patient = r.RLI_spatial, r.RLI_patient
-        rows.append({"dataset": dataset, "model": label, "spatial_RLI": spatial, "patient_RLI": patient})
+        patient_na_reason = ""
+        spatial_na_reason = ""
+        if pd.isna(patient):
+            patient_na_reason = "Unavailable from dataset structure"
+        if pd.isna(spatial):
+            spatial_na_reason = "Unavailable or non-interpretable"
+        rows.append({
+            "dataset": dataset,
+            "dataset_role": role_tag,
+            "model": label,
+            "spatial_RLI": spatial,
+            "patient_RLI": patient,
+            "pattern": pattern,
+            "spatial_na_reason": spatial_na_reason,
+            "patient_na_reason": patient_na_reason,
+        })
     rg = gse[(gse.model == "pca_ridge") & (gse.comparison == "random_vs_matched_hop5")].iloc[0]
-    rows.append({"dataset": "GSE278936", "model": "PCA+Ridge", "spatial_RLI": rg.rli, "patient_RLI": np.nan})
+    rows.append({
+        "dataset": "GSE278936",
+        "dataset_role": "spatial replication",
+        "model": "PCA+Ridge",
+        "spatial_RLI": rg.rli,
+        "patient_RLI": np.nan,
+        "pattern": "Spatial replication",
+        "spatial_na_reason": "",
+        "patient_na_reason": "Not used as clean patient-level validation",
+    })
+    rows.append({
+        "dataset": "GSE278936",
+        "dataset_role": "spatial replication",
+        "model": "Spatial kNN",
+        "spatial_RLI": np.nan,
+        "patient_RLI": np.nan,
+        "pattern": "Boundary",
+        "spatial_na_reason": "RLI denominator below prespecified threshold",
+        "patient_na_reason": "Not used as clean patient-level validation",
+    })
     return pd.DataFrame(rows)
 
 
@@ -673,6 +711,91 @@ def _plot_fig2_panel(ax: plt.Axes, rows: list[dict[str, object]], title: str, st
     ax.text(0.18, len(rows) - 0.58, "Random", color=random_color, fontsize=6.2, weight="bold", ha="left", va="top")
 
 
+def _mix_white(color: str, value: float, vmax: float = 0.8) -> tuple[float, float, float]:
+    base = np.array(mpl.colors.to_rgb(color))
+    white = np.ones(3)
+    amount = max(0.0, min(1.0, value / vmax))
+    return tuple(white * (1 - amount * 0.82) + base * (amount * 0.82))
+
+
+def _pattern_style(pattern: str) -> tuple[str, str]:
+    styles = {
+        "Mixed": ("#EEF1F6", "#4D6478"),
+        "Spatial": ("#EAF4EC", FIG1_COLORS["spatial"]),
+        "Spatial replication": ("#EAF4EC", FIG1_COLORS["spatial"]),
+        "Patient-associated": ("#F4ECF3", FIG1_COLORS["patient"]),
+        "Boundary": ("#F3F4F6", "#6B7280"),
+    }
+    return styles.get(pattern, ("#F3F4F6", FIG1_COLORS["dark"]))
+
+
+def _draw_rli_cell(ax: plt.Axes, x: float, y: float, value: float, channel_color: str) -> None:
+    rect_kw = dict(ec="white", lw=1.0)
+    if np.isfinite(value) and value >= 0:
+        ax.add_patch(patches.Rectangle((x - 0.45, y - 0.36), 0.90, 0.72, fc=_mix_white(channel_color, value), **rect_kw))
+        ax.text(x, y, f"{value:.3f}", ha="center", va="center", fontsize=6.8, weight="bold", color="white" if value > 0.55 else FIG1_COLORS["dark"])
+    elif np.isfinite(value) and value < 0:
+        ax.add_patch(patches.Rectangle((x - 0.45, y - 0.36), 0.90, 0.72, fc="#FAF3F3", hatch="..", **rect_kw))
+        ax.text(x, y, "<0", ha="center", va="center", fontsize=6.8, weight="bold", color="#8A2D2D")
+    else:
+        ax.add_patch(patches.Rectangle((x - 0.45, y - 0.36), 0.90, 0.72, fc="#F3F4F6", hatch="///", **rect_kw))
+        ax.text(x, y, "NA", ha="center", va="center", fontsize=6.6, weight="bold", color="#6B7280")
+
+
+def _make_figure3(df3: pd.DataFrame) -> None:
+    groups = list(dict.fromkeys(df3["dataset"].tolist()))
+    y_positions = []
+    y = 0.0
+    for dataset in groups:
+        idx = df3.index[df3.dataset == dataset].tolist()
+        for i in idx:
+            y_positions.append((i, y))
+            y += 1.0
+        y += 0.38
+    pos = dict(y_positions)
+    max_y = max(pos.values())
+
+    fig, ax = plt.subplots(figsize=(7.4, 5.9))
+    ax.set_xlim(-2.10, 3.38)
+    ax.set_ylim(max_y + 0.95, -1.25)
+    ax.axis("off")
+    ax.text(-2.08, -1.02, "Two-channel phenotype map of apparent generalization inflation", ha="left", va="bottom", fontsize=10.0, weight="bold", color=FIG1_COLORS["dark"])
+    ax.text(0, -0.47, "Spatial-neighborhood\nchannel", ha="center", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["spatial"])
+    ax.text(0, -0.08, "buffered vs random", ha="center", va="bottom", fontsize=5.8, color="#56735B")
+    ax.text(1, -0.47, "Patient-associated\nchannel", ha="center", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["patient"])
+    ax.text(1, -0.08, "patient-held-out vs random", ha="center", va="bottom", fontsize=5.8, color="#7A5474")
+    ax.text(2.15, -0.27, "Pattern", ha="left", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["dark"])
+
+    for dataset in groups:
+        g = df3[df3.dataset == dataset]
+        ys = [pos[i] for i in g.index]
+        group_mid = float(np.mean(ys))
+        tag = str(g.iloc[0].dataset_role)
+        ax.text(-2.05, group_mid, dataset, ha="left", va="center", fontsize=7.4, weight="bold", color=FIG1_COLORS["dark"])
+        if tag:
+            ax.text(-2.05, group_mid + 0.32, tag, ha="left", va="center", fontsize=5.7, color="#6B7280",
+                    bbox=dict(boxstyle="round,pad=0.18,rounding_size=0.10", fc="#F3F4F6", ec="none"))
+        ax.plot([-2.06, 3.18], [max(ys) + 0.55, max(ys) + 0.55], color="#E5E7EB", lw=0.8, zorder=0)
+
+    for i, row in df3.iterrows():
+        yy = pos[i]
+        ax.text(-0.76, yy, str(row.model), ha="right", va="center", fontsize=6.8, color=FIG1_COLORS["dark"])
+        _draw_rli_cell(ax, 0, yy, float(row.spatial_RLI) if pd.notna(row.spatial_RLI) else np.nan, FIG1_COLORS["spatial"])
+        _draw_rli_cell(ax, 1, yy, float(row.patient_RLI) if pd.notna(row.patient_RLI) else np.nan, FIG1_COLORS["patient"])
+        fc, ec = _pattern_style(str(row.pattern))
+        ax.add_patch(patches.FancyBboxPatch((1.82, yy - 0.25), 1.05, 0.50, boxstyle="round,pad=0.03,rounding_size=0.08", fc=fc, ec="none"))
+        ax.text(2.35, yy, str(row.pattern), ha="center", va="center", fontsize=6.2, weight="bold", color=ec)
+
+    legend_y = max_y + 0.78
+    ax.text(-2.05, legend_y, "Cell values are RLI; stronger shading indicates larger positive attenuation. Hatched NA is unavailable or non-interpretable; <0 is negative/no positive inflation.", ha="left", va="center", fontsize=5.9, color="#5B6570")
+    ax.text(2.50, legend_y, "RLI", ha="left", va="center", fontsize=5.9, color="#5B6570")
+    for k, val in enumerate([0.2, 0.5, 0.8]):
+        ax.add_patch(patches.Rectangle((2.78 + k * 0.16, legend_y - 0.12), 0.12, 0.18, fc=_mix_white("#4D8F57", val), ec="white", lw=0.5))
+    fig.subplots_adjust(left=0.02, right=0.99, top=0.94, bottom=0.08)
+    save_pub(fig, "Figure3_final_matrix")
+    plt.close(fig)
+
+
 def make_figures(t: dict[str, pd.DataFrame]) -> None:
     mpl.rcParams.update({
         "font.family": "sans-serif",
@@ -709,36 +832,10 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
     save_pub(fig, "Figure2_final")
     plt.close(fig)
 
-    # Figure 3: matrix with negative value marked as negative/no inflation.
+    # Figure 3: two-channel phenotype map with grouped dataset structure.
     df3 = figure3_df(t)
     df3.to_csv(SOURCE / "Figure3_Final_SourceData.csv", index=False)
-    vals = df3[["spatial_RLI", "patient_RLI"]].to_numpy(float)
-    fig, ax = plt.subplots(figsize=(6.6, 5.1))
-    plot_vals = np.where(vals < 0, np.nan, vals)
-    masked = np.ma.masked_invalid(plot_vals)
-    cmap = mpl.colors.LinearSegmentedColormap.from_list("rli", ["#F7F7F7", "#BFE0D7", "#5DA5A4", "#234F68"])
-    im = ax.imshow(masked, vmin=0, vmax=0.8, cmap=cmap, aspect="auto")
-    ax.set_yticks(np.arange(len(df3)), [f"{r.dataset} | {r.model}" for r in df3.itertuples()], fontsize=6.6)
-    ax.set_xticks([0, 1], ["Spatial-channel RLI", "Patient-associated RLI"])
-    for i in range(vals.shape[0]):
-        for j in range(vals.shape[1]):
-            val = vals[i, j]
-            if np.isfinite(val) and val >= 0:
-                ax.text(j, i, f"{val:.3f}", ha="center", va="center", fontsize=7, weight="bold", color="white" if val > 0.45 else "#1B2A34")
-            elif np.isfinite(val) and val < 0:
-                ax.add_patch(patches.Rectangle((j - 0.5, i - 0.5), 1, 1, fc="#F6ECEC", ec="white", hatch=".."))
-                ax.text(j, i, "<0", ha="center", va="center", fontsize=7, weight="bold", color="#8A2D2D")
-            else:
-                ax.add_patch(patches.Rectangle((j - 0.5, i - 0.5), 1, 1, fc="#F1F1F1", ec="white", hatch="///"))
-                ax.text(j, i, "NA", ha="center", va="center", fontsize=7, color="#666666")
-    ax.set_title("Two-channel landscape of apparent generalization inflation", loc="left", weight="bold")
-    ax.axhline(len(df3) - 1.5, color="#8A97A5", lw=0.9)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.03)
-    cbar.set_label("Relative leakage inflation (RLI)")
-    ax.text(0.5, len(df3) + 0.25, "NA is unavailable or not interpretable; <0 marks negative/no inflation and is not encoded as positive signal.", ha="center", va="top", fontsize=6.5)
-    fig.tight_layout()
-    save_pub(fig, "Figure3_final_matrix")
-    plt.close(fig)
+    _make_figure3(df3)
 
     # Figure 4: distance response.
     fig, ax = plt.subplots(figsize=(6.6, 4.4))
@@ -821,7 +918,7 @@ def source_index() -> None:
     rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI; descriptive pattern label; NA reason", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 5", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Figure5_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
     ]
@@ -1376,7 +1473,7 @@ def build_docx(v7: str) -> Path:
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable biological signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
             add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient-associated evaluation compares random spot-level performance with patient-held-out performance in datasets supporting patient-level separation. (b) Spatial evaluation compares random performance with buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient-held-out estimates summarize held-out patient/donor groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
         if line.startswith("The patient-channel datasets"):
-            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. Two-channel landscape of apparent generalization inflation. Spatial-channel and patient-associated RLI are shown separately. NA denotes an unavailable or non-interpretable tier and is not treated as zero; <0 denotes negative/no inflation.")
+            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and buffered spatial evaluation, whereas the patient-associated channel reports RLI between random and patient-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
             add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show performance under random, hop0, hop2 and hop5 splits. Error bars show seed-level standard deviation where available.")
         if line.startswith("Model comparisons changed"):
