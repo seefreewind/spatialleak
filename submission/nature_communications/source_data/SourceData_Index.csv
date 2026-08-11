@@ -1,6 +1,6 @@
 figure,panel,dataset,model,metric,source_file,generation_script,status
 Figure 1,a-d,all,all,conceptual schematic; no numerical graph source data,Figure1_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS
-Figure 2,all,DLPFC; Andersson; Thrane; Visium breast,PCA+Ridge; Spatial kNN,mean Pearson with explicit ±1 s.d. units and n,Figure2_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS
+Figure 2,a-b,DLPFC; Andersson; Thrane; Visium breast,PCA+Ridge; Spatial kNN; GraphSAGE,mean Pearson and Delta Pearson with explicit ±1 s.d. units and n,Figure2_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS
 Figure 3,all,DLPFC; Andersson; Thrane; Visium breast; GSE278936,PCA+Ridge; Spatial kNN; GraphSAGE,spatial RLI; patient RLI,Figure3_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS
 Figure 4,all,DLPFC; Visium breast; GSE278936,PCA+Ridge; Spatial kNN,mean Pearson by buffer with ±1 s.d. across frozen seeds,Figure4_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS
 Supplementary Fig. 1,all,DLPFC; Andersson; Thrane; Visium breast,PCA+Ridge; Spatial kNN; GraphSAGE,mean Pearson by evaluation tier,SupplementaryFigure1_SourceData.csv,scripts/finalize_phase23_natcomm_v8.py,PASS

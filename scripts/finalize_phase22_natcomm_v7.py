@@ -557,6 +557,122 @@ def make_figure1() -> None:
     plt.close(fig)
 
 
+def _graphsage_stats(dataset: str, strict_label: str) -> tuple[float, float, float, float, int, int]:
+    file_map = {
+        "Andersson": PAPER / "table_graphsage_shared_panel50_RLI_trainonly.csv",
+        "Thrane": PAPER / "table_graphsage_shared_panel50_RLI_trainonly.csv",
+        "Visium breast": PAPER / "table_graphsage_shared_panel50_RLI_trainonly.csv",
+    }
+    agg_map = {
+        "Andersson": Path("results/anderson_graphsage_shared_panel50_trainonly/shared_panel50_graphsage_trainonly_aggregate.csv"),
+        "Thrane": Path("results/thrane_graphsage_shared_panel50_trainonly/shared_panel50_graphsage_trainonly_aggregate.csv"),
+        "Visium breast": Path("results/visium_breast_graphsage_shared_panel50_trainonly/shared_panel50_graphsage_trainonly_aggregate.csv"),
+    }
+    table = pd.read_csv(file_map[dataset])
+    row = table[(table.dataset == dataset) & (table.strict_label == strict_label) & (table.model == "graphsage")].iloc[0]
+    agg = pd.read_csv(agg_map[dataset])
+    random_vals = agg[agg["split"].eq("random")]["mean_pearson"].astype(float)
+    if strict_label == "patient":
+        strict_vals = agg[agg["split"].str.startswith("patient")]["mean_pearson"].astype(float)
+    else:
+        strict_vals = agg[agg["split"].eq(strict_label)]["mean_pearson"].astype(float)
+    random_sd = float(random_vals.std(ddof=1)) if len(random_vals) > 1 else 0.0
+    strict_sd = float(strict_vals.std(ddof=1)) if len(strict_vals) > 1 else 0.0
+    return float(row.random), float(row.strict), random_sd, strict_sd, int(len(random_vals)), int(len(strict_vals))
+
+
+def _make_fig2_row(t: dict[str, pd.DataFrame], panel: str, dataset: str, model: str, strict_type: str, label: str) -> dict[str, object]:
+    model_label = model.replace("pca_ridge", "PCA+Ridge").replace("spatial_knn", "Spatial kNN").replace("graphsage", "GraphSAGE")
+    if model == "graphsage":
+        strict_label = "patient" if strict_type == "patient" else "matched_hop5"
+        random, strict, random_sd, strict_sd, random_n, strict_n = _graphsage_stats(dataset, strict_label)
+        strict_display = "patient-held-out" if strict_type == "patient" else strict_label
+        strict_error_bar = "s.d. across held-out patient/donor groups" if strict_type == "patient" else "s.d. across 5 frozen seeds"
+        return {
+            "panel": panel,
+            "dataset": dataset,
+            "model": model_label,
+            "display_label": label,
+            "strict_split": strict_display,
+            "random_mean_pearson": random,
+            "strict_mean_pearson": strict,
+            "delta_pearson": random - strict,
+            "random_sd": random_sd,
+            "strict_sd": strict_sd,
+            "random_error_bar": "s.d. across 5 frozen seeds",
+            "strict_error_bar": strict_error_bar,
+            "random_n": random_n,
+            "strict_n": strict_n,
+            "displayed_in_main_figure": True,
+        }
+
+    lr = t["lirli"][(t["lirli"].dataset == dataset.lower().replace(" ", "_")) & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+    if dataset == "DLPFC":
+        lr = t["lirli"][(t["lirli"].dataset == "dlpfc") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+    elif dataset == "Andersson":
+        lr = t["lirli"][(t["lirli"].dataset == "anderson") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+    elif dataset == "Thrane":
+        lr = t["lirli"][(t["lirli"].dataset == "thrane") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+    elif dataset == "Visium breast":
+        lr = t["lirli"][(t["lirli"].dataset == "visium_breast") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
+    lr = lr.iloc[0]
+    sdf = t["summary"]
+    random_row = sdf[(sdf.dataset == lr.dataset) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
+    if strict_type == "patient":
+        strict_parts = sdf[(sdf.dataset == lr.dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"].astype(float)
+        strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
+        strict_n = int(len(strict_parts))
+        strict_error_bar = "s.d. across held-out patient/donor groups"
+        strict_display = "patient-held-out"
+    else:
+        strict_row = sdf[(sdf.dataset == lr.dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)].iloc[0]
+        strict_sd = 0.0 if pd.isna(strict_row.sd_seed) else float(strict_row.sd_seed)
+        strict_n = 10
+        strict_error_bar = "s.d. across 10 frozen seeds"
+        strict_display = str(lr.strict_split)
+    return {
+        "panel": panel,
+        "dataset": dataset,
+        "model": model_label,
+        "display_label": label,
+        "strict_split": strict_display,
+        "random_mean_pearson": float(lr.random),
+        "strict_mean_pearson": float(lr.strict),
+        "delta_pearson": float(lr.random - lr.strict),
+        "random_sd": 0.0 if pd.isna(random_row.sd_seed) else float(random_row.sd_seed),
+        "strict_sd": strict_sd,
+        "random_error_bar": "s.d. across 10 frozen seeds",
+        "strict_error_bar": strict_error_bar,
+        "random_n": 10,
+        "strict_n": strict_n,
+        "displayed_in_main_figure": True,
+    }
+
+
+def _plot_fig2_panel(ax: plt.Axes, rows: list[dict[str, object]], title: str, strict_color: str) -> None:
+    random_color = "#8A949E"
+    line_color = "#B8C0C8"
+    y = np.arange(len(rows))[::-1]
+    for yi, row in zip(y, rows):
+        rnd = float(row["random_mean_pearson"])
+        strict = float(row["strict_mean_pearson"])
+        ax.plot([strict, rnd], [yi, yi], color=line_color, lw=1.5, zorder=1)
+        ax.errorbar(rnd, yi, xerr=float(row["random_sd"]), fmt="o", ms=4.8, color=random_color, ecolor=random_color, elinewidth=0.8, capsize=2, zorder=3)
+        ax.errorbar(strict, yi, xerr=float(row["strict_sd"]), fmt="o", ms=5.0, color=strict_color, ecolor=strict_color, elinewidth=0.8, capsize=2, zorder=4)
+        ax.text(0.705, yi, f"Δr = {float(row['delta_pearson']):.3f}", ha="left", va="center", fontsize=6.1, color=FIG1_COLORS["dark"])
+    ax.set_yticks(y, [str(row["display_label"]) for row in rows], fontsize=6.8)
+    ax.set_xlim(-0.04, 0.84)
+    ax.set_ylim(-0.65, len(rows) - 0.35)
+    ax.set_xlabel("Mean Pearson correlation")
+    ax.set_title(title, loc="left", weight="bold", fontsize=8.2, color=FIG1_COLORS["dark"])
+    ax.grid(axis="x", color="#E6E9ED", lw=0.6, zorder=0)
+    ax.axvline(0, color="#C9D0D7", lw=0.7, zorder=0)
+    ax.tick_params(axis="y", length=0)
+    ax.spines["left"].set_visible(False)
+    ax.text(0.01, len(rows) - 0.58, "Strict", color=strict_color, fontsize=6.2, weight="bold", ha="left", va="top")
+    ax.text(0.18, len(rows) - 0.58, "Random", color=random_color, fontsize=6.2, weight="bold", ha="left", va="top")
+
+
 def make_figures(t: dict[str, pd.DataFrame]) -> None:
     mpl.rcParams.update({
         "font.family": "sans-serif",
@@ -569,86 +685,27 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
     })
     make_figure1()
 
-    # Figure 2: random versus strict grouped by evaluation tier.
-    fig, ax = plt.subplots(figsize=(7.4, 4.8))
-    rows = []
-    fig2_specs = [
-        ("Patient-associated evaluation", "dlpfc", "patient", "DLPFC", "pca_ridge"),
-        ("Patient-associated evaluation", "anderson", "patient", "Andersson", "pca_ridge"),
-        ("Patient-associated evaluation", "thrane", "patient", "Thrane", "pca_ridge"),
-        ("Spatial-buffer evaluation", "dlpfc", "spatial", "DLPFC", "spatial_knn"),
-        ("Spatial-buffer evaluation", "anderson", "spatial", "Andersson", "spatial_knn"),
-        ("Spatial-buffer evaluation", "thrane", "spatial", "Thrane", "spatial_knn"),
-        ("Spatial-buffer evaluation", "visium_breast", "spatial", "Visium breast", "pca_ridge"),
-        ("Spatial-buffer evaluation", "visium_breast", "spatial", "Visium breast", "spatial_knn"),
+    # Figure 2: paired random-to-strict attenuation by evidence tier.
+    patient_rows = [
+        _make_fig2_row(t, "a", "DLPFC", "pca_ridge", "patient", "DLPFC | PCA+Ridge"),
+        _make_fig2_row(t, "a", "Andersson", "pca_ridge", "patient", "Andersson | PCA+Ridge"),
+        _make_fig2_row(t, "a", "Andersson", "graphsage", "patient", "Andersson | GraphSAGE"),
+        _make_fig2_row(t, "a", "Thrane", "pca_ridge", "patient", "Thrane | PCA+Ridge"),
+        _make_fig2_row(t, "a", "Thrane", "graphsage", "patient", "Thrane | GraphSAGE"),
     ]
-    for tier, dataset, strict_type, label, model in fig2_specs:
-        lr = t["lirli"][(t["lirli"].dataset == dataset) & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
-        if lr.empty:
-            continue
-        lr = lr.iloc[0]
-        sdf = t["summary"]
-        rnd_summary = sdf[(sdf.dataset == dataset) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
-        if strict_type == "patient":
-            strict_parts = sdf[(sdf.dataset == dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"]
-            strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
-            strict_n = int(len(strict_parts))
-            strict_error_bar = "s.d. across held-out patient/donor groups"
-            strict_label = "patient-held-out"
-        else:
-            st = sdf[(sdf.dataset == dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)]
-            strict_sd = 0.0 if st.empty or pd.isna(st.iloc[0].sd_seed) else float(st.iloc[0].sd_seed)
-            strict_n = 10
-            strict_error_bar = "s.d. across 10 frozen seeds"
-            strict_label = str(lr.strict_split)
-        rows.append((
-            tier,
-            label,
-            model,
-            strict_label,
-            lr.random,
-            lr.strict,
-            rnd_summary.sd_seed,
-            strict_sd,
-            "s.d. across 10 frozen seeds",
-            strict_error_bar,
-            10,
-            strict_n,
-        ))
-    pd.DataFrame(
-        rows,
-        columns=[
-            "evaluation_tier",
-            "dataset",
-            "model",
-            "strict_split",
-            "random_mean_pearson",
-            "strict_mean_pearson",
-            "random_sd",
-            "strict_sd",
-            "random_error_bar",
-            "strict_error_bar",
-            "random_n",
-            "strict_n",
-        ],
-    ).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
-    x = np.arange(len(rows))
-    width = 0.36
-    patient_n = sum(r[0] == "Patient-associated evaluation" for r in rows)
-    ax.axvspan(-0.55, patient_n - 0.45, color="#F5EEF6", zorder=0)
-    ax.axvspan(patient_n - 0.45, len(rows) - 0.45, color="#EEF6F0", zorder=0)
-    ax.bar(x - width / 2, [r[4] for r in rows], width, yerr=[r[6] for r in rows], label="Random", color="#4C78A8", capsize=2, zorder=3)
-    ax.bar(x + width / 2, [r[5] for r in rows], width, yerr=[r[7] for r in rows], label="Strict tier", color="#F58518", capsize=2, zorder=3)
-    ax.axvline(patient_n - 0.5, color="#A9B2BC", lw=0.8, ls="--", zorder=2)
-    ax.text((patient_n - 1) / 2, 0.715, "Patient-associated evaluation", ha="center", va="top", fontsize=7.2, weight="bold", color="#7A4E78")
-    ax.text(patient_n + (len(rows) - patient_n - 1) / 2, 0.715, "Spatial-buffer evaluation", ha="center", va="top", fontsize=7.2, weight="bold", color="#3D6D43")
-    ax.set_xticks(x, [f"{r[1]}\n{r[2].replace('pca_ridge', 'PCA+Ridge').replace('spatial_knn', 'Spatial kNN')}" for r in rows], rotation=0)
-    ax.set_ylabel("Mean Pearson correlation")
-    ax.set_ylim(-0.055, 0.74)
-    ax.set_title("Random and strict evaluation diverge by evidence tier", loc="left", weight="bold")
-    ax.grid(axis="y", color="#E5E7EB", lw=0.6, zorder=1)
-    ax.legend()
-    fig.tight_layout()
+    spatial_rows = [
+        _make_fig2_row(t, "b", "DLPFC", "pca_ridge", "spatial", "DLPFC | PCA+Ridge"),
+        _make_fig2_row(t, "b", "DLPFC", "spatial_knn", "spatial", "DLPFC | Spatial kNN"),
+        _make_fig2_row(t, "b", "Visium breast", "pca_ridge", "spatial", "Visium breast | PCA+Ridge"),
+        _make_fig2_row(t, "b", "Visium breast", "spatial_knn", "spatial", "Visium breast | Spatial kNN"),
+        _make_fig2_row(t, "b", "Visium breast", "graphsage", "spatial", "Visium breast | GraphSAGE"),
+    ]
+    pd.DataFrame(patient_rows + spatial_rows).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
+    fig, axes = plt.subplots(2, 1, figsize=(7.4, 5.2), sharex=True, gridspec_kw={"hspace": 0.34})
+    _plot_fig2_panel(axes[0], patient_rows, "a  Patient-held-out evaluation attenuates random-split performance", FIG1_COLORS["patient"])
+    _plot_fig2_panel(axes[1], spatial_rows, "b  Buffered spatial evaluation reveals local performance dependence", FIG1_COLORS["spatial"])
+    fig.suptitle("Predictive performance attenuates under stricter evaluation tiers", x=0.06, y=0.985, ha="left", fontsize=9.8, fontweight="bold")
+    fig.subplots_adjust(left=0.23, right=0.98, top=0.88, bottom=0.10, hspace=0.40)
     save_pub(fig, "Figure2_final")
     plt.close(fig)
 
@@ -763,7 +820,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
 def source_index() -> None:
     rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 5", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Figure5_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
@@ -784,7 +841,7 @@ def reports(t: dict[str, pd.DataFrame], k: dict[str, str], refs: dict[str, int],
     manifest_rows = []
     captions = {
         "Figure 1": "Evaluation design determines the generalization claim.",
-        "Figure 2": "Cross-dataset random versus strict evaluation.",
+        "Figure 2": "Predictive performance attenuates under stricter evaluation tiers.",
         "Figure 3": "Two-channel landscape of apparent generalization inflation.",
         "Figure 4": "Non-zero spatial buffer response.",
         "Figure 5": "Evaluation-regime-dependent model behavior.",
@@ -1317,7 +1374,7 @@ def build_docx(v7: str) -> Path:
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable biological signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation. Bars show mean Pearson correlation for random and relevant strict splits; error bars show seed-level standard deviation where available.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient-associated evaluation compares random spot-level performance with patient-held-out performance in datasets supporting patient-level separation. (b) Spatial evaluation compares random performance with buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient-held-out estimates summarize held-out patient/donor groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. Two-channel landscape of apparent generalization inflation. Spatial-channel and patient-associated RLI are shown separately. NA denotes an unavailable or non-interpretable tier and is not treated as zero; <0 denotes negative/no inflation.")
         if line.startswith("SpatialLeak next tested"):

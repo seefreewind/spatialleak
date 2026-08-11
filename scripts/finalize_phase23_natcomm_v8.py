@@ -370,7 +370,7 @@ def build_docx(v8: str) -> Path:
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
             add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting can place neighboring training and test spots within the same local tissue context. (b) Observed test performance under permissive evaluation may combine local spatial dependence, patient-associated structure and transportable biological signal. (c) Increasing separation adds spatial buffers, section separation, patient separation, dataset separation and platform separation. (d) The evidence hierarchy links each evaluation tier to the level of generalization it can support; signal retained under stricter tiers provides stronger evidence for transportable biology.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Cross-dataset random versus strict evaluation by evidence tier. Bars show mean Pearson correlation for random splits and the relevant strict tier. Background shading separates patient-associated evaluation from spatial-buffer evaluation. Error bars indicate ±1 s.d.; s.d. is computed across 10 frozen seeds for random and spatial-buffer estimates and across held-out patient/donor groups for patient-held-out strict estimates, as specified in Source Data.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient-associated evaluation compares random spot-level performance with patient-held-out performance in datasets supporting patient-level separation. (b) Spatial evaluation compares random performance with buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient-held-out estimates summarize held-out patient/donor groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. Two-channel landscape of apparent generalization inflation. Spatial-channel and patient-associated RLI are shown separately. NA denotes an unavailable or non-interpretable tier and is not treated as zero; <0 denotes negative/no inflation.")
         if line.startswith("SpatialLeak next tested"):
@@ -404,7 +404,7 @@ def update_source_data() -> None:
             path.unlink()
     idx_rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual schematic; no numerical graph source data", "Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 2", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN", "mean Pearson with explicit ±1 s.d. units and n", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units and n", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI", "Figure3_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Supplementary Fig. 1", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "SupplementaryFigure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
@@ -419,7 +419,7 @@ def update_source_data() -> None:
 This folder contains the numerical source data for all graphs and charts in the main manuscript and Supplementary Fig. 1.
 
 - `Figure1_SourceData.csv`: conceptual schematic manifest; Figure 1 contains no numerical graph values.
-- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, explicit ±1 s.d. units, and n for each error bar.
+- `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, Δr, explicit ±1 s.d. units, and n for each error bar.
 - `Figure3_SourceData.csv`: spatial-channel and patient-associated RLI matrix values.
 - `Figure4_SourceData.csv`: mean Pearson values by spatial buffer with ±1 s.d. across frozen seeds.
 - `SupplementaryFigure1_SourceData.csv`: evaluation-regime-dependent model behavior values.
@@ -502,11 +502,11 @@ Move Figure 5 to Supplementary Fig. 1. The main article retains Figure 1 concept
 
 ## Finding
 
-The available frozen outputs provide seed-level standard deviation for random/spatial split summaries and patient-fold dispersion for grouped patient-held-out summaries. Uniform biological-unit 95% bootstrap confidence intervals are not available for every Figure 2 bar.
+The available frozen outputs provide seed-level standard deviation for random/spatial split summaries and patient-fold dispersion for grouped patient-held-out summaries. Uniform biological-unit 95% bootstrap confidence intervals are not available for every Figure 2 point.
 
 ## Decision
 
-Figure 2 reports descriptive ±1 s.d. error bars. Random estimates and spatial-buffer strict estimates use s.d. across 10 frozen seeds. Patient-held-out strict estimates use s.d. across held-out patient/donor groups, because these folds are biological groups rather than repeated seeds. `Figure2_SourceData.csv` records the error-bar unit and n for every bar.
+Figure 2 reports descriptive ±1 s.d. error bars around paired random and strict-tier points. Random estimates and spatial-buffer strict estimates use s.d. across frozen seeds. Patient-held-out strict estimates use s.d. across held-out patient/donor groups, because these folds are biological groups rather than repeated seeds. `Figure2_SourceData.csv` records Δr, the error-bar unit and n for every point.
 
 ## Status
 
@@ -521,7 +521,7 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Bars show mean Pearson correlation from frozen aggregate results and are grouped by the evaluation tier being tested. Error bars indicate ±1 s.d. For random estimates and spatial-buffer strict estimates, s.d. is across 10 frozen seeds. For patient-held-out strict estimates, s.d. is across held-out patient/donor groups. `Figure2_SourceData.csv` lists the unit and n for each bar.
+Paired points show mean Pearson correlation from frozen aggregate results under random and claim-matched strict evaluation tiers. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas patient-held-out strict estimates summarize held-out patient/donor groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
 
 ## Figure 3
 

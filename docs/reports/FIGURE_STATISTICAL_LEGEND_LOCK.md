@@ -6,7 +6,7 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Bars show mean Pearson correlation from frozen aggregate results and are grouped by the evaluation tier being tested. Error bars indicate ±1 s.d. For random estimates and spatial-buffer strict estimates, s.d. is across 10 frozen seeds. For patient-held-out strict estimates, s.d. is across held-out patient/donor groups. `Figure2_SourceData.csv` lists the unit and n for each bar.
+Paired points show mean Pearson correlation from frozen aggregate results under random and claim-matched strict evaluation tiers. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas patient-held-out strict estimates summarize held-out patient/donor groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
 
 ## Figure 3
 
