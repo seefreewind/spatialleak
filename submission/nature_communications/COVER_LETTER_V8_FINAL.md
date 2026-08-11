@@ -1,6 +1,6 @@
 Dear Editors,
 
-We submit the manuscript entitled "Evaluation design reshapes apparent generalization in spatial omics prediction" for consideration as an Article in Nature Communications. Different evaluation designs in spatial omics do not support equivalent generalization claims, yet predictive model performance is often interpreted without separating local interpolation, section transfer, patient transfer and dataset transfer.
+We submit the manuscript entitled "Evaluation design reshapes apparent generalization in spatial omics prediction" for consideration as an Article in Nature Communications. Different evaluation designs in spatial omics do not support equivalent generalization claims, yet predictive model performance is often interpreted without separating local interpolation, section transfer, subject transfer and dataset transfer.
 
 SpatialLeak addresses this problem by defining a leakage-resistant evaluation hierarchy for spatial omics prediction. Across public spatial transcriptomics datasets, the framework separates two sources of apparent generalization: local spatial-neighborhood dependence and subject-associated structure.
 

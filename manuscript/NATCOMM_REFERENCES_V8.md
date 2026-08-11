@@ -1,7 +1,7 @@
 # Nature Communications References V8
 
 1. Ståhl, P.L. et al. Visualization and analysis of gene expression in tissue sections by spatial transcriptomics. Science 353, 78-82 (2016). https://doi.org/10.1126/science.aaf2403
-2. Abdelaal, T., Mourragui, S., Mahfouz, A. & Reinders, M.J.T. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Res. 48, e107-e107 (2020). https://doi.org/10.1093/nar/gkaa740
+2. Abdelaal, T., Mourragui, S., Mahfouz, A. & Reinders, M.J.T. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Res. 48, e107 (2020). https://doi.org/10.1093/nar/gkaa740
 3. Biancalani, T. et al. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. Nat. Methods 18, 1352-1362 (2021). https://doi.org/10.1038/s41592-021-01264-7
 4. Chen, S., Zhang, B., Chen, X., Zhang, X. & Jiang, R. stPlus: a reference-based method for the accurate enhancement of spatial transcriptomics. Bioinformatics 37, i299–i307 (2021). https://doi.org/10.1093/bioinformatics/btab298
 5. Long, Y. et al. Spatially informed clustering, integration, and deconvolution of spatial transcriptomics with GraphST. Nat. Commun. 14, 1155 (2023). https://doi.org/10.1038/s41467-023-36796-3
@@ -29,4 +29,5 @@
 27. 10x Genomics. Human Breast Cancer (Block A Section 1): Spatial Gene Expression dataset. 10x Genomics dataset, version 1.0.0, Block A Section 1; Accessed 2026-08-10. https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-1-1-standard-1-0-0 (2020).
 28. 10x Genomics. Human Breast Cancer (Block A Section 2): Spatial Gene Expression dataset. 10x Genomics dataset, version 1.1.0, Block A Section 2; Accessed 2026-08-11. https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-2-1-standard-1-1-0 (2020).
 29. Kiviaho, A. et al. Single cell and spatial transcriptomics highlight the interaction of club-like cells with immunosuppressive myeloid cells in prostate cancer. Nat. Commun. 15, 9949 (2024). https://doi.org/10.1038/s41467-024-54364-1
-30. Hamilton, W.L., Ying, R. & Leskovec, J. Inductive representation learning on large graphs. In Advances in Neural Information Processing Systems 30, 1024-1034 (2017).
+30. Wolf, F.A., Angerer, P. & Theis, F.J. SCANPY: large-scale single-cell gene expression data analysis. Genome Biol. 19, 15 (2018). https://doi.org/10.1186/s13059-017-1382-0
+31. Hamilton, W.L., Ying, R. & Leskovec, J. Inductive representation learning on large graphs. In Advances in Neural Information Processing Systems 30, 1024-1034 (2017).
