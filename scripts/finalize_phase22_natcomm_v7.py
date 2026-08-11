@@ -796,6 +796,71 @@ def _make_figure3(df3: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def _plot_spatial_response_panel(
+    ax: plt.Axes,
+    rows: list[dict[str, object]],
+    title: str,
+    subtitle: str,
+    annotation: str | None = None,
+    note: str | None = None,
+) -> None:
+    x_map = {"random": 0, "matched_hop0": 1, "matched_hop2": 2, "matched_hop5": 3}
+    by_split = {str(r["split"]): r for r in rows}
+    green = FIG1_COLORS["spatial"]
+    green_light = "#A7CDA4"
+    green_dark = "#2F6F3A"
+    random_color = "#8A949E"
+    line_color = "#4D8F57"
+
+    random = by_split["random"]
+    ax.errorbar([0], [float(random["mean_pearson"])], yerr=[float(random["sd"])], fmt="o", ms=5.2,
+                color=random_color, ecolor=random_color, elinewidth=0.9, capsize=2, zorder=4)
+    hop_splits = ["matched_hop0", "matched_hop2", "matched_hop5"]
+    xs = [x_map[s] for s in hop_splits if s in by_split]
+    ys = [float(by_split[s]["mean_pearson"]) for s in hop_splits if s in by_split]
+    es = [float(by_split[s]["sd"]) for s in hop_splits if s in by_split]
+    ax.plot(xs, ys, color=line_color, lw=1.7, zorder=2)
+    ax.errorbar(xs, ys, yerr=es, fmt="o", ms=5.3, color=green, ecolor=green, elinewidth=0.9, capsize=2, zorder=4)
+    if "matched_hop0" in by_split:
+        ax.plot([0, 1], [float(random["mean_pearson"]), float(by_split["matched_hop0"]["mean_pearson"])],
+                color="#B8C0C8", lw=1.1, ls=(0, (2, 2)), zorder=1)
+    ax.axvline(0.5, color="#CDD4DB", lw=0.8, ls=(0, (2, 2)), zorder=0)
+    ax.scatter([1, 2, 3], ys, s=[0, 0, 0], color=[green_light, green, green_dark])
+    ax.set_xticks([0, 1, 2, 3], ["Random", "Block\nonly", "+2-hop\nbuffer", "+5-hop\nbuffer"], fontsize=6.2)
+    ax.set_title(title, loc="left", fontsize=7.7, weight="bold", color=FIG1_COLORS["dark"], pad=10)
+    ax.text(0.0, 1.01, subtitle, transform=ax.transAxes, ha="left", va="bottom", fontsize=5.9, color="#6B7280")
+    ax.set_xlim(-0.35, 3.35)
+    ax.set_ylim(0, 0.70)
+    ax.grid(axis="y", color="#E6E9ED", lw=0.6, zorder=0)
+    ax.spines["left"].set_color("#B6C0C9")
+    ax.spines["bottom"].set_color("#B6C0C9")
+    if annotation:
+        ax.text(2.95, 0.63, annotation, ha="right", va="top", fontsize=6.3, color=green_dark, weight="bold")
+    if note:
+        ax.text(0.02, 0.08, note, transform=ax.transAxes, ha="left", va="bottom", fontsize=5.4, color="#6B7280")
+
+
+def _make_figure4(fig4_rows: list[dict[str, object]]) -> None:
+    panel_specs = [
+        ("DLPFC", "a  DLPFC - Spatial kNN", "n = 10 seeds", "hop5 RLI = 0.700", None),
+        ("Visium breast", "b  Visium breast - Spatial kNN", "n = 10 seeds", "hop5 RLI = 0.796", None),
+        ("GSE278936 prostate", "c  GSE278936 - PCA+Ridge", "independent Visium replication; n = 5 seeds", "Non-zero buffer\nrequired\nhop5 RLI = 0.222", "Spatial kNN RLI not interpretable\n(random performance near zero)."),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(7.4, 3.25), sharey=True)
+    for ax, (dataset, title, subtitle, annotation, note) in zip(axes, panel_specs):
+        rows = [r for r in fig4_rows if r["dataset"] == dataset]
+        _plot_spatial_response_panel(ax, rows, title, subtitle, annotation, note)
+    axes[0].set_ylabel("Mean Pearson correlation")
+    for ax in axes[1:]:
+        ax.tick_params(axis="y", labelleft=False)
+    fig.suptitle("Performance response to increasing spatial exclusion", x=0.04, y=0.99, ha="left", fontsize=9.8, fontweight="bold")
+    fig.text(0.04, 0.05, "Random is shown as a permissive reference; block-only, +2-hop and +5-hop splits form the buffered spatial family. Shared y-axis is used across panels.", ha="left", va="bottom", fontsize=6.0, color="#5B6570")
+    fig.text(0.53, 0.11, "Increasing spatial exclusion: block-only -> +2-hop buffer -> +5-hop buffer", ha="center", va="bottom", fontsize=6.1, color="#2F6F3A", weight="bold")
+    fig.subplots_adjust(left=0.08, right=0.99, top=0.78, bottom=0.30, wspace=0.18)
+    save_pub(fig, "Figure4_final")
+    plt.close(fig)
+
+
 def make_figures(t: dict[str, pd.DataFrame]) -> None:
     mpl.rcParams.update({
         "font.family": "sans-serif",
@@ -837,10 +902,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
     df3.to_csv(SOURCE / "Figure3_Final_SourceData.csv", index=False)
     _make_figure3(df3)
 
-    # Figure 4: distance response.
-    fig, ax = plt.subplots(figsize=(6.6, 4.4))
-    colors = {"DLPFC": "#4C78A8", "Visium breast": "#59A14F", "GSE278936 prostate": "#B07AA1"}
-    # DLPFC / Visium from summary, GSE from table.
+    # Figure 4: spatial exclusion response.
     fig4_rows = []
     for dataset, label, model in [("dlpfc", "DLPFC", "spatial_knn"), ("visium_breast", "Visium breast", "spatial_knn")]:
         sdf = t["summary"]
@@ -853,9 +915,9 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         xs = [-0.4] + [p[0] for p in pts]
         ys = [rnd.mean_pearson] + [p[1] for p in pts]
         es = [rnd.sd_seed] + [p[2] for p in pts]
-        ax.errorbar(xs, ys, yerr=es, marker="o", lw=1.7, capsize=2, color=colors[label], label=f"{label} {model.replace('_', '+')}")
         for split_label, hop, mean, sd in zip(["random"] + [f"matched_hop{p[0]}" for p in pts], xs, ys, es):
-            fig4_rows.append({"dataset": label, "model": model, "split": split_label, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 10 frozen seeds", "n_seeds": 10})
+            display = {"random": "Random", "matched_hop0": "Block only", "matched_hop2": "+2-hop buffer", "matched_hop5": "+5-hop buffer"}[split_label]
+            fig4_rows.append({"dataset": label, "model": model, "split": split_label, "display_split": display, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 10 frozen seeds", "n_seeds": 10, "regime_family": "permissive reference" if split_label == "random" else "buffered spatial"})
     gse = t["gse"][(t["gse"].model == "pca_ridge")]
     gse_seed = pd.read_csv("results/gse278936_prostate_spatial_pilot/spatial_pilot_aggregate.csv")
     gse_seed = gse_seed[gse_seed.model == "pca_ridge"]
@@ -867,16 +929,10 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
         xs.append(int(comp[-1]))
         ys.append(float(r.strict_mean_pearson))
         es.append(float(gse_sd.get(split, 0.0)))
-    ax.errorbar(xs, ys, yerr=es, marker="o", lw=1.7, capsize=2, color=colors["GSE278936 prostate"], label="GSE278936 PCA+Ridge")
     for split_label, hop, mean, sd in zip(["random", "matched_hop0", "matched_hop2", "matched_hop5"], xs, ys, es):
-        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 5 frozen seeds", "n_seeds": 5})
-    ax.set_xticks([-0.4, 0, 2, 5], ["Random", "hop0", "hop2", "hop5"])
-    ax.set_ylabel("Mean Pearson correlation")
-    ax.set_title("Non-zero spatial buffers reveal distance-dependent performance loss", loc="left", weight="bold")
-    ax.legend(fontsize=6.3)
-    fig.tight_layout()
-    save_pub(fig, "Figure4_final")
-    plt.close(fig)
+        display = {"random": "Random", "matched_hop0": "Block only", "matched_hop2": "+2-hop buffer", "matched_hop5": "+5-hop buffer"}[split_label]
+        fig4_rows.append({"dataset": "GSE278936 prostate", "model": "pca_ridge", "split": split_label, "display_split": display, "hop": hop, "mean_pearson": mean, "sd": sd, "error_bar": "s.d. across 5 frozen seeds", "n_seeds": 5, "regime_family": "permissive reference" if split_label == "random" else "buffered spatial"})
+    _make_figure4(fig4_rows)
     pd.DataFrame(fig4_rows).to_csv(SOURCE / "Figure4_SourceData.csv", index=False)
 
     # Figure 5: model behavior by evaluation regime.
@@ -919,7 +975,7 @@ def source_index() -> None:
         ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI; descriptive pattern label; NA reason", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 4", "a-c", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by spatial exclusion regime with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 5", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Figure5_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
     ]
     with (SOURCE / "SourceData_Index.csv").open("w", newline="") as fh:
@@ -940,7 +996,7 @@ def reports(t: dict[str, pd.DataFrame], k: dict[str, str], refs: dict[str, int],
         "Figure 1": "Evaluation design determines the generalization claim.",
         "Figure 2": "Predictive performance attenuates under stricter evaluation tiers.",
         "Figure 3": "Two-channel landscape of apparent generalization inflation.",
-        "Figure 4": "Non-zero spatial buffer response.",
+        "Figure 4": "Performance response to increasing spatial exclusion.",
         "Figure 5": "Evaluation-regime-dependent model behavior.",
     }
     for fid in [f"Figure {i}" for i in range(1, 6)]:
@@ -1475,7 +1531,7 @@ def build_docx(v7: str) -> Path:
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and buffered spatial evaluation, whereas the patient-associated channel reports RLI between random and patient-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
-            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show performance under random, hop0, hop2 and hop5 splits. Error bars show seed-level standard deviation where available.")
+            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Increasing spatial exclusion reveals dataset-dependent local neighborhood dependence. (a) Spatial kNN performance in DLPFC under random evaluation and increasingly buffered spatial splits. (b) Spatial kNN in dense Visium breast data, showing pronounced attenuation with increasing exclusion distance. (c) PCA+Ridge in the independent GSE278936 Visium cohort, where block-only separation produced little change relative to random evaluation, whereas non-zero hop buffers reduced performance. Points show mean Pearson correlation across target genes; error bars indicate ±1 s.d. across frozen seeds (n = 10 for DLPFC and Visium breast; n = 5 for GSE278936). Random evaluation is shown as a permissive reference, whereas block-only, +2-hop and +5-hop splits represent progressively stronger within-section spatial separation. Random-size-matched controls are reported in the Supplementary Information.")
         if line.startswith("Model comparisons changed"):
             add_figure(doc, FIGS / "Figure5_final.png", "Figure 5. Evaluation-regime-dependent model behavior. Model performance is shown across random, spatial-strict and patient-strict settings where each tier is available.")
 

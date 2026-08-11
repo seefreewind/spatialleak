@@ -14,7 +14,7 @@ Cells show RLI. NA denotes unavailable or non-interpretable tiers and is not zer
 
 ## Figure 4
 
-Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for GSE278936.
+Panel-wise response plots show mean Pearson correlation under random evaluation and increasingly buffered spatial splits. Random is a permissive reference, whereas block-only, +2-hop and +5-hop splits form the buffered spatial family. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for GSE278936.
 
 ## Supplementary Fig. 1
 

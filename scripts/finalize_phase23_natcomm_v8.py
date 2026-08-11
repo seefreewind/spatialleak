@@ -374,7 +374,7 @@ def build_docx(v8: str) -> Path:
         if line.startswith("The patient-channel datasets"):
             add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and buffered spatial evaluation, whereas the patient-associated channel reports RLI between random and patient-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
-            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Non-zero spatial buffer response. Curves show mean Pearson correlation under random, hop0, hop2 and hop5 splits. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for the GSE278936 spatial-channel pilot.")
+            add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Increasing spatial exclusion reveals dataset-dependent local neighborhood dependence. (a) Spatial kNN performance in DLPFC under random evaluation and increasingly buffered spatial splits. (b) Spatial kNN in dense Visium breast data, showing pronounced attenuation with increasing exclusion distance. (c) PCA+Ridge in the independent GSE278936 Visium cohort, where block-only separation produced little change relative to random evaluation, whereas non-zero hop buffers reduced performance. Points show mean Pearson correlation across target genes; error bars indicate ±1 s.d. across frozen seeds (n = 10 for DLPFC and Visium breast; n = 5 for GSE278936). Random evaluation is shown as a permissive reference, whereas block-only, +2-hop and +5-hop splits represent progressively stronger within-section spatial separation. Random-size-matched controls are reported in the Supplementary Information.")
     doc.save(out)
     return out
 
@@ -406,7 +406,7 @@ def update_source_data() -> None:
         ["Figure 1", "a-d", "all", "all", "conceptual schematic; no numerical graph source data", "Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units and n", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI; descriptive pattern label; NA reason", "Figure3_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 4", "all", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by buffer with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 4", "a-c", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by spatial exclusion regime with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Supplementary Fig. 1", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "SupplementaryFigure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
     ]
     with (SOURCE / "SourceData_Index.csv").open("w", newline="") as fh:
@@ -529,7 +529,7 @@ Cells show RLI. NA denotes unavailable or non-interpretable tiers and is not zer
 
 ## Figure 4
 
-Curves show mean Pearson correlation across random, hop0, hop2 and hop5 regimes. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for GSE278936.
+Panel-wise response plots show mean Pearson correlation under random evaluation and increasingly buffered spatial splits. Random is a permissive reference, whereas block-only, +2-hop and +5-hop splits form the buffered spatial family. Error bars indicate ±1 s.d. across frozen seeds: 10 seeds for DLPFC and Visium breast, and 5 seeds for GSE278936.
 
 ## Supplementary Fig. 1
 
