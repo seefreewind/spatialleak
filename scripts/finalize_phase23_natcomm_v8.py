@@ -283,7 +283,7 @@ def format_reference_list(records: list[dict]) -> str:
             note = f"; {r.get('note', '')}" if r.get("note") else ""
             line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']} dataset, version 1.0.0, Block A Section 1{note}. {r['url']} ({r['year']})."
         elif r["key"] == "Hamilton2017GraphSAGE":
-            line = f"{r['citation_number']}. {r['authors']} {r['title']}. In Advances in Neural Information Processing Systems 30 (2017)."
+            line = f"{r['citation_number']}. {r['authors']} {r['title']}. In Advances in Neural Information Processing Systems 30, 1024-1034 (2017)."
         else:
             line = f"{r['citation_number']}. {r['authors']} {r['title']}. {r['journal']}{volume}{pages} ({r['year']}).{doi}{url}"
         lines.append(line)
@@ -369,10 +369,10 @@ def build_docx(v8: str) -> Path:
             continue
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
-            add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting can place neighboring training and test spots within the same local tissue context. (b) Observed test performance under permissive evaluation may combine local spatial dependence, patient-associated structure and transportable biological signal. (c) Increasing separation adds spatial buffers, section separation, patient separation, dataset separation and platform separation. (d) The evidence hierarchy links each evaluation tier to the level of generalization it can support; signal retained under stricter tiers provides stronger evidence for transportable biology.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient-associated evaluation compares random spot-level performance with patient-held-out performance in datasets supporting patient-level separation. (b) Spatial evaluation compares random performance with buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient-held-out estimates summarize held-out patient/donor groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
-        if line.startswith("The patient-channel datasets"):
-            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and buffered spatial evaluation, whereas the patient-associated channel reports RLI between random and patient-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
+            add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting can place neighboring training and test spots within the same local tissue context. (b) Observed test performance under permissive evaluation may combine local spatial dependence, patient-associated structure and transportable signal. (c) Increasing separation adds spatial buffers, section separation, patient or donor separation, dataset separation and platform separation. (d) The evidence hierarchy links each evaluation tier to the level of generalization it can support; signal retained under stricter tiers provides stronger evidence for transportable signal.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient/donor-associated evaluation compares random spot-level performance with patient- or donor-held-out performance in datasets supporting subject-level separation. (b) Spatial evaluation compares random performance with +5-hop buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient/donor-held-out estimates summarize held-out subject groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
+        if line.startswith("The patient/donor-associated datasets"):
+            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and the prespecified hop-buffered spatial evaluation, prioritizing +5-hop where resolvable; exact strict splits are listed in Source Data. The patient/donor-associated channel reports RLI between random and patient- or donor-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
             add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Increasing spatial exclusion reveals dataset-dependent local neighborhood dependence. (a) Spatial kNN performance in DLPFC under random evaluation and increasingly buffered spatial splits. (b) Spatial kNN in dense Visium breast data, showing pronounced attenuation with increasing exclusion distance. (c) PCA+Ridge in the independent GSE278936 Visium cohort, where block-only separation produced little change relative to random evaluation, whereas non-zero hop buffers reduced performance. Points show mean Pearson correlation across target genes; error bars indicate ±1 s.d. across frozen seeds (n = 10 for DLPFC and Visium breast; n = 5 for GSE278936). Random evaluation is shown as a permissive reference, whereas block-only, +2-hop and +5-hop splits represent progressively stronger within-section spatial separation. Random-size-matched controls are reported in the Supplementary Information.")
     doc.save(out)
@@ -405,7 +405,7 @@ def update_source_data() -> None:
     idx_rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual schematic; no numerical graph source data", "Figure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units and n", "Figure2_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
-        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI; descriptive pattern label; NA reason", "Figure3_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
+        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient/donor-associated RLI; exact strict split label; descriptive pattern label; NA reason", "Figure3_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Figure 4", "a-c", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by spatial exclusion regime with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
         ["Supplementary Fig. 1", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "SupplementaryFigure1_SourceData.csv", "scripts/finalize_phase23_natcomm_v8.py", "PASS"],
     ]
@@ -420,7 +420,7 @@ This folder contains the numerical source data for all graphs and charts in the 
 
 - `Figure1_SourceData.csv`: conceptual schematic manifest; Figure 1 contains no numerical graph values.
 - `Figure2_SourceData.csv`: random-versus-strict mean Pearson values, Δr, explicit ±1 s.d. units, and n for each error bar.
-- `Figure3_SourceData.csv`: spatial-channel and patient-associated RLI matrix values, descriptive pattern labels, and NA reasons.
+- `Figure3_SourceData.csv`: spatial-channel and patient/donor-associated RLI matrix values, exact strict split labels, descriptive pattern labels, and NA reasons.
 - `Figure4_SourceData.csv`: mean Pearson values by spatial buffer with ±1 s.d. across frozen seeds.
 - `SupplementaryFigure1_SourceData.csv`: evaluation-regime-dependent model behavior values.
 - `SourceData_Index.csv`: per-figure file map.
@@ -495,7 +495,7 @@ Sources: Nature Communications "How to submit" and "Article" instructions.
 
 ## Decision
 
-Move Figure 5 to Supplementary Fig. 1. The main article retains Figure 1 conceptual framework, Figure 2 random-versus-strict performance, Figure 3 two-channel landscape and Figure 4 non-zero spatial buffer response. This keeps the main paper focused and avoids redundancy between model-behavior and two-channel summary panels.
+Move Figure 5 to Supplementary Fig. 1. The main article retains Figure 1 conceptual framework, Figure 2 random-versus-strict performance, Figure 3 two-channel landscape and Figure 4 spatial buffer response. This keeps the main paper focused and avoids redundancy between model-behavior and two-channel summary panels.
 """)
     write(REPORTS / "FIG2_UNCERTAINTY_AUDIT.md", """
 # Figure 2 Uncertainty Audit
@@ -521,11 +521,11 @@ Conceptual schematic. No numerical source data are required.
 
 ## Figure 2
 
-Paired points show mean Pearson correlation from frozen aggregate results under random and claim-matched strict evaluation tiers. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas patient-held-out strict estimates summarize held-out patient/donor groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
+Paired points show mean Pearson correlation from frozen aggregate results under random and strict evaluation tiers. Spatial-channel synthesis uses the prespecified +5-hop buffered tier where resolvable. Connecting lines show attenuation and right-side labels report Δr. Error bars indicate ±1 s.d.; random and spatial-buffer strict estimates summarize predefined seeds, whereas patient/donor-held-out strict estimates summarize held-out subject groups. `Figure2_SourceData.csv` lists Δr, the unit and n for each error bar.
 
 ## Figure 3
 
-Cells show RLI. NA denotes unavailable or non-interpretable tiers and is not zero. `<0` denotes negative/no inflation. No inferential cutoff is implied.
+Cells show RLI. Spatial-channel synthesis uses the prespecified hop-buffered tier, prioritizing +5-hop where resolvable; exact strict splits are listed in Source Data. NA denotes unavailable or non-interpretable tiers and is not zero. `<0` denotes negative/no inflation. No inferential cutoff is implied.
 
 ## Figure 4
 
@@ -724,11 +724,13 @@ def supplement_v3(k: dict[str, str]) -> None:
 
 ## Supplementary Methods
 
-SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, 10x Visium breast cancer and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. Up to 2000 highly variable predictor genes were used after excluding target genes.
+SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, 10x Visium breast cancer and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. Up to 2000 highly variable predictor genes were selected once during dataset preprocessing after excluding target genes and then frozen before split-specific model fitting.
 
-Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Hop buffers were defined on a within-slide spatial kNN graph with k = 15. Patient-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training patients.
+Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Block-only splits correspond to hop0; +2-hop and +5-hop buffers correspond to hop2 and hop5 exclusion on a within-slide spatial kNN graph with k = 15. Patient/donor-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training subjects. Section-held-out splits held out sections but were not treated as patient/donor-held-out unless subject identity was also separated.
 
-PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60.
+The Andersson-to-Visium dataset-held-out/cross-platform stress test trained PCA+Ridge on Andersson and evaluated on 10x Visium breast using 49 shared targets and 2000 common predictor features. PCA and Ridge parameters were fitted on the training dataset only and applied to the held-out Visium dataset without refitting; spatial kNN was excluded because spatial coordinates are not comparable across platforms.
+
+PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128 in all reported analyses, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60. The split-construction kNN graph (k = 15) was distinct from the GraphSAGE message-passing graph (k = 10).
 
 ## Dataset and Sample Structure
 
@@ -780,7 +782,7 @@ Model performance changed with the evaluation tier. The source data are provided
 
 ## Boundary Conditions
 
-Spatial kNN RLI was not interpreted when random performance was near zero. Thrane high-hop spatial buffers were limited by ST v1.0 density. Visium breast was single-patient and therefore supports spatial and section-level evidence, not patient-level validation. GSE278936 public data contain one section per patient and were used only for spatial-channel replication.
+Spatial kNN RLI was not interpreted when random performance was near zero. Thrane high-hop spatial buffers were limited by ST v1.0 density. Visium breast was single-patient and contained two sections in the frozen split manifest; it therefore supports dense Visium spatial and section-level evidence, not patient-level validation. GSE278936 public data contain one section per patient and were used only for spatial-channel replication.
 """)
 
 

@@ -4,11 +4,13 @@
 
 ## Supplementary Methods
 
-SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, 10x Visium breast cancer and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. Up to 2000 highly variable predictor genes were used after excluding target genes.
+SpatialLeak used public DLPFC, Andersson HER2-positive breast cancer, Thrane melanoma, 10x Visium breast cancer and GSE278936 prostate Visium data. Restricted EGA data from the prostate study were not used. All datasets were normalized with library-size scaling to 10,000 counts per spot followed by log1p transformation. Up to 2000 highly variable predictor genes were selected once during dataset preprocessing after excluding target genes and then frozen before split-specific model fitting.
 
-Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Hop buffers were defined on a within-slide spatial kNN graph with k = 15. Patient-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training patients.
+Random splits used 80/10/10 train/validation/test proportions. Matched spatial splits used 3 x 3 within-slide grid blocks and 300 candidate assignments per seed. Block-only splits correspond to hop0; +2-hop and +5-hop buffers correspond to hop2 and hop5 exclusion on a within-slide spatial kNN graph with k = 15. Patient/donor-held-out splits separated all sections from the held-out patient or donor, with validation sections chosen from training subjects. Section-held-out splits held out sections but were not treated as patient/donor-held-out unless subject identity was also separated.
 
-PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60.
+The Andersson-to-Visium dataset-held-out/cross-platform stress test trained PCA+Ridge on Andersson and evaluated on 10x Visium breast using 49 shared targets and 2000 common predictor features. PCA and Ridge parameters were fitted on the training dataset only and applied to the held-out Visium dataset without refitting; spatial kNN was excluded because spatial coordinates are not comparable across platforms.
+
+PCA+Ridge used 64 PCs and Ridge alpha 1.0, with PCA fitted on training observations only. Spatial kNN used k = 15 training neighbors and inverse-distance weighting in normalized per-slide coordinates. GraphSAGE used train-only PCA and scaling, two layers, hidden dimension 128 in all reported analyses, graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam learning rate 1e-3, weight decay 1e-4, 500 maximum epochs and validation-loss early stopping with patience 60. The split-construction kNN graph (k = 15) was distinct from the GraphSAGE message-passing graph (k = 10).
 
 ## Dataset and Sample Structure
 
@@ -60,4 +62,4 @@ Model performance changed with the evaluation tier. The source data are provided
 
 ## Boundary Conditions
 
-Spatial kNN RLI was not interpreted when random performance was near zero. Thrane high-hop spatial buffers were limited by ST v1.0 density. Visium breast was single-patient and therefore supports spatial and section-level evidence, not patient-level validation. GSE278936 public data contain one section per patient and were used only for spatial-channel replication.
+Spatial kNN RLI was not interpreted when random performance was near zero. Thrane high-hop spatial buffers were limited by ST v1.0 density. Visium breast was single-patient and contained two sections in the frozen split manifest; it therefore supports dense Visium spatial and section-level evidence, not patient-level validation. GSE278936 public data contain one section per patient and were used only for spatial-channel replication.

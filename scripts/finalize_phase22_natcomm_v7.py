@@ -58,6 +58,13 @@ REF_ORDER = [
     "Joeres2025NatCommunDataSAIL",
     "Rosenblatt2024NatCommunLeakage",
     "Moran1950Biometrika",
+    "Yuan2024NatMethodsBenchmark",
+    "Wang2025NatCommunPredictionBenchmark",
+    "Yan2026NatComputSciAlignmentBenchmark",
+    "You2024NatMethodsSSTBenchmark",
+    "Plummer2025NatBiotechnolTouchstone",
+    "Sun2024NatMethodsTISSUE",
+    "Tan2026NatCommunSTimage",
     "Maynard2021NatNeurosci",
     "Andersson2021NatCommun",
     "Andersson2021Zenodo",
@@ -65,13 +72,6 @@ REF_ORDER = [
     "TenXBreastSection1",
     "Kiviaho2024NatCommun",
     "Hamilton2017GraphSAGE",
-    "Yuan2024NatMethodsBenchmark",
-    "Wang2025NatCommunPredictionBenchmark",
-    "Sun2024NatMethodsTISSUE",
-    "Tan2026NatCommunSTimage",
-    "You2024NatMethodsSSTBenchmark",
-    "Plummer2025NatBiotechnolTouchstone",
-    "Yan2026NatComputSciAlignmentBenchmark",
 ]
 
 
@@ -223,11 +223,11 @@ def manuscript_v7(k: dict[str, str], refs: dict[str, int]) -> str:
         "SpatialLeak provides a hierarchy for matching benchmark design to the level of generalization being claimed."
     )
     intro = f"""
-Spatial transcriptomics and related spatial omics assays connect molecular measurements to tissue architecture, enabling prediction tasks that are not available in dissociated profiling alone {c(['Stahl2016Science'])}. Early spatial prediction and enhancement methods addressed unmeasured genes and registration between molecular and spatial modalities {c(['Abdelaal2020NAR','Biancalani2021NatMethods','Chen2021Bioinformatics'])}. Graph-based and spatial-domain methods then made tissue neighborhoods an explicit part of the model, using location, morphology and local context to recover biologically meaningful spatial structure {c(['Long2023NatCommun','Dong2022NatCommun','Hu2021NatMethods'])}. Recent visual-omics and deep representation models extend this trajectory toward large-scale multimodal learning between histology and spatial transcriptomics {c(['He2020NatBiomedEng','Fu2024GenomeMed','Chen2025NatMethodsOmiCLIP'])}. As these models are increasingly compared across tissues and cohorts, the validity of the comparison depends not only on model architecture but also on whether the evaluation design matches the level of generalization being claimed.
+Spatial transcriptomics and related spatial omics assays connect molecular measurements to tissue architecture, enabling prediction tasks that are not available in dissociated profiling alone {c(['Stahl2016Science'])}. Early spatial prediction and enhancement methods addressed unmeasured genes and registration between molecular and spatial modalities {c(['Abdelaal2020NAR','Biancalani2021NatMethods','Chen2021Bioinformatics'])}. Graph-based and spatial-domain methods then made tissue neighborhoods an explicit part of the model, using location, morphology and local context to recover biologically meaningful spatial structure {c(['Long2023NatCommun','Dong2022NatCommun','Hu2021NatMethods'])}. Subsequent visual-omics and deep representation models extended this trajectory toward large-scale multimodal learning between histology and spatial transcriptomics {c(['He2020NatBiomedEng','Fu2024GenomeMed','Chen2025NatMethodsOmiCLIP'])}. As these models are increasingly compared across tissues and cohorts, the validity of the comparison depends not only on model architecture but also on whether the evaluation design matches the level of generalization being claimed.
 
-Spatial observations are not independent in the conventional IID sense. Random spot-level splits can place neighboring tissue locations, similar local cell compositions, the same section background or the same patient-associated structure on both sides of the train-test boundary. Under such settings, apparent test performance can combine local interpolation with broader transfer. Leakage has long been recognized as a source of optimistic machine-learning estimates when information crosses the boundary between model development and evaluation {c(['Kaufman2012ACM'])}. Recent work has moved this concern from general warnings toward leakage-reduced biological data splitting and empirical demonstrations that subject reuse or pipeline leakage can inflate biomedical prediction performance {c(['Joeres2025NatCommunDataSAIL','Rosenblatt2024NatCommunLeakage'])}. Spatial omics adds a further challenge because biological proximity itself may carry genuine predictive information.
+Spatial observations are not independent in the conventional IID sense. Random spot-level splits can place neighboring tissue locations, similar local cell compositions, the same section background or the same patient-associated structure on both sides of the train-test boundary. Under such settings, apparent test performance can combine local interpolation with broader transfer. Leakage has long been recognized as a source of optimistic machine-learning estimates when information crosses the boundary between model development and evaluation {c(['Kapoor2023Patterns','Kaufman2012ACM'])}. Recent work has moved this concern from general warnings toward leakage-reduced biological data splitting and empirical demonstrations that subject reuse or pipeline leakage can inflate biomedical prediction performance {c(['Joeres2025NatCommunDataSAIL','Rosenblatt2024NatCommunLeakage'])}. Spatial omics adds a further challenge because biological proximity itself may carry genuine predictive information.
 
-Spatial dependence is therefore not inherently invalid. Spatial autocorrelation is a defining property of many tissue measurements and has a formal statistical history {c(['Moran1950Biometrika'])}. A spatially aware model may legitimately exploit tissue architecture when the intended task is local interpolation or when the learned signal remains predictive across the separation required by the scientific claim. Modern spatial omics benchmarks increasingly evaluate robustness, generalizability and scenario-specific behavior rather than a single internal accuracy estimate {c(['Yuan2024NatMethodsBenchmark','You2024NatMethodsSSTBenchmark'])}. The relevant question is not whether a model uses spatial information, but whether the information it exploits remains predictive under the level of separation implied by that claim. Local interpolation, spatial transfer, section transfer, patient transfer, dataset transfer and cross-platform transfer are distinct evaluation targets and should not be treated as interchangeable.
+Spatial dependence is therefore not inherently invalid. Spatial autocorrelation is a defining property of many tissue measurements and has a formal statistical history {c(['Moran1950Biometrika'])}. A spatially aware model may legitimately exploit tissue architecture when the intended task is local interpolation or when the learned signal remains predictive across the separation required by the scientific claim. Modern spatial-omics method benchmarks increasingly evaluate robustness, generalizability and scenario-specific performance {c(['Yuan2024NatMethodsBenchmark','Wang2025NatCommunPredictionBenchmark','Yan2026NatComputSciAlignmentBenchmark'])}, while systematic technology comparisons demonstrate substantial platform-dependent variation {c(['You2024NatMethodsSSTBenchmark'])}. The relevant question is not whether a model uses spatial information, but whether the information it exploits remains predictive under the level of separation implied by that claim. Local interpolation, spatial transfer, section transfer, patient transfer, dataset transfer and cross-platform transfer are distinct evaluation targets and should not be treated as interchangeable.
 
 Existing benchmarks have broadened spatial omics evaluation but do not yet provide a unified hierarchy linking the train-test boundary to the generalization claim. Spatial prediction studies show that within-study accuracy, cross-study generalizability and translational utility can rank methods differently {c(['Wang2025NatCommunPredictionBenchmark'])}. Benchmarks of alignment and related spatial tasks likewise show that challenging cross-platform and multi-slice scenarios expose limitations that conventional evaluations can miss {c(['Yan2026NatComputSciAlignmentBenchmark'])}. It remains unclear whether apparent performance inflation is driven primarily by local spatial-neighborhood dependence, patient-associated structure or broader distributional differences, and whether non-overlapping spatial partitions alone are sufficient to remove local dependence. Here we introduce SpatialLeak, a multi-tier evaluation framework that compares random spot splits with buffered spatial, section-held-out, patient-held-out and dataset-held-out regimes across public spatial transcriptomics datasets and diagnostic model classes. We show that apparent generalization can be attenuated through distinct spatial-neighborhood and patient-associated channels, that non-zero spatial buffers can be necessary to expose local dependence, and that model comparisons change with the evaluation tier. SpatialLeak therefore organizes spatial omics benchmarking into a generalization evidence hierarchy that links evaluation design to the level of claim it can support.
 """.strip()
@@ -238,17 +238,17 @@ Existing benchmarks have broadened spatial omics evaluation but do not yet provi
 
 SpatialLeak first tested whether random spot-level performance was retained when the train-test boundary matched a stricter generalization claim (Fig. 1, Fig. 2). Across DLPFC, Andersson, Thrane and Visium breast, random splits produced higher apparent performance than the relevant stricter split for the main interpretable model-dataset combinations. This established random spot evaluation as a permissive interpolation setting rather than evidence, by itself, for section-, patient- or dataset-level generalization.
 
-The patient-channel datasets showed the clearest random-to-patient losses (Fig. 3). In Andersson, PCA+Ridge patient RLI was {k['anderson_pca']}, and GraphSAGE patient RLI was {k['andersson_gs']}. In Thrane, PCA+Ridge patient RLI was {k['thrane_pca']}, and GraphSAGE patient RLI was {k['thrane_gs']}. These results show that a graph-based model did not remove the need for grouped evaluation.
+The patient/donor-associated datasets showed the clearest random-to-subject losses (Fig. 3). We use patient-associated as an umbrella term for subject-level grouping, including donor-held-out evaluation in DLPFC and patient-held-out evaluation in tumor datasets. In Andersson, PCA+Ridge patient RLI was {k['anderson_pca']}, and GraphSAGE patient RLI was {k['andersson_gs']}. In Thrane, PCA+Ridge patient RLI was {k['thrane_pca']}, and GraphSAGE patient RLI was {k['thrane_gs']}. These results show that a graph-based model did not remove the need for grouped evaluation.
 
 ### Non-zero spatial buffers reveal local neighborhood dependence
 
 SpatialLeak next tested whether non-overlapping spatial partitions were sufficient to remove local neighborhood dependence (Fig. 4). They were not always sufficient. In DLPFC and Visium breast, increasing hop distance reduced performance, especially for Spatial kNN. Visium breast showed the strongest spatial-channel example, with Spatial kNN hop5 RLI {k['visium_knn']}.
 
-GSE278936 provided an independent high-density Visium spatial-channel replication. PCA+Ridge was essentially unchanged at hop0 (RLI {k['gse_hop0']}) but decreased under hop2 and hop5 buffers, reaching hop5 RLI {k['gse_hop5']}. This pattern supports the specific claim that a non-zero exclusion buffer can be required to expose local neighborhood dependence. The random-size-matched control showed that the main spatial-buffer losses were larger than the losses caused by downsampling random splits to similar sample sizes.
+GSE278936 provided an independent high-density Visium spatial-channel replication. PCA+Ridge was essentially unchanged under block-only separation (hop0; RLI ≈ 0) but decreased under hop2 and hop5 buffers, reaching hop5 RLI {k['gse_hop5']}. This pattern supports the specific claim that a non-zero exclusion buffer can be required to expose local neighborhood dependence. The random-size-matched control showed that the main spatial-buffer losses were larger than the losses caused by downsampling random splits to similar sample sizes.
 
-### Patient-held-out evaluation identifies a distinct patient-associated channel
+### Patient/donor-held-out evaluation identifies a distinct patient-associated channel
 
-Patient-held-out evaluation measured a different axis of dependence from within-section spatial buffering (Fig. 3). Andersson and Thrane had large patient-held-out losses even when spatial kNN was near zero or when high-hop spatial curves were not resolvable in low-density ST v1.0 geometry. DLPFC showed a mixed pattern, with both spatial and donor-associated effects.
+Patient/donor-held-out evaluation measured a different axis of dependence from within-section spatial buffering (Fig. 3). Andersson and Thrane had large patient-held-out losses even when spatial kNN was near zero or when high-hop spatial curves were not resolvable in low-density ST v1.0 geometry. DLPFC showed a mixed pattern, with both spatial and donor-associated effects.
 
 The patient-associated channel should not be interpreted as a causal batch-effect estimate. It can include patient identity, section background, tissue processing, sample handling, cohort structure and biological heterogeneity. The result is that random spot splits can use structure that is not retained when patient-associated groups are separated.
 
@@ -273,19 +273,19 @@ This hierarchy fixes the language of the manuscript. Visium breast supports dens
     discussion = f"""
 ## Discussion
 
-SpatialLeak shows that apparent performance in spatial omics prediction depends materially on the evaluation design used to define generalization. Across tissues and platforms, replacing random spot-level evaluation with stricter designs attenuated performance through two separable channels: local spatial-neighborhood dependence and patient-associated structure. This extends recent benchmarking work showing that spatial omics methods rarely have a single evaluation-independent ranking. Large comparative studies of spatial clustering and histology-based spatial gene-expression prediction have found that apparent method superiority varies across accuracy, robustness, generalizability and downstream utility {c(['Yuan2024NatMethodsBenchmark','Wang2025NatCommunPredictionBenchmark'])}. Benchmarks of spatial alignment further show that challenging cross-platform and multi-slice scenarios can change apparent method behavior {c(['Yan2026NatComputSciAlignmentBenchmark'])}. SpatialLeak adds a complementary point: the split itself is part of the estimand, because different train-test boundaries test different forms of generalization.
+SpatialLeak shows that apparent performance in spatial omics prediction depends materially on the evaluation design used to define generalization. Across tissues and datasets, replacing random spot-level evaluation with stricter designs attenuated performance through two separable channels: local spatial-neighborhood dependence and patient-associated structure. This extends recent benchmarking work showing that spatial omics methods rarely have a single evaluation-independent ranking. Large comparative studies of spatial clustering and histology-based spatial gene-expression prediction have found that apparent method superiority varies across accuracy, robustness, generalizability and downstream utility {c(['Yuan2024NatMethodsBenchmark','Wang2025NatCommunPredictionBenchmark'])}. Benchmarks of spatial alignment further show that challenging cross-platform and multi-slice scenarios can change apparent method behavior {c(['Yan2026NatComputSciAlignmentBenchmark'])}. SpatialLeak adds a complementary point: the split itself is part of the estimand, because different train-test boundaries test different forms of generalization.
 
 The requirement for a non-zero spatial exclusion buffer highlights a distinction between nominal partitioning and effective independence. Assigning neighboring spots to different spatial blocks prevents literal overlap, but it does not eliminate correlation generated by continuous tissue architecture, spatially structured cell composition or molecular gradients. Spatial autocorrelation is therefore not merely a property of the response variable; it can determine the effective information distance between nominally separate training and test observations {c(['Moran1950Biometrika'])}. Contemporary benchmarks increasingly recognize spatial continuity and technology-dependent variation as distinct dimensions of performance rather than treating observations as exchangeable {c(['Yuan2024NatMethodsBenchmark','You2024NatMethodsSSTBenchmark'])}. This agrees with broader data-splitting work in biology, where similarity-aware partitions are used to reduce leakage that would remain under naive random splitting {c(['Joeres2025NatCommunDataSAIL'])}. GSE278936 illustrates this point clearly: hop0 was nearly indistinguishable from random evaluation, whereas positive exclusion distances exposed a stable loss despite random-size-matched controls. A spatial split should therefore be defined by the dependence it removes, not only by whether train and test labels occupy different geometric partitions.
 
-Patient-held-out evaluation exposed a second dependence structure that was largely orthogonal to local spatial autocorrelation. In Andersson and Thrane, substantial patient-associated losses persisted for both PCA+Ridge and GraphSAGE even when local spatial-neighbor baselines were weak, indicating that within-section proximity was insufficient to explain the observed attenuation. This channel should not be interpreted as a single batch effect. Patient identity can be entangled with tissue composition, disease heterogeneity, section preparation, sequencing characteristics and other technical factors. Multi-site spatial transcriptomics studies have independently shown that platform and processing context can account for major variation, motivating standardized reproducibility metrics across sites and technologies {c(['Plummer2025NatBiotechnolTouchstone'])}. This interpretation is consistent with the broader machine-learning literature showing that non-independent grouping between development and evaluation data can produce optimistic estimates when the intended deployment unit is a new biological subject {c(['Kapoor2023Patterns','Joeres2025NatCommunDataSAIL','Rosenblatt2024NatCommunLeakage'])}. Patient-held-out evaluation therefore measures the portability of a predictive relationship across patient-associated contexts rather than identifying which individual source of heterogeneity caused the loss.
+Patient/donor-held-out evaluation exposed a second dependence structure that was not explained by local spatial-neighborhood dependence alone. In Andersson and Thrane, substantial patient-associated losses persisted for both PCA+Ridge and GraphSAGE even when local spatial-neighbor baselines were weak, indicating that within-section proximity was insufficient to explain the observed attenuation. This channel should not be interpreted as a single batch effect. Patient or donor identity can be entangled with tissue composition, disease heterogeneity, section preparation, sequencing characteristics and other technical factors. Multi-site spatial transcriptomics studies have independently shown that platform and processing context can account for major variation, motivating standardized reproducibility metrics across sites and technologies {c(['Plummer2025NatBiotechnolTouchstone'])}. This interpretation is consistent with the broader machine-learning literature showing that non-independent grouping between development and evaluation data can produce optimistic estimates when the intended deployment unit is a new biological subject {c(['Kapoor2023Patterns','Joeres2025NatCommunDataSAIL','Rosenblatt2024NatCommunLeakage'])}. Patient/donor-held-out evaluation therefore measures the portability of a predictive relationship across subject-associated contexts rather than identifying which individual source of heterogeneity caused the loss.
 
-Conversely, performance that persists after stricter separation should not be dismissed as residual leakage. Spatial organization is an intrinsic component of tissue biology, and conserved anatomical or pathological structures may legitimately support prediction across sections or patients. The important distinction is between local interpolation and transportable structure, not between models that do and do not use spatial information. Recent work on spatial prediction similarly indicates that prediction accuracy and generalizability are separate properties: methods that perform strongly within a study may show weaker cross-study or cross-platform transfer {c(['Wang2025NatCommunPredictionBenchmark'])}. Robust and uncertainty-aware spatial prediction frameworks further show that nominally accurate predictions can differ in reliability for downstream inference {c(['Sun2024NatMethodsTISSUE','Tan2026NatCommunSTimage'])}. We therefore view the SpatialLeak hierarchy as an extrapolation ladder: retention under increasingly independent evaluation tiers provides progressively stronger evidence that a learned relationship reflects transportable structure. At the same time, strict-split loss can include legitimate distribution shift, so RLI should be interpreted as evaluation-dependent inflation rather than as the causal fraction of performance attributable to leakage {c(['Kapoor2023Patterns'])}.
+Conversely, performance that persists after stricter separation should not be dismissed as residual leakage. Spatial organization is an intrinsic component of tissue biology, and conserved anatomical or pathological structures may legitimately support prediction across sections or patients. The important distinction is between local interpolation and transportable structure, not between models that do and do not use spatial information. Recent work on spatial prediction similarly indicates that prediction accuracy and generalizability are separate properties: methods that perform strongly within a study may show weaker cross-study or cross-platform transfer {c(['Wang2025NatCommunPredictionBenchmark'])}. Robust and uncertainty-aware spatial prediction frameworks further show that nominally accurate predictions can differ in reliability for downstream inference {c(['Sun2024NatMethodsTISSUE','Tan2026NatCommunSTimage'])}. We therefore view the SpatialLeak hierarchy as an extrapolation ladder: retention under progressively broader separation tiers provides progressively stronger evidence that a learned relationship reflects transportable structure. At the same time, strict-split loss can include legitimate distribution shift, so RLI should be interpreted as evaluation-dependent inflation rather than as the causal fraction of performance attributable to leakage {c(['Kapoor2023Patterns'])}.
 
 The dependence of apparent model advantage on evaluation regime has implications for how spatial omics leaderboards are interpreted. In our analyses, models that benefited strongly from local neighborhoods under random evaluation did not necessarily retain the same advantage under patient- or spatially isolated testing. This is consistent with independent spatial omics benchmarks in which no method dominates all evaluation criteria: spatial clustering algorithms show complementary performance across accuracy, continuity and robustness {c(['Yuan2024NatMethodsBenchmark'])}, and histology-to-expression prediction methods can rank differently for within-study accuracy, cross-study generalizability and translational utility {c(['Wang2025NatCommunPredictionBenchmark'])}. A recent benchmark of spatial alignment methods likewise found that performance is scenario-dependent and that challenging cross-platform or multi-slice settings expose limitations that are not apparent under conventional evaluations {c(['Yan2026NatComputSciAlignmentBenchmark'])}. A leaderboard without an explicit generalization regime is therefore underspecified. Spatial omics studies should specify whether model superiority refers to local interpolation, patient transfer, dataset transfer or platform transportability.
 
 These findings support a shift from single-split benchmarking toward tiered reporting standards for spatial omics. Recent spatial transcriptomics benchmark initiatives have called for standardized performance metrics, reference tissues and reproducible workflows because platform resolution, molecular capture, sequencing depth and other technical characteristics can materially alter analytical conclusions {c(['You2024NatMethodsSSTBenchmark'])}. Multi-site imaging-based spatial studies further demonstrate the importance of harmonized procedures and standardized reproducibility metrics when results are compared across laboratories or platforms {c(['Plummer2025NatBiotechnolTouchstone'])}. Contemporary method benchmarks increasingly include robustness, usability and challenging cross-platform scenarios rather than relying on a single internal accuracy measure {c(['Yan2026NatComputSciAlignmentBenchmark'])}. For predictive modeling, authors should report at minimum the biological grouping unit, exact spatial exclusion rule, patient or donor separation where relevant, uncertainty at the biological-unit level, strong non-spatial and spatial diagnostic baselines, and machine-readable split manifests. Similarity-aware split descriptions are especially important when nominally separate observations remain biologically or technically related {c(['Joeres2025NatCommunDataSAIL'])}. This would not mandate a universal split; it would make explicit which claim each reported performance estimate can support.
 
-Several limitations define the scope of this framework and motivate the next generation of spatial omics benchmarks. First, our model set was deliberately diagnostic rather than exhaustive; the study was designed to identify evaluation-sensitive behavior rather than establish a new state-of-the-art leaderboard. Second, public datasets differ in tissue composition, platform density and sample structure: Visium breast contains a single patient, whereas the public GSE278936 cohort contains one section per patient, preventing clean decomposition of patient and section effects. Future evaluations would benefit from multi-patient, multi-section and multi-site reference resources of the kind now emerging for spatial omics reproducibility studies {c(['Plummer2025NatBiotechnolTouchstone'])}. Third, our main task focused on gene-expression prediction; evaluation dependence should also be tested in multimodal translation, spatial domain inference, alignment and representation learning, where recent methods and benchmarks already show strong scenario-specific behavior {c(['Chen2025NatMethodsOmiCLIP','Tan2026NatCommunSTimage','Yan2026NatComputSciAlignmentBenchmark'])}. Finally, point performance alone does not capture the reliability of predicted spatial quantities, suggesting that future leakage-resistant benchmarks should integrate uncertainty calibration and downstream inference alongside discrimination metrics {c(['Sun2024NatMethodsTISSUE'])}. These limitations constrain the breadth of our conclusions, but they also define a path toward benchmark designs that distinguish interpolation, biological transportability and out-of-domain transfer.
+Several limitations define the scope of this framework and motivate the next generation of spatial omics benchmarks. First, our model set was deliberately diagnostic rather than exhaustive; the study was designed to identify evaluation-sensitive behavior rather than establish a new state-of-the-art leaderboard. Second, public datasets differ in tissue composition, platform density and sample structure: Visium breast contains a single patient, whereas the public GSE278936 cohort contains one section per patient, preventing clean decomposition of patient and section effects. Future evaluations would benefit from multi-patient, multi-section and multi-site reference resources of the kind now emerging for spatial omics reproducibility studies {c(['Plummer2025NatBiotechnolTouchstone'])}. Third, our main task focused on gene-expression prediction; evaluation dependence should also be tested in multimodal translation, spatial domain inference, alignment and representation learning, where recent methods and benchmarks already show strong scenario-specific behavior {c(['Chen2025NatMethodsOmiCLIP','Tan2026NatCommunSTimage','Yan2026NatComputSciAlignmentBenchmark'])}. Finally, point performance alone does not capture the reliability of predicted spatial quantities, suggesting that future leakage-resistant benchmarks should integrate uncertainty calibration and downstream inference alongside predictive accuracy metrics {c(['Sun2024NatMethodsTISSUE'])}. These limitations constrain the breadth of our conclusions, but they also define a path toward benchmark designs that distinguish interpolation, biological transportability and out-of-domain transfer.
 """.strip()
     methods = f"""
 ## Methods
@@ -296,7 +296,7 @@ SpatialLeak used public spatial transcriptomics datasets covering human dorsolat
 
 ### Preprocessing
 
-Each section or sample was library-size normalized with `normalize_total(target_sum=1e4)` and transformed with `log1p`. Highly variable genes were selected with the Scanpy Seurat-flavor highly variable gene procedure using up to 2000 predictor genes. Slide or section identifiers and patient or donor metadata were retained where available. Spatial coordinates were standardized within slide for model input while preserving within-slide geometry for split construction.
+Each section or sample was library-size normalized with `normalize_total(target_sum=1e4)` and transformed with `log1p`. Highly variable genes were selected once during dataset preprocessing with the Scanpy Seurat-flavor highly variable gene procedure using up to 2000 predictor genes after excluding target genes; this predictor set was frozen before split-specific model fitting rather than reselected within each split. Slide or section identifiers and patient or donor metadata were retained where available. Spatial coordinates were standardized within slide for model input while preserving within-slide geometry for split construction.
 
 ### Target panels
 
@@ -304,7 +304,9 @@ Dataset-specific panels used the top 50 Moran-ranked genes after preprocessing. 
 
 ### Split construction
 
-Random spot splits used an 80/10/10 train/validation/test partition. Matched spatial block splits assigned 3 x 3 grid blocks within each section to train, validation or test folds and selected balanced assignments from 300 random candidates per seed using spot count, library size, Moran signal and layer composition where available. `matched_hop0` denotes non-overlapping block assignment without a positive exclusion buffer. Hop2 and hop5 splits removed test spots whose nearest training neighborhood was within fewer than two or five edges on a within-slide spatial kNN graph with k = 15. Patient-held-out splits held out all sections from a patient or donor where available. Validation sections were selected from training patients rather than the held-out test patient. Slide-held-out splits held out sections but were not treated as patient-held-out unless patient identity was also separated.
+Random spot splits used an 80/10/10 train/validation/test partition. Matched spatial block splits assigned 3 x 3 grid blocks within each section to train, validation or test folds and selected balanced assignments from 300 random candidates per seed using spot count, library size, Moran signal and layer composition where available. `matched_hop0` denotes block-only separation: non-overlapping block assignment without a positive exclusion buffer. Hop2 and hop5 splits removed test spots whose nearest training neighborhood was within fewer than two or five edges on a within-slide spatial kNN graph with k = 15; these are denoted `matched_hop2` and `matched_hop5`, or +2-hop and +5-hop buffers. Patient/donor-held-out splits held out all sections from a patient or donor where available. Validation sections were selected from the remaining training patients or donors, rather than from the held-out test subject. Section-held-out (slide-held-out) splits held out sections but were not treated as patient/donor-held-out unless patient or donor identity was also separated.
+
+Dataset- and platform-level evaluation was used only as a supplementary stress test. In the Andersson-to-Visium comparison, PCA+Ridge was trained on Andersson HER2-positive breast cancer spatial transcriptomics data and evaluated on 10x Visium breast data using the shared target-gene intersection. The model used 49 shared targets because SEPT4 was unavailable in the shared target panel and 2000 common predictor features. Preprocessing and target-panel definitions were frozen before model fitting; PCA and Ridge parameters were fitted on the training dataset only and then applied to the held-out Visium dataset without refitting on test observations. Spatial kNN was excluded because spatial coordinates are not comparable across platforms. This analysis was reported as a dataset-held-out/cross-platform stress test rather than as central validation.
 
 ### Spatial graph construction
 
@@ -312,7 +314,7 @@ Spatial graphs were built within slides only. kNN edges were calculated from spa
 
 ### Models
 
-PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers, hidden dimension 128 for formal external runs, within-slide graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. Test performance was not used for checkpoint selection.
+PCA+Ridge used 2000 predictor genes excluding the 50 target genes. PCA used 64 components and was fit only on training observations. Ridge regression used alpha = 1.0 and was fit separately for each target gene. Spatial kNN used k = 15 nearest training spots in normalized per-slide coordinates and inverse-distance weights `1/(d + 1e-6)` normalized to sum to one for each test spot. Neighbors were drawn only from the training split; when fewer than 15 training spots were available, all available training spots were used. GraphSAGE used train-only PCA and train-only feature scaling, two GraphSAGE layers with a hidden dimension of 128 in all reported analyses, within-slide graph k = 10 with self-loops, ReLU activation, no dropout, mean-squared-error loss on training nodes, Adam optimization with learning rate 1e-3, weight decay 1e-4, up to 500 epochs, validation-loss early stopping with patience 60, and validation-loss checkpoint selection. The kNN graph used for split construction (k = 15) was distinct from the GraphSAGE message-passing graph (k = 10). Test performance was not used for checkpoint selection.
 
 ### Metrics and inference
 
@@ -392,10 +394,12 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
         ("Visium breast", "single patient", "GraphSAGE", "graphsage", "Spatial"),
     ]
     for dataset, role_tag, label, model, pattern in base:
+        spatial_strict_split = ""
         if model == "graphsage":
             r2 = two[(two.dataset == dataset) & (two.model == "graphsage_trainonly")]
             if not r2.empty:
                 spatial, patient = r2.iloc[0].RLI_spatial, r2.iloc[0].RLI_patient
+                spatial_strict_split = "matched_hop5" if pd.notna(spatial) else ""
             else:
                 strict = "patient" if dataset in {"Andersson", "Thrane"} else "matched_hop5"
                 r = gs[(gs.dataset == dataset) & (gs.strict_label == strict)]
@@ -403,9 +407,23 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
                     continue
                 spatial = r.iloc[0].RLI if strict != "patient" else np.nan
                 patient = r.iloc[0].RLI if strict == "patient" else np.nan
+                spatial_strict_split = strict if strict != "patient" else ""
         else:
             r = two[(two.dataset == dataset) & (two.model == model)].iloc[0]
-            spatial, patient = r.RLI_spatial, r.RLI_patient
+            patient = r.RLI_patient
+            ds_key = {"DLPFC": "dlpfc", "Andersson": "anderson", "Thrane": "thrane", "Visium breast": "visium_breast"}[dataset]
+            sdf = t["summary"]
+            rnd = sdf[(sdf.dataset == ds_key) & (sdf.split == "random") & (sdf.model == model)]
+            strict_row = pd.DataFrame()
+            for candidate in ["matched_hop5", "matched_hop2", "matched_hop0"]:
+                strict_row = sdf[(sdf.dataset == ds_key) & (sdf.split == candidate) & (sdf.model == model)]
+                if not strict_row.empty:
+                    spatial_strict_split = candidate
+                    break
+            if rnd.empty or strict_row.empty or abs(float(rnd.iloc[0].mean_pearson)) < 0.05:
+                spatial = np.nan
+            else:
+                spatial = (float(rnd.iloc[0].mean_pearson) - float(strict_row.iloc[0].mean_pearson)) / float(rnd.iloc[0].mean_pearson)
         patient_na_reason = ""
         spatial_na_reason = ""
         if pd.isna(patient):
@@ -418,6 +436,8 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
             "model": label,
             "spatial_RLI": spatial,
             "patient_RLI": patient,
+            "spatial_strict_split": spatial_strict_split,
+            "patient_strict_split": "patient/donor-held-out" if pd.notna(patient) else "",
             "pattern": pattern,
             "spatial_na_reason": spatial_na_reason,
             "patient_na_reason": patient_na_reason,
@@ -429,6 +449,8 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
         "model": "PCA+Ridge",
         "spatial_RLI": rg.rli,
         "patient_RLI": np.nan,
+        "spatial_strict_split": "matched_hop5",
+        "patient_strict_split": "",
         "pattern": "Spatial replication",
         "spatial_na_reason": "",
         "patient_na_reason": "Not used as clean patient-level validation",
@@ -439,6 +461,8 @@ def figure3_df(t: dict[str, pd.DataFrame]) -> pd.DataFrame:
         "model": "Spatial kNN",
         "spatial_RLI": np.nan,
         "patient_RLI": np.nan,
+        "spatial_strict_split": "",
+        "patient_strict_split": "",
         "pattern": "Boundary",
         "spatial_na_reason": "RLI denominator below prespecified threshold",
         "patient_na_reason": "Not used as clean patient-level validation",
@@ -654,30 +678,33 @@ def _make_fig2_row(t: dict[str, pd.DataFrame], panel: str, dataset: str, model: 
         lr = t["lirli"][(t["lirli"].dataset == "thrane") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
     elif dataset == "Visium breast":
         lr = t["lirli"][(t["lirli"].dataset == "visium_breast") & (t["lirli"].strict_type == strict_type) & (t["lirli"].model == model)]
-    lr = lr.iloc[0]
     sdf = t["summary"]
-    random_row = sdf[(sdf.dataset == lr.dataset) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
+    lr = lr.iloc[0]
+    ds_key = str(lr.dataset)
+    random_row = sdf[(sdf.dataset == ds_key) & (sdf.split == "random") & (sdf.model == model)].iloc[0]
     if strict_type == "patient":
-        strict_parts = sdf[(sdf.dataset == lr.dataset) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"].astype(float)
+        strict_parts = sdf[(sdf.dataset == ds_key) & (sdf["split"].str.startswith("patient_")) & (sdf.model == model)]["mean_pearson"].astype(float)
         strict_sd = float(strict_parts.std(ddof=1)) if len(strict_parts) > 1 else 0.0
         strict_n = int(len(strict_parts))
         strict_error_bar = "s.d. across held-out patient/donor groups"
         strict_display = "patient-held-out"
+        strict_mean = float(lr.strict)
     else:
-        strict_row = sdf[(sdf.dataset == lr.dataset) & (sdf.split == lr.strict_split) & (sdf.model == model)].iloc[0]
+        strict_row = sdf[(sdf.dataset == ds_key) & (sdf.split == "matched_hop5") & (sdf.model == model)].iloc[0]
         strict_sd = 0.0 if pd.isna(strict_row.sd_seed) else float(strict_row.sd_seed)
         strict_n = 10
         strict_error_bar = "s.d. across 10 frozen seeds"
-        strict_display = str(lr.strict_split)
+        strict_display = "matched_hop5"
+        strict_mean = float(strict_row.mean_pearson)
     return {
         "panel": panel,
         "dataset": dataset,
         "model": model_label,
         "display_label": label,
         "strict_split": strict_display,
-        "random_mean_pearson": float(lr.random),
-        "strict_mean_pearson": float(lr.strict),
-        "delta_pearson": float(lr.random - lr.strict),
+        "random_mean_pearson": float(random_row.mean_pearson),
+        "strict_mean_pearson": strict_mean,
+        "delta_pearson": float(random_row.mean_pearson - strict_mean),
         "random_sd": 0.0 if pd.isna(random_row.sd_seed) else float(random_row.sd_seed),
         "strict_sd": strict_sd,
         "random_error_bar": "s.d. across 10 frozen seeds",
@@ -763,8 +790,8 @@ def _make_figure3(df3: pd.DataFrame) -> None:
     ax.text(-2.08, -1.02, "Two-channel phenotype map of apparent generalization inflation", ha="left", va="bottom", fontsize=10.0, weight="bold", color=FIG1_COLORS["dark"])
     ax.text(0, -0.47, "Spatial-neighborhood\nchannel", ha="center", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["spatial"])
     ax.text(0, -0.08, "buffered vs random", ha="center", va="bottom", fontsize=5.8, color="#56735B")
-    ax.text(1, -0.47, "Patient-associated\nchannel", ha="center", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["patient"])
-    ax.text(1, -0.08, "patient-held-out vs random", ha="center", va="bottom", fontsize=5.8, color="#7A5474")
+    ax.text(1, -0.47, "Patient/donor-associated\nchannel", ha="center", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["patient"])
+    ax.text(1, -0.08, "patient/donor-held-out vs random", ha="center", va="bottom", fontsize=5.8, color="#7A5474")
     ax.text(2.15, -0.27, "Pattern", ha="left", va="bottom", fontsize=7.3, weight="bold", color=FIG1_COLORS["dark"])
 
     for dataset in groups:
@@ -845,7 +872,7 @@ def _make_figure4(fig4_rows: list[dict[str, object]]) -> None:
     panel_specs = [
         ("DLPFC", "a  DLPFC - Spatial kNN", "n = 10 seeds", "hop5 RLI = 0.700", None),
         ("Visium breast", "b  Visium breast - Spatial kNN", "n = 10 seeds", "hop5 RLI = 0.796", None),
-        ("GSE278936 prostate", "c  GSE278936 - PCA+Ridge", "independent Visium replication; n = 5 seeds", "Non-zero buffer\nrequired\nhop5 RLI = 0.222", "Spatial kNN RLI not interpretable\n(random performance near zero)."),
+        ("GSE278936 prostate", "c  GSE278936 - PCA+Ridge", "independent Visium replication; n = 5 seeds", "Attenuation emerges\nwith non-zero buffering\nhop5 RLI = 0.222", "Spatial kNN RLI not interpretable\n(random performance near zero)."),
     ]
     fig, axes = plt.subplots(1, 3, figsize=(7.4, 3.25), sharey=True)
     for ax, (dataset, title, subtitle, annotation, note) in zip(axes, panel_specs):
@@ -891,7 +918,7 @@ def make_figures(t: dict[str, pd.DataFrame]) -> None:
     ]
     pd.DataFrame(patient_rows + spatial_rows).to_csv(SOURCE / "Figure2_SourceData.csv", index=False)
     fig, axes = plt.subplots(2, 1, figsize=(7.4, 5.2), sharex=True, gridspec_kw={"hspace": 0.34})
-    _plot_fig2_panel(axes[0], patient_rows, "a  Patient-held-out evaluation attenuates random-split performance", FIG1_COLORS["patient"])
+    _plot_fig2_panel(axes[0], patient_rows, "a  Patient/donor-held-out evaluation attenuates random-split performance", FIG1_COLORS["patient"])
     _plot_fig2_panel(axes[1], spatial_rows, "b  Buffered spatial evaluation reveals local performance dependence", FIG1_COLORS["spatial"])
     fig.suptitle("Predictive performance attenuates under stricter evaluation tiers", x=0.06, y=0.985, ha="left", fontsize=9.8, fontweight="bold")
     fig.subplots_adjust(left=0.23, right=0.98, top=0.88, bottom=0.10, hspace=0.40)
@@ -975,7 +1002,7 @@ def source_index() -> None:
     rows = [
         ["Figure 1", "a-d", "all", "all", "conceptual hierarchy", "Figure1_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 2", "a-b", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson and Delta Pearson with explicit ±1 s.d. units", "Figure2_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
-        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient RLI; descriptive pattern label; NA reason", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
+        ["Figure 3", "all", "DLPFC; Andersson; Thrane; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN; GraphSAGE", "spatial RLI; patient/donor-associated RLI; descriptive pattern label; NA reason", "Figure3_Final_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 4", "a-c", "DLPFC; Visium breast; GSE278936", "PCA+Ridge; Spatial kNN", "mean Pearson by spatial exclusion regime with ±1 s.d. across frozen seeds", "Figure4_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
         ["Figure 5", "all", "DLPFC; Andersson; Thrane; Visium breast", "PCA+Ridge; Spatial kNN; GraphSAGE", "mean Pearson by evaluation tier", "Figure5_SourceData.csv", "scripts/finalize_phase22_natcomm_v7.py", "PASS"],
     ]
@@ -1146,7 +1173,7 @@ PASS.
 | Spatial kNN neighbor source | training spots only | Included |
 | Spatial graph k for GraphSAGE | 10 with self-loops | Included |
 | GraphSAGE layers | two GraphSAGE layers | Included |
-| GraphSAGE hidden dimension | 128 for formal external runs | Included |
+| GraphSAGE hidden dimension | 128 in all reported analyses | Included |
 | GraphSAGE optimizer | Adam | Included |
 | GraphSAGE learning rate | 1e-3 | Included |
 | GraphSAGE weight decay | 1e-4 | Included |
@@ -1186,7 +1213,7 @@ PASS.
 
 ## Terminology
 
-Canonical forms enforced: spatial omics, patient-held-out, GraphSAGE, PCA+Ridge, Spatial kNN, shared_panel_50, GSE278936 spatial-channel replication.
+Canonical forms enforced: spatial omics, patient/donor-held-out, patient-associated channel, GraphSAGE, PCA+Ridge, Spatial kNN, shared_panel_50, GSE278936 spatial-channel replication.
 
 No accidental claim that GSE278936 is clean patient-level validation was detected.
 """)
@@ -1527,10 +1554,10 @@ def build_docx(v7: str) -> Path:
         # Embed figures after relevant captions/first mentions.
         doc.add_paragraph(line)
         if line.startswith("SpatialLeak first tested"):
-            add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable biological signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
-            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient-associated evaluation compares random spot-level performance with patient-held-out performance in datasets supporting patient-level separation. (b) Spatial evaluation compares random performance with buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient-held-out estimates summarize held-out patient/donor groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
-        if line.startswith("The patient-channel datasets"):
-            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and buffered spatial evaluation, whereas the patient-associated channel reports RLI between random and patient-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
+            add_figure(doc, FIGS / "Figure1_final.png", "Figure 1. Evaluation design determines the generalization claim. (a) Random spot splitting intermingles training and test observations within the same section and patient context. (b) Apparent performance can reflect local spatial dependence, patient-associated structure and transportable signal. (c) Different isolation strategies target different dependence sources. (d) The resulting hierarchy links each evaluation tier to the level of generalization it can support.")
+            add_figure(doc, FIGS / "Figure2_final.png", "Figure 2. Predictive performance attenuates under stricter evaluation tiers. (a) Patient/donor-associated evaluation compares random spot-level performance with patient- or donor-held-out performance in datasets supporting subject-level separation. (b) Spatial evaluation compares random performance with +5-hop buffered spatial evaluation in datasets supporting within-section separation. Points indicate mean Pearson correlation across target genes, and connecting lines show the change between random and the corresponding stricter evaluation regime; Δr denotes random minus strict-tier Pearson correlation. Error bars indicate ±1 s.d.; random and spatial-buffer estimates summarize predefined seeds, whereas patient/donor-held-out estimates summarize held-out subject groups as detailed in Source Data. Model-dataset combinations with near-zero random performance, for which relative inflation is not interpretable, are excluded from the main display and reported in the Supplementary Information.")
+        if line.startswith("The patient/donor-associated datasets"):
+            add_figure(doc, FIGS / "Figure3_final_matrix.png", "Figure 3. SpatialLeak reveals heterogeneous channels of apparent generalization inflation across datasets and model classes. Rows represent interpretable dataset-model combinations, grouped by dataset. The spatial-neighborhood channel reports relative leakage inflation (RLI) between random and the prespecified hop-buffered spatial evaluation, prioritizing +5-hop where resolvable; exact strict splits are listed in Source Data. The patient/donor-associated channel reports RLI between random and patient- or donor-held-out evaluation. Cell values show RLI, with stronger shading indicating larger positive evaluation-dependent attenuation. <0 denotes a negative RLI and therefore no positive inflation under the corresponding contrast. Hatched NA cells indicate evaluation tiers that were unavailable from the dataset structure or non-interpretable under the prespecified near-zero random-performance rule; NA values are not treated as zero. Descriptive pattern labels summarize the observed profile and do not represent threshold-based classifications.")
         if line.startswith("SpatialLeak next tested"):
             add_figure(doc, FIGS / "Figure4_final.png", "Figure 4. Increasing spatial exclusion reveals dataset-dependent local neighborhood dependence. (a) Spatial kNN performance in DLPFC under random evaluation and increasingly buffered spatial splits. (b) Spatial kNN in dense Visium breast data, showing pronounced attenuation with increasing exclusion distance. (c) PCA+Ridge in the independent GSE278936 Visium cohort, where block-only separation produced little change relative to random evaluation, whereas non-zero hop buffers reduced performance. Points show mean Pearson correlation across target genes; error bars indicate ±1 s.d. across frozen seeds (n = 10 for DLPFC and Visium breast; n = 5 for GSE278936). Random evaluation is shown as a permissive reference, whereas block-only, +2-hop and +5-hop splits represent progressively stronger within-section spatial separation. Random-size-matched controls are reported in the Supplementary Information.")
         if line.startswith("Model comparisons changed"):

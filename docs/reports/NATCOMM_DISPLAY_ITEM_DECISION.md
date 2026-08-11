@@ -8,11 +8,11 @@ Sources: Nature Communications "How to submit" and "Article" instructions.
 
 ## Counts
 
-- Main-text word count including Methods and statements, excluding references: 3441
+- Main-text word count including Methods and statements, excluding references: 3660
 - Main figures: 4
 - Main tables: 0
 - Supplementary figures: 1
 
 ## Decision
 
-Move Figure 5 to Supplementary Fig. 1. The main article retains Figure 1 conceptual framework, Figure 2 random-versus-strict performance, Figure 3 two-channel landscape and Figure 4 non-zero spatial buffer response. This keeps the main paper focused and avoids redundancy between model-behavior and two-channel summary panels.
+Move Figure 5 to Supplementary Fig. 1. The main article retains Figure 1 conceptual framework, Figure 2 random-versus-strict performance, Figure 3 two-channel landscape and Figure 4 spatial buffer response. This keeps the main paper focused and avoids redundancy between model-behavior and two-channel summary panels.
