@@ -553,7 +553,7 @@ def _draw_figure1_panel_b(ax: plt.Axes) -> None:
         ax.add_patch(patches.FancyBboxPatch((0.18, y - 0.048), 0.64, 0.088, boxstyle="round,pad=0.010,rounding_size=0.020", fc=color, ec="white", lw=1.0, alpha=0.95))
         ax.text(0.50, y - 0.004, label, ha="center", va="center", fontsize=6.0, color="white", fontweight="bold")
     ax.annotate("", xy=(0.50, 0.65), xytext=(0.50, 0.69), arrowprops=dict(arrowstyle="->", lw=0.9, color=FIG1_COLORS["line"]))
-    ax.text(0.50, 0.18, "Spatial information is not inherently invalid;\nthe test is whether signal survives\nclaim-matched separation.", ha="center", va="center", fontsize=6.2, color=FIG1_COLORS["dark"], fontweight="bold")
+    ax.text(0.50, 0.18, "Spatial signal is valid when it survives\nclaim-matched separation.", ha="center", va="center", fontsize=6.2, color=FIG1_COLORS["dark"], fontweight="bold")
 
 
 def _draw_figure1_panel_c(ax: plt.Axes) -> None:
