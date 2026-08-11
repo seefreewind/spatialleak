@@ -30,6 +30,7 @@ venv/
 
 # Submission QA/intermediate renders
 submission/nature_communications/rendered*/
+submission/nature_communications/portal_materials_final/
 submission/nature_communications/FIGURES/*.tiff
 submission/nature_communications/FIGURES/*prototype*
 submission/nature_communications/SPATIALLEAK_NATCOMM_WORD_DRAFT.docx
