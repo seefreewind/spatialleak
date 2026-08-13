@@ -145,6 +145,7 @@ Contents:
 - Supplementary Table 3: Visium breast section-held-out summary.
 - Supplementary Table 4: mixed-effects/statistical summary.
 - Supplementary Table 5: boundary and non-interpretable cases.
+- Supplementary Table 6: two-sided paired Wilcoxon signed-rank results with paired n, W statistics, P values and BH-FDR-adjusted q values.
 - Supplementary methods: GraphSAGE settings, split definitions, full output availability, Moran analysis and Andersson-to-Visium stress test.
 
 ## Source Data
@@ -178,6 +179,7 @@ SupplementaryTable2_SplitSampleCounts.csv
 SupplementaryTable3_VisiumBreastSectionHeldOutSummary.csv
 SupplementaryTable4_MixedEffectsSummary.csv
 SupplementaryTable5_BoundaryCases.csv
+SupplementaryTable6_WilcoxonSignedRankResults.csv
 SupplementaryTable_VisiumBreastSectionHeldOut.csv
 SourceData_Index.csv
 README.md

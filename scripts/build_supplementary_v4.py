@@ -219,6 +219,32 @@ def make_tables():
         })
     pd.DataFrame(rows).to_csv(SD / "SupplementaryTable4_MixedEffectsSummary.csv", index=False)
 
+    wilcoxon = pd.read_csv(ROOT / "results" / "final_stats" / "wilcoxon_all_datasets.csv")
+    rli = pd.read_csv(ROOT / "results" / "final_stats" / "LI_RLI_all_datasets.csv")
+    rli = rli[["dataset", "strict_type", "model", "random", "strict", "LI", "RLI", "retention"]]
+    t6 = wilcoxon.merge(rli, on=["dataset", "strict_type", "model"], how="left")
+    t6 = t6.rename(columns={
+        "dataset": "Dataset",
+        "strict_type": "Comparison family",
+        "model": "Model",
+        "n_pairs": "Paired n",
+        "median_diff": "Median random-minus-strict difference",
+        "statistic": "Wilcoxon W",
+        "p": "P value",
+        "p_bh": "BH-FDR q value",
+        "sig_bh_0.05": "BH-FDR q < 0.05",
+    })
+    t6.insert(3, "Test", "Two-sided paired Wilcoxon signed-rank test")
+    t6.insert(4, "Null hypothesis", "Median paired random-minus-strict difference = 0")
+    t6.insert(7, "Degrees of freedom", "n/a")
+    low_random = t6["random"].abs() < 0.05
+    t6.loc[low_random, ["RLI", "retention"]] = np.nan
+    t6["Effect metric"] = "median paired difference; LI/RLI/retention, with RLI and retention left blank when absolute random mean Pearson < 0.05"
+    for col in ["Median random-minus-strict difference", "Wilcoxon W", "P value", "BH-FDR q value", "random", "strict", "LI", "RLI", "retention"]:
+        t6[col] = t6[col].map(lambda x: "" if pd.isna(x) else f"{float(x):.6g}")
+    t6["BH-FDR q < 0.05"] = t6["BH-FDR q < 0.05"].map({True: "yes", False: "no"})
+    t6.to_csv(SD / "SupplementaryTable6_WilcoxonSignedRankResults.csv", index=False)
+
     fig3 = pd.read_csv(SD / "Figure3_SourceData.csv")
     gse_rli = pd.read_csv(ROOT / "results" / "paper_assets" / "table_gse278936_spatial_pilot_RLI.csv")
     rows = []
@@ -246,7 +272,7 @@ def make_tables():
         })
     t5 = pd.DataFrame(rows).drop_duplicates()
     t5.to_csv(SD / "SupplementaryTable5_BoundaryCases.csv", index=False)
-    return t1, t2, t3sum, pd.DataFrame(rows).drop_duplicates(), pd.DataFrame(rows)
+    return t1, t2, t3sum, pd.DataFrame(rows).drop_duplicates(), t6
 
 
 def set_run_font(run, name="Arial", size=10, bold=False, italic=False, color=None):
@@ -348,7 +374,7 @@ def add_df_table(document, df, max_rows=None, font_size=7.5):
 
 
 def build_si_doc(fig_paths, tables):
-    t1, t2, t3, t5_dedup, _ = tables
+    t1, t2, t3, t5_dedup, t6 = tables
     t4 = pd.read_csv(SD / "SupplementaryTable4_MixedEffectsSummary.csv")
     doc = Document()
     configure_doc(doc)
@@ -402,6 +428,21 @@ def build_si_doc(fig_paths, tables):
     add_caption(doc, "Supplementary Table 5 | Boundary and non-interpretable cases.", "Cases retained as unavailable or non-interpretable rather than converted to zero.", "source_data/SupplementaryTable5_BoundaryCases.csv")
     add_df_table(doc, t5_dedup, font_size=6.7)
 
+    doc.add_page_break()
+    add_caption(doc, "Supplementary Table 6 | Two-sided paired Wilcoxon signed-rank results.", "Exact paired n values, Wilcoxon W statistics, P values and Benjamini-Hochberg false-discovery-rate-adjusted q values are shown for predefined random-versus-strict comparison families. The null hypothesis was median paired random-minus-strict difference = 0. Wilcoxon degrees of freedom are not applicable. Full effect columns are provided in the source-data CSV.", "source_data/SupplementaryTable6_WilcoxonSignedRankResults.csv")
+    t6_display = t6[[
+        "Dataset",
+        "Comparison family",
+        "Model",
+        "Paired n",
+        "Median random-minus-strict difference",
+        "Wilcoxon W",
+        "P value",
+        "BH-FDR q value",
+        "BH-FDR q < 0.05",
+    ]]
+    add_df_table(doc, t6_display, font_size=6.2)
+
     out = PORTAL / "Supplementary_Information_V4.docx"
     doc.save(out)
     return out
@@ -417,6 +458,7 @@ def update_source_index():
         ["Supplementary Table 3", "all", "Visium breast", "PCA+Ridge; Spatial kNN", "section-held-out summary", "SupplementaryTable3_VisiumBreastSectionHeldOutSummary.csv", "scripts/build_supplementary_v4.py", "PASS"],
         ["Supplementary Table 4", "all", "all", "all", "mixed-effects summary", "SupplementaryTable4_MixedEffectsSummary.csv", "scripts/build_supplementary_v4.py", "PASS"],
         ["Supplementary Table 5", "all", "all", "all", "boundary/non-interpretable cases", "SupplementaryTable5_BoundaryCases.csv", "scripts/build_supplementary_v4.py", "PASS"],
+        ["Supplementary Table 6", "all", "DLPFC; Andersson; Thrane; Visium breast", "Mean; PCA+Ridge; Spatial kNN", "two-sided paired Wilcoxon signed-rank statistics with BH-FDR q values", "SupplementaryTable6_WilcoxonSignedRankResults.csv", "scripts/build_supplementary_v4.py", "PASS"],
     ], columns=idx.columns)
     idx = pd.concat([idx[~idx["figure"].isin(additions["figure"])], additions], ignore_index=True)
     idx.to_csv(SD / "SourceData_Index.csv", index=False)
