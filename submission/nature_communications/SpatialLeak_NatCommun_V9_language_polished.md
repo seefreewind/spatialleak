@@ -132,6 +132,10 @@ No specific funding was received for this work.
 
 The authors declare no competing interests.
 
+## AI Use Statement
+
+ChatGPT was used to assist with code-related work, language polishing and manuscript formatting. The authors reviewed and approved the final manuscript content and take full responsibility for the work.
+
 
 
 ## References
