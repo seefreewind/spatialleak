@@ -18,9 +18,9 @@ Use the following order during portal submission.
 | P0 | Supplementary Information | `submission/nature_communications/portal_materials_final/Supplementary_Information_V4.docx` | Ready | Single combined Word file with supplementary figures and tables. PDF copy is for visual checking or portal fallback. |
 | P0 | Source Data | `submission/nature_communications/SpatialLeak_NatCommun_SourceData_final.zip` | Ready | Dedicated source-data archive. Use if the portal has a Source Data category. |
 | P0 | Main figures | `portal_materials_final/figures/Figure1_final.pdf` to `Figure4_final.pdf` | Ready | Upload PDF vector files first where accepted. TIFF files are fallback only. |
-| P0 | Reporting Summary | `official_forms/nr-reporting-summary.pdf` | Manual action required | Complete in Adobe Reader using the draft answers in `reporting/Reporting_Summary_Draft.md`. |
+| P0 | Reporting Summary | `official_forms/nr-reporting-summary_filled_spatialleak.pdf` | Ready, verify visually | Filled XFA smart-PDF generated from the reporting draft; blank official form retained as backup. |
 | P0 | Machine Learning Checklist | `official_forms/machine-learning-checklist_filled.pdf` | Verify manually | Locally filled draft exists; open in Adobe Reader and verify all fields before upload. |
-| P0 | Code and Software Checklist | `official_forms/nr-software-policy.pdf` | Manual action required | Complete in Adobe Reader using `reporting/Code_Software_Checklist_Draft.md`. |
+| P0 | Code and Software Checklist | `official_forms/nr-software-policy_filled_spatialleak.pdf` | Ready, verify visually | Filled XFA smart-PDF generated from the code/software checklist draft; blank official form retained as backup. |
 | P1 | Data Availability text | `portal_materials_final/DATA_AVAILABILITY.md` | Ready | Also present inside the main manuscript. Use for portal fields if requested. |
 | P1 | Code Availability text | `portal_materials_final/CODE_AVAILABILITY.md` | Ready | Includes GitHub and Zenodo archive. |
 | P1 | Portal support bundle | `submission/nature_communications/SpatialLeak_NatCommun_portal_materials_upload_slim.zip` | Ready | Slim package excludes TIFF backups and passed zip integrity check. Use as an assembly package only if the portal allows/needs a zipped support upload. |
@@ -205,9 +205,9 @@ Use these files:
 
 | Form | File | Current action |
 |---|---|---|
-| Bio and life sciences reporting summary | `nr-reporting-summary.pdf` | Complete manually in Adobe Reader. |
+| Bio and life sciences reporting summary | `nr-reporting-summary_filled_spatialleak.pdf` | Filled; verify visually in Adobe Reader before upload. |
 | Machine learning checklist | `machine-learning-checklist_filled.pdf` | Verify manually in Adobe Reader before upload. |
-| Code and Software submission checklist | `nr-software-policy.pdf` | Complete manually in Adobe Reader. |
+| Code and Software submission checklist | `nr-software-policy_filled_spatialleak.pdf` | Filled; verify visually in Adobe Reader before upload. |
 | Manual guide | `OFFICIAL_FORM_COMPLETION_GUIDE.md` | Use as field-by-field support. |
 
 Draft answer files:
